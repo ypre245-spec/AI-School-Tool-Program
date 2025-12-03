@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI School Tool Program | DepEd Aligned Tools</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        deped: {
+                            blue: '#1e3a8a', // Deep Royal Blue
+                            red: '#dc2626',  // Vivid Red
+                            yellow: '#facc15', // Sun Yellow
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .hero-pattern {
+            background-color: #ffffff;
+            background-image: radial-gradient(#1e3a8a 0.5px, transparent 0.5px), radial-gradient(#1e3a8a 0.5px, #ffffff 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.05;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-deped-blue text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-20 items-center">
+                <!-- Logo / Brand -->
+                <div class="flex items-center space-x-3">
+                    <div class="bg-white text-deped-blue p-2 rounded-full h-10 w-10 flex items-center justify-center shadow-md">
+                        <i class="fa-solid fa-graduation-cap text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg leading-tight">AI School Tool Program</h1>
+                        <p class="text-xs text-blue-200 font-light tracking-wide">EMPOWERING FILIPINO EDUCATORS</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex space-x-8 items-center">
+                    <a href="#home" class="hover:text-yellow-400 transition font-medium text-sm uppercase tracking-wider">Home</a>
+                    <a href="#tools" class="hover:text-yellow-400 transition font-medium text-sm uppercase tracking-wider">AI Tools</a>
+                    <a href="#about" class="hover:text-yellow-400 transition font-medium text-sm uppercase tracking-wider">About</a>
+                    <a href="#contact" class="bg-deped-red hover:bg-red-700 text-white px-5 py-2 rounded-full font-medium transition shadow-lg transform hover:-translate-y-0.5 text-sm">
+                        Contact Us
+                    </a>
+                </div>
+
+                <!-- Mobile Menu Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="text-white hover:text-yellow-400 focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Panel -->
+        <div id="mobile-menu" class="hidden md:hidden bg-blue-900 border-t border-blue-800">
+            <div class="px-4 pt-2 pb-6 space-y-2">
+                <a href="#home" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">Home</a>
+                <a href="#tools" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">AI Tools</a>
+                <a href="#about" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">About</a>
+                <a href="#contact" class="block px-3 py-2 rounded-md bg-deped-red text-white hover:bg-red-700 mt-4 text-center">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="relative pt-20 pb-24 overflow-hidden">
+        <div class="absolute inset-0 hero-pattern z-0"></div>
+        
+        <!-- Decorative Elements -->
+        <div class="absolute top-20 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-100 opacity-50 blur-3xl z-0"></div>
+        <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-red-100 opacity-50 blur-3xl z-0"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+            <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-deped-blue text-xs font-bold tracking-widest uppercase mb-6 border border-blue-200">
+                Bagong Pilipinas, Bagong Edukasyon
+            </span>
+            <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight mb-6">
+                Empowering Teachers with <br>
+                <span class="text-transparent bg-clip-text bg-gradient-to-r from-deped-blue to-deped-red">Smart AI Tools</span>
+            </h1>
+            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 leading-relaxed">
+                Streamline your lesson planning, enhance instructional materials, and focus on what matters most—teaching. An initiative aligned with DepEd standards.
+            </p>
+            <div class="mt-10 flex justify-center gap-4">
+                <a href="#tools" class="px-8 py-4 bg-deped-blue text-white rounded-lg font-semibold shadow-lg hover:bg-blue-800 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center gap-2">
+                    <i class="fa-solid fa-rocket"></i> Explore Tools
+                </a>
+                <a href="#about" class="px-8 py-4 bg-white text-deped-blue border border-gray-200 rounded-lg font-semibold shadow-sm hover:bg-gray-50 transition flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info"></i> Learn More
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Section -->
+    <section id="tools" class="bg-white py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-16">
+                <h2 class="text-3xl font-bold text-deped-blue mb-4">AI-Powered Instructional Tools</h2>
+                <div class="h-1 w-24 bg-deped-red mx-auto rounded-full"></div>
+                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
+                    Select a tool below to launch the Gemini-powered assistant designed specifically for the K-12, MATATAG, and NEAP frameworks.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                
+                <!-- Tool 1: K-12 Lesson Planner -->
+                <a href="https://gemini.google.com/share/fc12e1d8ee61" target="_blank" class="group relative block h-full">
+                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
+                        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-deped-blue text-2xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-book-open"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-blue transition">K–12 Lesson Planner</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
+                            Craft K–12 aligned lesson plans complete with learning competencies, structured activities, and assessments efficiently.
+                        </p>
+                        <div class="flex items-center text-deped-blue font-semibold text-sm group-hover:text-blue-700">
+                            Launch Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Tool 2: MATATAG Curriculum -->
+                <a href="https://gemini.google.com/share/6ed13bd2f8bf" target="_blank" class="group relative block h-full">
+                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
+                        <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-deped-red text-2xl mb-6 group-hover:bg-deped-red group-hover:text-white transition">
+                            <i class="fa-solid fa-shield-halved"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-red transition">MATATAG Planner</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
+                            Generate lesson plans aligned with the new MATATAG Curriculum, focusing on foundational skills and contextualized tasks.
+                        </p>
+                        <div class="flex items-center text-deped-red font-semibold text-sm group-hover:text-red-700">
+                            Launch Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Tool 3: NEAP Planner -->
+                <a href="https://gemini.google.com/share/8ca4944eca50" target="_blank" class="group relative block h-full">
+                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
+                        <div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-user-tie"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition">NEAP Planner</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
+                            Plan according to NEAP professional development standards. Ideal for training portfolios and RPMS documentation.
+                        </p>
+                        <div class="flex items-center text-yellow-600 font-semibold text-sm group-hover:text-yellow-700">
+                            Launch Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Tool 4: Story Book Generator -->
+                <a href="https://gemini.google.com/share/c3e58707632f" target="_blank" class="group relative block h-full">
+                    <div class="absolute inset-0 bg-gradient-to-r from-teal-500 to-teal-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
+                    <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
+                        <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 text-2xl mb-6 group-hover:bg-teal-500 group-hover:text-white transition">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-600 transition">Story Book Generator</h3>
+                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
+                            Create engaging children's storybooks with customizable themes, characters, and local context for reading interventions.
+                        </p>
+                        <div class="flex items-center text-teal-600 font-semibold text-sm group-hover:text-teal-700">
+                            Launch Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="bg-blue-50 py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
+                <div class="mb-10 lg:mb-0 relative">
+                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-deped-red rounded-full opacity-10"></div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl relative z-10 border-l-4 border-deped-blue">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-4">Why AI in Education?</h3>
+                        <ul class="space-y-4">
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-deped-blue mt-1 mr-3"></i>
+                                <span class="text-slate-600">Reduces administrative burden on teachers.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-deped-blue mt-1 mr-3"></i>
+                                <span class="text-slate-600">Ensures alignment with latest curriculum standards.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-deped-blue mt-1 mr-3"></i>
+                                <span class="text-slate-600">Contextualizes learning materials for Filipino students.</span>
+                            </li>
+                            <li class="flex items-start">
+                                <i class="fa-solid fa-check-circle text-deped-blue mt-1 mr-3"></i>
+                                <span class="text-slate-600">Fosters innovation in teaching methodologies.</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-deped-blue rounded-full opacity-10"></div>
+                </div>
+                
+                <div>
+                    <h2 class="text-3xl font-bold text-deped-blue mb-4">Our Mission</h2>
+                    <h3 class="text-xl text-deped-red font-semibold mb-6">"Bagong Pilipinas, Bagong Edukasyon, Bagong Teknolohiya."</h3>
+                    <p class="text-slate-600 leading-relaxed mb-6">
+                        The AI School Tool Program aims to bridge the gap between traditional pedagogy and modern technology. We believe that Artificial Intelligence should not replace teachers, but rather serve as a powerful assistant that amplifies their capacity to inspire and educate.
+                    </p>
+                    <p class="text-slate-600 leading-relaxed">
+                        By providing accessible, free, and curriculum-aligned AI tools, we are committed to supporting the Department of Education's vision of producing resilient and competent learners.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="bg-deped-blue py-16 relative overflow-hidden">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-10 -mt-10"></div>
+        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <h2 class="text-3xl font-bold text-white mb-6">Ready to upgrade your teaching toolkit?</h2>
+            <p class="text-blue-100 mb-8 text-lg">Join thousands of Filipino educators integrating AI into their classrooms today.</p>
+            <a href="#tools" class="inline-block bg-deped-red text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-700 transition transform hover:scale-105">
+                Start Planning Now
+            </a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <!-- Brand -->
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
+                        <h4 class="text-white font-bold text-lg">AI School Tool Program</h4>
+                    </div>
+                    <p class="text-sm text-slate-400">
+                        An independent initiative supporting Filipino teachers through technology and innovation. Not officially affiliated with DepEd but fully aligned with its standards.
+                    </p>
+                </div>
+                
+                <!-- Links -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Quick Links</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms of Use</a></li>
+                        <li><a href="#" class="hover:text-white transition">Teacher Resources</a></li>
+                        <li><a href="#" class="hover:text-white transition">Feedback</a></li>
+                    </ul>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <h4 class="text-white font-bold text-lg mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-deped-blue hover:text-white transition">
+                            <i class="fa-brands fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-500 hover:text-white transition">
+                            <i class="fa-brands fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-600 hover:text-white transition">
+                            <i class="fa-brands fa-youtube"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+                <p>&copy; 2024 AI School Tool Program. All rights reserved.</p>
+                <p class="mt-2 text-xs opacity-70">"Bagong Pilipinas, Bagong Edukasyon, Bagong Teknolohiya."</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Menu Script -->
+    <script>
+        const btn = document.getElementById('mobile-menu-btn');
+        const menu = document.getElementById('mobile-menu');
+
+        btn.addEventListener('click', () => {
+            menu.classList.toggle('hidden');
+        });
+
+        // Close mobile menu when a link is clicked
+        const mobileLinks = menu.querySelectorAll('a');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                menu.classList.add('hidden');
+            });
+        });
+    </script>
+</body>
+</html>
