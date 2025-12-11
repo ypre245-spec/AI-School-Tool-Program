@@ -50,6 +50,20 @@
             background-position: 0 0, 10px 10px;
             opacity: 0.05;
         }
+        /* Scroll Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        /* Hide element helper for filtering */
+        .hidden-tool {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
@@ -60,7 +74,6 @@
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo / Brand -->
                 <div class="flex items-center space-x-3">
-                    <!-- Replaced Icon with Image Logo -->
                     <img src="https://ui-avatars.com/api/?name=AI+School&background=ffffff&color=1e3a8a&size=128&rounded=true&bold=true" 
                          alt="AI School Tool Logo" 
                          class="h-10 w-10 rounded-full shadow-md border-2 border-white/20">
@@ -108,7 +121,7 @@
         <div class="absolute top-20 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-blue-100 opacity-50 blur-3xl z-0"></div>
         <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-red-100 opacity-50 blur-3xl z-0"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
             <span class="inline-block py-1 px-3 rounded-full bg-blue-100 text-deped-blue text-xs font-bold tracking-widest uppercase mb-6 border border-blue-200">
                 Bagong Pilipinas, Bagong Edukasyon
             </span>
@@ -133,7 +146,7 @@
     <!-- Tools Section -->
     <section id="tools" class="bg-white py-24 relative">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
+            <div class="text-center mb-10 reveal">
                 <h2 class="text-3xl font-bold text-deped-blue mb-4">AI-Powered Instructional Tools</h2>
                 <div class="h-1 w-24 bg-deped-red mx-auto rounded-full"></div>
                 <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
@@ -141,11 +154,30 @@
                 </p>
             </div>
 
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-deped-blue text-white ring-2 ring-deped-blue ring-offset-2" data-filter="all">
+                    All Tools
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-deped-blue" data-filter="planning">
+                    Planning
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-deped-blue" data-filter="content">
+                    Content Creation
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-deped-blue" data-filter="assessment">
+                    Assessment
+                </button>
+                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-slate-50 hover:text-deped-blue" data-filter="prof-dev">
+                    Prof. Dev
+                </button>
+            </div>
+
             <!-- Changed to lg:grid-cols-3 for balanced layout with 6 items -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
-                <!-- Tool 1: K-12 Lesson Planner -->
-                <a href="https://gemini.google.com/share/fc12e1d8ee61" target="_blank" class="group relative block h-full">
+                <!-- Tool 1: K-12 Lesson Planner (Planning) -->
+                <a href="https://gemini.google.com/share/fc12e1d8ee61" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
                     <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-deped-blue text-2xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
@@ -161,8 +193,8 @@
                     </div>
                 </a>
 
-                <!-- Tool 2: MATATAG Curriculum -->
-                <a href="https://gemini.google.com/share/6ed13bd2f8bf" target="_blank" class="group relative block h-full">
+                <!-- Tool 2: MATATAG Curriculum (Planning) -->
+                <a href="https://gemini.google.com/share/6ed13bd2f8bf" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
                     <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-deped-red text-2xl mb-6 group-hover:bg-deped-red group-hover:text-white transition">
@@ -178,8 +210,8 @@
                     </div>
                 </a>
 
-                <!-- Tool 3: NEAP Planner -->
-                <a href="https://gemini.google.com/share/8ca4944eca50" target="_blank" class="group relative block h-full">
+                <!-- Tool 3: NEAP Planner (Prof Dev) -->
+                <a href="https://gemini.google.com/share/8ca4944eca50" target="_blank" class="tool-card group relative block h-full reveal" data-category="prof-dev">
                     <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition">
@@ -195,8 +227,8 @@
                     </div>
                 </a>
 
-                <!-- Tool 4: Story Book Generator -->
-                <a href="https://gemini.google.com/share/c3e58707632f" target="_blank" class="group relative block h-full">
+                <!-- Tool 4: Story Book Generator (Content) -->
+                <a href="https://gemini.google.com/share/c3e58707632f" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
                     <div class="absolute inset-0 bg-gradient-to-r from-teal-500 to-teal-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 text-2xl mb-6 group-hover:bg-teal-500 group-hover:text-white transition">
@@ -212,8 +244,8 @@
                     </div>
                 </a>
 
-                <!-- Tool 5: TOS Generator -->
-                <a href="https://gemini.google.com/share/1263ce1a15e4" target="_blank" class="group relative block h-full">
+                <!-- Tool 5: TOS Generator (Assessment) -->
+                <a href="https://gemini.google.com/share/1263ce1a15e4" target="_blank" class="tool-card group relative block h-full reveal" data-category="assessment">
                     <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-purple-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 text-2xl mb-6 group-hover:bg-purple-600 group-hover:text-white transition">
@@ -229,8 +261,8 @@
                     </div>
                 </a>
 
-                <!-- Tool 6: AI Presentation Generator (NEW) -->
-                <a href="https://gemini.google.com/share/82563b1d563b" target="_blank" class="group relative block h-full">
+                <!-- Tool 6: AI Presentation Generator (Content) -->
+                <a href="https://gemini.google.com/share/82563b1d563b" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
                     <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
                     <div class="relative h-full bg-white border border-gray-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col">
                         <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 text-2xl mb-6 group-hover:bg-orange-500 group-hover:text-white transition">
@@ -254,7 +286,7 @@
     <section id="about" class="bg-blue-50 py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                <div class="mb-10 lg:mb-0 relative">
+                <div class="mb-10 lg:mb-0 relative reveal">
                     <div class="absolute -top-4 -left-4 w-24 h-24 bg-deped-red rounded-full opacity-10"></div>
                     <div class="bg-white p-8 rounded-2xl shadow-xl relative z-10 border-l-4 border-deped-blue">
                         <h3 class="text-2xl font-bold text-slate-900 mb-4">Why AI in Education?</h3>
@@ -280,7 +312,7 @@
                     <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-deped-blue rounded-full opacity-10"></div>
                 </div>
                 
-                <div>
+                <div class="reveal">
                     <h2 class="text-3xl font-bold text-deped-blue mb-4">Our Mission</h2>
                     <h3 class="text-xl text-deped-red font-semibold mb-6">"Bagong Pilipinas, Bagong Edukasyon, Bagong Teknolohiya."</h3>
                     <p class="text-slate-600 leading-relaxed mb-6">
@@ -295,7 +327,7 @@
     </section>
 
     <!-- Call to Action -->
-    <section class="bg-deped-blue py-16 relative overflow-hidden">
+    <section class="bg-deped-blue py-16 relative overflow-hidden reveal">
         <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full -mr-10 -mt-10"></div>
         <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
             <h2 class="text-3xl font-bold text-white mb-6">Ready to upgrade your teaching toolkit?</h2>
@@ -360,20 +392,69 @@
         </div>
     </footer>
 
-    <!-- Mobile Menu Script -->
+    <!-- Logic Script -->
     <script>
+        // 1. Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
 
-        btn.addEventListener('click', () => {
-            menu.classList.toggle('hidden');
-        });
+        if(btn && menu){
+            btn.addEventListener('click', () => {
+                menu.classList.toggle('hidden');
+            });
+            const mobileLinks = menu.querySelectorAll('a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menu.classList.add('hidden');
+                });
+            });
+        }
 
-        // Close mobile menu when a link is clicked
-        const mobileLinks = menu.querySelectorAll('a');
-        mobileLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                menu.classList.add('hidden');
+        // 2. Scroll Animation (Entrance Effects)
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        const revealElements = document.querySelectorAll('.reveal');
+        revealElements.forEach(el => observer.observe(el));
+
+        // 3. Tool Filtering Logic
+        const filterBtns = document.querySelectorAll('.filter-btn');
+        const toolCards = document.querySelectorAll('.tool-card');
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                // Update button states
+                filterBtns.forEach(b => {
+                    b.classList.remove('bg-deped-blue', 'text-white', 'ring-2', 'ring-deped-blue', 'ring-offset-2');
+                    b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+                });
+                btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
+                btn.classList.add('bg-deped-blue', 'text-white', 'ring-2', 'ring-deped-blue', 'ring-offset-2');
+
+                // Filter cards
+                const filterValue = btn.getAttribute('data-filter');
+                
+                toolCards.forEach(card => {
+                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                        card.classList.remove('hidden-tool');
+                        // Small animation reset for re-appearing items
+                        card.classList.remove('active');
+                        setTimeout(() => card.classList.add('active'), 50);
+                    } else {
+                        card.classList.add('hidden-tool');
+                    }
+                });
             });
         });
     </script>
