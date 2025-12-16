@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI School Tool Program | Holiday Edition 🎄</title>
+    <title>AI School Tool Program | Coming Soon 🎄</title>
     
     <!-- Favicon -->
     <link rel="icon" href="https://ui-avatars.com/api/?name=AI+School&background=b91c1c&color=fff&rounded=true" type="image/png">
@@ -45,31 +45,12 @@
     </script>
     
     <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
         .hero-pattern {
             background-color: #f8fafc;
             background-image: radial-gradient(#b91c1c 0.5px, transparent 0.5px), radial-gradient(#15803d 0.5px, #f8fafc 0.5px);
             background-size: 20px 20px;
             background-position: 0 0, 10px 10px;
             opacity: 0.1;
-        }
-        /* Scroll Animation Classes */
-        .reveal {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        .reveal.active {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        /* Hide element helper for filtering */
-        .hidden-tool {
-            display: none !important;
         }
 
         /* Snowflake Animation */
@@ -98,6 +79,62 @@
             50% { transform: translateX(80px); }
             100% { transform: translateX(0px); }
         }
+
+        /* New Gift Animation */
+        @keyframes gift-wiggle {
+            0%, 100% { transform: rotate(-6deg) scale(1); }
+            50% { transform: rotate(6deg) scale(1.1); }
+        }
+        .animate-gift {
+            animation: gift-wiggle 3s ease-in-out infinite;
+        }
+
+        /* Tooltip Styles */
+        .tooltip-trigger {
+            position: relative;
+            cursor: help;
+            text-decoration: underline;
+            text-decoration-style: dotted;
+            text-decoration-color: #1e3a8a;
+            text-underline-offset: 4px;
+        }
+        .tooltip-content {
+            visibility: hidden;
+            width: 220px;
+            background-color: #1e3a8a; /* deped-blue */
+            color: #fff;
+            text-align: center;
+            border-radius: 8px;
+            padding: 10px;
+            position: absolute;
+            z-index: 50;
+            bottom: 140%; /* Position above */
+            left: 50%;
+            transform: translateX(-50%);
+            opacity: 0;
+            transition: opacity 0.3s, transform 0.3s;
+            font-size: 0.85rem;
+            font-weight: normal;
+            line-height: 1.4;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            pointer-events: none;
+        }
+        .tooltip-trigger:hover .tooltip-content {
+            visibility: visible;
+            opacity: 1;
+            transform: translateX(-50%) translateY(5px);
+        }
+        .tooltip-content::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -6px;
+            border-width: 6px;
+            border-style: solid;
+            border-color: #1e3a8a transparent transparent transparent;
+        }
+
         .snowflake:nth-of-type(0) { left: 1%; animation-delay: 0s, 0s; }
         .snowflake:nth-of-type(1) { left: 10%; animation-delay: 1s, 1s; }
         .snowflake:nth-of-type(2) { left: 20%; animation-delay: 6s, .5s; }
@@ -105,9 +142,6 @@
         .snowflake:nth-of-type(4) { left: 40%; animation-delay: 2s, 2s; }
         .snowflake:nth-of-type(5) { left: 50%; animation-delay: 8s, 3s; }
         .snowflake:nth-of-type(6) { left: 60%; animation-delay: 6s, 2s; }
-        .snowflake:nth-of-type(7) { left: 70%; animation-delay: 2.5s, 1s; }
-        .snowflake:nth-of-type(8) { left: 80%; animation-delay: 1s, 0s; }
-        .snowflake:nth-of-type(9) { left: 90%; animation-delay: 3s, 1.5s; }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen">
@@ -119,439 +153,164 @@
     <div class="snowflake">❆</div>
     <div class="snowflake">❅</div>
     <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
 
     <!-- Navigation -->
     <nav class="bg-gradient-to-r from-xmas-red to-deped-blue text-white shadow-lg sticky top-0 z-50 border-b-4 border-xmas-gold">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-20 items-center">
+            <div class="flex justify-center h-20 items-center">
                 <!-- Logo / Brand -->
                 <div class="flex items-center space-x-3">
                     <div class="relative">
                         <img src="https://ui-avatars.com/api/?name=AI+School&background=ffffff&color=1e3a8a&size=128&rounded=true&bold=true" 
                              alt="AI School Tool Logo" 
                              class="h-10 w-10 rounded-full shadow-md border-2 border-white/20">
-                        <!-- Santa Hat Icon Overlay -->
                         <i class="fa-solid fa-hat-santa text-white absolute -top-4 -right-2 text-xl drop-shadow-md transform rotate-12"></i>
                     </div>
                     <div>
                         <h1 class="font-holiday font-bold text-2xl leading-tight">AI School Tool Program</h1>
-                        <p class="text-xs text-blue-100 font-light tracking-wide uppercase">Holiday Edition 🎄</p>
+                        <p class="text-xs text-blue-100 font-light tracking-wide uppercase">Coming Soon</p>
                     </div>
                 </div>
-
-                <!-- Desktop Menu -->
-                <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#home" class="hover:text-xmas-gold transition font-medium text-sm uppercase tracking-wider">Home</a>
-                    <a href="#tools" class="hover:text-xmas-gold transition font-medium text-sm uppercase tracking-wider">AI Gifts</a>
-                    <a href="#about" class="hover:text-xmas-gold transition font-medium text-sm uppercase tracking-wider">Mission</a>
-                    <a href="#contact" class="bg-white text-xmas-red hover:bg-green-100 px-5 py-2 rounded-full font-bold transition shadow-lg transform hover:-translate-y-0.5 text-sm">
-                        <i class="fa-solid fa-gift mr-1"></i> Contact Us
-                    </a>
-                </div>
-
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden flex items-center">
-                    <button id="mobile-menu-btn" class="text-white hover:text-xmas-gold focus:outline-none">
-                        <i class="fa-solid fa-bars text-2xl"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-deped-blue border-t border-blue-800">
-            <div class="px-4 pt-2 pb-6 space-y-2">
-                <a href="#home" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">Home</a>
-                <a href="#tools" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">AI Gifts</a>
-                <a href="#about" class="block px-3 py-2 rounded-md hover:bg-blue-800 transition">Mission</a>
-                <a href="#contact" class="block px-3 py-2 rounded-md bg-xmas-red text-white hover:bg-red-700 mt-4 text-center">Contact Us</a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section id="home" class="relative pt-20 pb-24 overflow-hidden">
+    <!-- Main Content -->
+    <section class="flex-grow flex flex-col items-center justify-center text-center p-8 relative overflow-hidden min-h-[60vh]">
         <div class="absolute inset-0 hero-pattern z-0"></div>
         
         <!-- Decorative Elements -->
         <div class="absolute top-20 right-0 -mr-20 -mt-20 w-96 h-96 rounded-full bg-red-100 opacity-50 blur-3xl z-0"></div>
         <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-green-100 opacity-50 blur-3xl z-0"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
-            <span class="inline-block py-1 px-3 rounded-full bg-red-100 text-xmas-red text-xs font-bold tracking-widest uppercase mb-6 border border-red-200">
-                <i class="fa-solid fa-snowflake mr-1"></i> Maligayang Pasko, Teachers!
-            </span>
-            <h1 class="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight mb-6 font-holiday">
-                Unwrap the Gift of <br>
-                <span class="text-transparent bg-clip-text bg-gradient-to-r from-xmas-red to-xmas-green drop-shadow-sm">Smart AI Tools</span>
+        <div class="relative z-10 max-w-2xl mx-auto bg-white/90 backdrop-blur-md p-10 rounded-3xl shadow-xl border-4 border-slate-100">
+            <!-- Icon -->
+            <div class="mb-8 relative inline-block">
+                <div class="w-24 h-24 bg-deped-blue rounded-full flex items-center justify-center text-white text-4xl shadow-lg animate-gift">
+                    <i class="fa-solid fa-gift"></i>
+                </div>
+                <div class="absolute -top-2 -right-2 w-10 h-10 bg-xmas-red rounded-full flex items-center justify-center text-white text-xl shadow border-2 border-white transform rotate-12">
+                    <i class="fa-solid fa-star"></i>
+                </div>
+            </div>
+
+            <h1 class="text-4xl md:text-5xl font-bold font-holiday text-slate-900 mb-4">
+                Something Magical is Coming
             </h1>
-            <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 leading-relaxed">
-                This holiday season, give yourself the gift of time. Streamline your planning and focus on the joy of teaching.
+            <h2 class="text-xl font-semibold text-xmas-red mb-6 uppercase tracking-wide">Get Ready for Launch</h2>
+            
+            <p class="text-lg text-slate-600 mb-8 leading-relaxed max-w-3xl mx-auto">
+                We are preparing to unwrap the future of education. Soon you will be able to effortlessly generate 
+                <span class="tooltip-trigger font-bold text-deped-blue transition-colors hover:text-xmas-red">
+                    Lesson Plans
+                    <span class="tooltip-content">K-12 and MATATAG aligned daily & unit plans customized for your learners.</span>
+                </span>, create engaging 
+                <span class="tooltip-trigger font-bold text-deped-blue transition-colors hover:text-xmas-red">
+                    Story Books
+                    <span class="tooltip-content">Contextualized stories with illustrations suitable for diverse reading levels.</span>
+                </span>, build precise 
+                <span class="tooltip-trigger font-bold text-deped-blue transition-colors hover:text-xmas-red">
+                    TOS & Exams
+                    <span class="tooltip-content">Automated Table of Specifications and periodic test generation.</span>
+                </span>, and streamline 
+                <span class="tooltip-trigger font-bold text-deped-blue transition-colors hover:text-xmas-red">
+                    PMES with COI
+                    <span class="tooltip-content">Performance management tools integrated with Classroom Observation instruments.</span>
+                </span>, and more—all designed to help you teach smarter, not harder.
             </p>
-            <div class="mt-10 flex justify-center gap-4">
-                <a href="#tools" class="px-8 py-4 bg-xmas-red text-white rounded-lg font-semibold shadow-lg hover:bg-red-700 hover:shadow-xl transition transform hover:-translate-y-1 flex items-center gap-2">
-                    <i class="fa-solid fa-sleigh"></i> Open Tools
-                </a>
-                <a href="#about" class="px-8 py-4 bg-white text-xmas-green border border-green-200 rounded-lg font-semibold shadow-sm hover:bg-green-50 transition flex items-center gap-2">
-                    <i class="fa-solid fa-star"></i> Learn More
-                </a>
-            </div>
-        </div>
-    </section>
 
-    <!-- Tools Section -->
-    <section id="tools" class="bg-white py-24 relative">
-        <!-- Decoration -->
-        <div class="absolute top-0 left-0 w-full h-4 bg-gradient-to-r from-xmas-red via-xmas-green to-xmas-red"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-10 reveal">
-                <h2 class="text-4xl font-bold text-xmas-green mb-4 font-holiday"><i class="fa-solid fa-holly-berry mr-2 text-xmas-red"></i>Your Digital Stocking Stuffers</h2>
-                <div class="h-1 w-24 bg-xmas-gold mx-auto rounded-full"></div>
-                <p class="mt-4 text-slate-600 max-w-2xl mx-auto">
-                    Select a tool below to launch the Gemini-powered assistant. Designed to be as helpful as Santa's elves!
-                </p>
-            </div>
-
-            <!-- Filter Buttons -->
-            <div class="flex flex-wrap justify-center gap-3 mb-12 reveal">
-                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-xmas-green text-white ring-2 ring-xmas-green ring-offset-2" data-filter="all">
-                    All Gifts
-                </button>
-                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-red-50 hover:text-xmas-red" data-filter="planning">
-                    Planning
-                </button>
-                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-red-50 hover:text-xmas-red" data-filter="content">
-                    Content Creation
-                </button>
-                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-red-50 hover:text-xmas-red" data-filter="assessment">
-                    Assessment
-                </button>
-                <button class="filter-btn px-5 py-2 rounded-full text-sm font-semibold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:bg-red-50 hover:text-xmas-red" data-filter="prof-dev">
-                    Prof. Dev
-                </button>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                
-                <!-- Tool 1: K-12 Lesson Planner (Planning) -->
-                <a href="https://gemini.google.com/share/fc12e1d8ee61" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
-                    <div class="absolute inset-0 bg-gradient-to-r from-blue-600 to-blue-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-blue-400">
-                        <!-- Bow Tie Decoration -->
-                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-red rounded-full flex items-center justify-center text-white shadow-md transform rotate-12 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-ribbon"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center text-deped-blue text-2xl mb-6 group-hover:bg-blue-600 group-hover:text-white transition">
-                            <i class="fa-solid fa-book-open"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-blue transition">K–12 Lesson Planner</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Craft K–12 aligned lesson plans complete with learning competencies, structured activities, and assessments.
-                        </p>
-                        <div class="flex items-center text-deped-blue font-semibold text-sm group-hover:text-blue-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
+            <!-- Countdown Timer -->
+            <div class="mb-8 w-full max-w-md mx-auto">
+                <p class="text-sm font-semibold text-deped-blue uppercase tracking-widest mb-4">Launching In</p>
+                <div class="grid grid-cols-4 gap-2 md:gap-4" id="countdown-display">
+                    <div class="bg-deped-blue text-white rounded-xl p-3 shadow-md flex flex-col items-center transform hover:scale-105 transition">
+                        <span class="text-2xl md:text-3xl font-bold font-holiday" id="days">00</span>
+                        <span class="text-[10px] md:text-xs uppercase opacity-80 mt-1">Days</span>
                     </div>
-                </a>
-
-                <!-- Tool 2: MATATAG Curriculum (Planning) -->
-                <a href="https://gemini.google.com/share/6ed13bd2f8bf" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-600 to-red-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-red-400">
-                         <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-green rounded-full flex items-center justify-center text-white shadow-md transform -rotate-12 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-holly-berry"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-red-50 rounded-xl flex items-center justify-center text-deped-red text-2xl mb-6 group-hover:bg-deped-red group-hover:text-white transition">
-                            <i class="fa-solid fa-shield-halved"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-red transition">MATATAG Planner</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Generate lesson plans aligned with the new MATATAG Curriculum, focusing on foundational skills.
-                        </p>
-                        <div class="flex items-center text-deped-red font-semibold text-sm group-hover:text-red-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
+                    <div class="bg-xmas-red text-white rounded-xl p-3 shadow-md flex flex-col items-center transform hover:scale-105 transition delay-75">
+                        <span class="text-2xl md:text-3xl font-bold font-holiday" id="hours">00</span>
+                        <span class="text-[10px] md:text-xs uppercase opacity-80 mt-1">Hours</span>
                     </div>
-                </a>
-
-                <!-- Tool 3: NEAP Planner (Prof Dev) -->
-                <a href="https://gemini.google.com/share/8ca4944eca50" target="_blank" class="tool-card group relative block h-full reveal" data-category="prof-dev">
-                    <div class="absolute inset-0 bg-gradient-to-r from-yellow-500 to-yellow-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-yellow-400">
-                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-red rounded-full flex items-center justify-center text-white shadow-md transform rotate-6 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-star"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-yellow-50 rounded-xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:bg-yellow-500 group-hover:text-white transition">
-                            <i class="fa-solid fa-user-tie"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition">NEAP Planner</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Plan according to NEAP professional development standards. Ideal for training portfolios.
-                        </p>
-                        <div class="flex items-center text-yellow-600 font-semibold text-sm group-hover:text-yellow-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
+                    <div class="bg-xmas-green text-white rounded-xl p-3 shadow-md flex flex-col items-center transform hover:scale-105 transition delay-100">
+                        <span class="text-2xl md:text-3xl font-bold font-holiday" id="minutes">00</span>
+                        <span class="text-[10px] md:text-xs uppercase opacity-80 mt-1">Mins</span>
                     </div>
-                </a>
-
-                <!-- Tool 4: Story Book Generator (Content) -->
-                <a href="https://gemini.google.com/share/c3e58707632f" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
-                    <div class="absolute inset-0 bg-gradient-to-r from-teal-500 to-teal-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-teal-400">
-                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-gold rounded-full flex items-center justify-center text-white shadow-md transform -rotate-6 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-wand-sparkles"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-teal-50 rounded-xl flex items-center justify-center text-teal-600 text-2xl mb-6 group-hover:bg-teal-500 group-hover:text-white transition">
-                            <i class="fa-solid fa-book-journal-whills"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-600 transition">Story Book Generator</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Create engaging children's storybooks with customizable themes and local context.
-                        </p>
-                        <div class="flex items-center text-teal-600 font-semibold text-sm group-hover:text-teal-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
+                    <div class="bg-xmas-gold text-slate-900 rounded-xl p-3 shadow-md flex flex-col items-center transform hover:scale-105 transition delay-150">
+                        <span class="text-2xl md:text-3xl font-bold font-holiday" id="seconds">00</span>
+                        <span class="text-[10px] md:text-xs uppercase opacity-80 mt-1">Secs</span>
                     </div>
-                </a>
-
-                <!-- Tool 5: TOS Generator (Assessment) -->
-                <a href="https://gemini.google.com/share/8b3073de1fd0" target="_blank" class="tool-card group relative block h-full reveal" data-category="assessment">
-                    <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-purple-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-purple-400">
-                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-green rounded-full flex items-center justify-center text-white shadow-md transform rotate-12 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-list-check"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600 text-2xl mb-6 group-hover:bg-purple-600 group-hover:text-white transition">
-                            <i class="fa-solid fa-table-list"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition">TOS Generator</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Create a Table of Specifications (TOS) quickly to ensure your periodic tests are valid and balanced.
-                        </p>
-                        <div class="flex items-center text-purple-600 font-semibold text-sm group-hover:text-purple-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
-                    </div>
-                </a>
-
-                <!-- Tool 6: AI Presentation Generator (Content) -->
-                <a href="https://gemini.google.com/share/c3d0942eeb13" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
-                    <div class="absolute inset-0 bg-gradient-to-r from-orange-500 to-orange-400 rounded-2xl transform rotate-1 opacity-0 group-hover:opacity-100 transition duration-300"></div>
-                    <div class="relative h-full bg-white border-2 border-slate-100 rounded-2xl p-8 shadow-lg group-hover:-translate-y-2 transition duration-300 flex flex-col group-hover:border-orange-400">
-                        <div class="absolute -top-3 -right-3 w-8 h-8 bg-xmas-red rounded-full flex items-center justify-center text-white shadow-md transform -rotate-12 group-hover:scale-110 transition">
-                            <i class="fa-solid fa-video"></i>
-                        </div>
-                        <div class="w-14 h-14 bg-orange-50 rounded-xl flex items-center justify-center text-orange-600 text-2xl mb-6 group-hover:bg-orange-500 group-hover:text-white transition">
-                            <i class="fa-solid fa-chalkboard-user"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-orange-600 transition">AI Presentation Generator</h3>
-                        <p class="text-slate-600 text-sm leading-relaxed mb-6 flex-grow">
-                            Instantly create structured presentation outlines and slide content tailored to your lesson topics.
-                        </p>
-                        <div class="flex items-center text-orange-600 font-semibold text-sm group-hover:text-orange-700">
-                            Unwrap Tool <i class="fa-solid fa-gift ml-2 transition-transform group-hover:translate-x-1"></i>
-                        </div>
-                    </div>
-                </a>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- About Section -->
-    <section id="about" class="bg-red-50 py-24 relative overflow-hidden">
-        <!-- Background decor -->
-        <i class="fa-solid fa-tree text-green-100 text-9xl absolute -bottom-10 -right-10 opacity-50 rotate-12"></i>
-        <i class="fa-solid fa-candy-cane text-red-100 text-8xl absolute top-10 -left-10 opacity-50 -rotate-12"></i>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="lg:grid lg:grid-cols-2 lg:gap-16 items-center">
-                <div class="mb-10 lg:mb-0 relative reveal">
-                    <div class="absolute -top-4 -left-4 w-24 h-24 bg-xmas-green rounded-full opacity-10"></div>
-                    <div class="bg-white p-8 rounded-2xl shadow-xl relative z-10 border-l-4 border-xmas-red">
-                        <h3 class="text-2xl font-bold text-slate-900 mb-4 font-holiday text-3xl">Why AI this Christmas?</h3>
-                        <ul class="space-y-4">
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-check-circle text-xmas-green mt-1 mr-3"></i>
-                                <span class="text-slate-600">Finish grading and planning faster so you can enjoy the holidays.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-check-circle text-xmas-green mt-1 mr-3"></i>
-                                <span class="text-slate-600">Reduce the year-end rush administrative burden.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-check-circle text-xmas-green mt-1 mr-3"></i>
-                                <span class="text-slate-600">Create fun, contextualized materials for the new year.</span>
-                            </li>
-                            <li class="flex items-start">
-                                <i class="fa-solid fa-check-circle text-xmas-green mt-1 mr-3"></i>
-                                <span class="text-slate-600">Start 2025 with innovation in your classroom.</span>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="absolute -bottom-4 -right-4 w-32 h-32 bg-xmas-gold rounded-full opacity-20"></div>
-                </div>
-                
-                <div class="reveal">
-                    <h2 class="text-3xl font-bold text-xmas-red mb-4 font-holiday">Our Holiday Mission</h2>
-                    <h3 class="text-xl text-xmas-green font-semibold mb-6">"Bagong Taon, Bagong Edukasyon."</h3>
-                    <p class="text-slate-600 leading-relaxed mb-6">
-                        The AI School Tool Program aims to be the helping hand every teacher deserves. We believe that Artificial Intelligence should not replace teachers, but rather act as a supportive elf that amplifies their capacity to inspire.
-                    </p>
-                    <p class="text-slate-600 leading-relaxed">
-                        By providing accessible and curriculum-aligned tools, we hope to give you back the precious gift of time for your family and yourself.
-                    </p>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- Call to Action -->
-    <section class="bg-xmas-green py-16 relative overflow-hidden reveal border-t-8 border-xmas-red">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full -mr-10 -mt-10"></div>
-        <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
-            <h2 class="text-4xl font-bold text-white mb-6 font-holiday">Ready to unwrap your potential?</h2>
-            <p class="text-green-100 mb-8 text-lg">Join thousands of Filipino educators integrating AI into their classrooms today.</p>
-            <a href="#tools" class="inline-block bg-xmas-red text-white font-bold py-3 px-8 rounded-full shadow-lg hover:bg-red-800 transition transform hover:scale-105 border-2 border-white">
-                <i class="fa-solid fa-sleigh mr-2"></i> Start Planning Now
-            </a>
+            <div class="inline-flex items-center gap-2 px-6 py-3 bg-slate-100 text-slate-600 rounded-full font-medium text-sm border border-slate-200">
+                <i class="fa-regular fa-calendar-check text-deped-blue"></i>
+                <span>Mark Your Calendars: <span class="font-bold text-slate-900">January 6, 2026</span></span>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer id="contact" class="bg-slate-900 text-slate-300 py-12 border-t border-slate-800 relative">
-        <!-- Snow on Footer -->
-         <div class="absolute top-0 left-0 w-full h-2 bg-white opacity-20"></div>
-
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-                <!-- Brand -->
-                <div>
-                    <div class="flex items-center space-x-2 mb-4">
-                        <img src="https://ui-avatars.com/api/?name=AI+School&background=1e3a8a&color=fff&size=64&rounded=true&bold=true" 
-                             alt="AI School Tool Logo" 
-                             class="h-8 w-8 rounded-full border border-slate-600">
-                        <h4 class="text-white font-bold text-lg font-holiday">AI School Tool Program</h4>
-                    </div>
-                    <p class="text-sm text-slate-400">
-                        An independent initiative supporting Filipino teachers through technology and innovation. Wishing you a restful break!
-                    </p>
-                </div>
-                
-                <!-- Links -->
-                <div>
-                    <h4 class="text-white font-bold text-lg mb-4 font-holiday text-xl">Quick Links</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="#" class="hover:text-xmas-gold transition">Privacy Policy</a></li>
-                        <li><a href="#" class="hover:text-xmas-gold transition">Terms of Use</a></li>
-                        <li><a href="#" class="hover:text-xmas-gold transition">Teacher Resources</a></li>
-                        <li><a href="#" class="hover:text-xmas-gold transition">Send a Greeting</a></li>
-                    </ul>
-                </div>
-
-                <!-- Social -->
-                <div>
-                    <h4 class="text-white font-bold text-lg mb-4 font-holiday text-xl">Connect With Us</h4>
-                    <div class="flex space-x-4">
-                        <a href="https://www.facebook.com/y2k2009/" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-deped-blue hover:text-white transition">
-                            <i class="fa-brands fa-facebook-f"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-sky-500 hover:text-white transition">
-                            <i class="fa-brands fa-twitter"></i>
-                        </a>
-                        <a href="#" class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center hover:bg-red-600 hover:text-white transition">
-                            <i class="fa-brands fa-youtube"></i>
-                        </a>
-                    </div>
-                </div>
+    <footer class="bg-slate-900 text-slate-300 py-8 border-t border-slate-800 relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <div class="flex justify-center space-x-6 mb-6">
+                <a href="https://www.facebook.com/y2k2009/" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-brands fa-facebook-f text-xl"></i>
+                </a>
+                <a href="#" class="text-slate-400 hover:text-white transition">
+                    <i class="fa-solid fa-envelope text-xl"></i>
+                </a>
             </div>
             
-            <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500">
+            <div class="text-sm text-slate-500">
                 <p>&copy; 2025 AI School Tool Program. All rights reserved.</p>
-                <p class="mt-1">Created with holiday cheer by <span class="text-xmas-gold font-medium">DAVID JESS F. ASAURO</span></p>
-                <p class="mt-2 text-xs opacity-70">"Bagong Pilipinas, Bagong Edukasyon, Maligayang Pasko."</p>
+                <p class="mt-1">Created by: <span class="text-slate-300 font-semibold">DAVID JESS F. ASAURO</span> using GEMINI</p>
+                <p class="mt-1 text-xs opacity-70">"Bagong Pilipinas, Bagong Edukasyon."</p>
             </div>
         </div>
     </footer>
 
-    <!-- Logic Script -->
     <script>
-        // 1. Mobile Menu Toggle
-        const btn = document.getElementById('mobile-menu-btn');
-        const menu = document.getElementById('mobile-menu');
+        (function() {
+            // Set the date we're counting down to
+            const countDownDate = new Date("Jan 6, 2026 00:00:00").getTime();
 
-        if(btn && menu){
-            btn.addEventListener('click', () => {
-                menu.classList.toggle('hidden');
-            });
-            const mobileLinks = menu.querySelectorAll('a');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', () => {
-                    menu.classList.add('hidden');
-                });
-            });
-        }
+            // Update the count down every 1 second
+            const countdownInterval = setInterval(function() {
 
-        // 2. Scroll Animation (Entrance Effects)
-        const observerOptions = {
-            root: null,
-            rootMargin: '0px',
-            threshold: 0.1
-        };
+                // Get today's date and time
+                const now = new Date().getTime();
 
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active');
-                }
-            });
-        }, observerOptions);
+                // Find the distance between now and the count down date
+                const distance = countDownDate - now;
 
-        const revealElements = document.querySelectorAll('.reveal');
-        revealElements.forEach(el => observer.observe(el));
+                // Time calculations for days, hours, minutes and seconds
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        // 3. Tool Filtering Logic
-        const filterBtns = document.querySelectorAll('.filter-btn');
-        const toolCards = document.querySelectorAll('.tool-card');
+                // Output the result in an element with id="demo"
+                const dayEl = document.getElementById("days");
+                const hourEl = document.getElementById("hours");
+                const minEl = document.getElementById("minutes");
+                const secEl = document.getElementById("seconds");
 
-        filterBtns.forEach(btn => {
-            btn.addEventListener('click', () => {
-                // Update button states
-                filterBtns.forEach(b => {
-                    b.classList.remove('bg-xmas-green', 'text-white', 'ring-2', 'ring-xmas-green', 'ring-offset-2');
-                    b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-                });
-                btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-                btn.classList.add('bg-xmas-green', 'text-white', 'ring-2', 'ring-xmas-green', 'ring-offset-2');
+                if(dayEl) dayEl.innerHTML = days;
+                if(hourEl) hourEl.innerHTML = hours;
+                if(minEl) minEl.innerHTML = minutes;
+                if(secEl) secEl.innerHTML = seconds;
 
-                // Filter cards
-                const filterValue = btn.getAttribute('data-filter');
-                
-                toolCards.forEach(card => {
-                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
-                        card.classList.remove('hidden-tool');
-                        // Small animation reset for re-appearing items
-                        card.classList.remove('active');
-                        setTimeout(() => card.classList.add('active'), 50);
-                    } else {
-                        card.classList.add('hidden-tool');
+                // If the count down is over, write some text 
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    const display = document.getElementById("countdown-display");
+                    if(display) {
+                        display.innerHTML = '<div class="col-span-4 text-3xl font-bold text-xmas-red font-holiday py-4">WE ARE LIVE!</div>';
                     }
-                });
-            });
-        });
+                }
+            }, 1000);
+        })();
     </script>
+
 </body>
 </html>
-
-
-
-
-
-
-
-
