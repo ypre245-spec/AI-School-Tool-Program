@@ -867,9 +867,10 @@
                                 
                                 <!-- Image with Fallback -->
                                 <img src="gcash.jpg" 
+                                     id="support-img"
                                      onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/fbbf24?text=Place+gcash.jpg+Here';" 
                                      alt="Support via GCash" 
-                                     class="w-full h-auto transform group-hover:scale-105 transition duration-500">
+                                     class="w-full h-auto transform group-hover:scale-105 transition duration-500 cursor-zoom-in">
                             </div>
                         </div>
                     </div>
@@ -889,6 +890,12 @@
             </div>
         </div>
     </footer>
+
+    <!-- Full Screen Image Modal -->
+    <div id="image-modal" class="fixed inset-0 z-[200] bg-black/95 hidden flex items-center justify-center p-4 cursor-zoom-out transition-opacity duration-300 opacity-0 backdrop-blur-sm">
+        <img id="modal-img" src="" alt="Full Screen Support" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transform scale-95 transition-transform duration-300 border-2 border-ny-gold">
+        <p class="absolute bottom-10 text-white/50 text-sm animate-pulse">Click anywhere to close</p>
+    </div>
 
     <!-- Logic Script -->
     <script>
@@ -1544,6 +1551,33 @@
                          supportIcon.classList.remove('fa-chevron-up');
                          supportIcon.classList.add('fa-chevron-down');
                      }
+                 });
+             }
+
+             // Full Screen Image Modal Logic
+             const supportImg = document.getElementById('support-img');
+             const modal = document.getElementById('image-modal');
+             const modalImg = document.getElementById('modal-img');
+
+             if(supportImg && modal && modalImg) {
+                 supportImg.addEventListener('click', () => {
+                     modal.classList.remove('hidden');
+                     // Small delay to allow display:flex to apply before opacity transition
+                     setTimeout(() => {
+                        modal.classList.remove('opacity-0');
+                        modalImg.classList.remove('scale-95');
+                        modalImg.classList.add('scale-100');
+                     }, 10);
+                     modalImg.src = supportImg.src;
+                 });
+
+                 modal.addEventListener('click', () => {
+                     modal.classList.add('opacity-0');
+                     modalImg.classList.remove('scale-100');
+                     modalImg.classList.add('scale-95');
+                     setTimeout(() => {
+                        modal.classList.add('hidden');
+                     }, 300);
                  });
              }
         });
