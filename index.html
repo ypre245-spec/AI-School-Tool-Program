@@ -882,11 +882,6 @@
                 <div class="mt-4 px-4 py-2 bg-slate-800 rounded-full inline-block">
                     Created with 2025 vision by <span class="text-ny-gold font-bold">DAVID JESS F. ASAURO</span>
                 </div>
-                
-                <!-- Wellness Mode Toggle (For Demo Purposes) -->
-                <button id="toggleWellness" class="mt-8 text-xs text-slate-600 hover:text-slate-400 underline cursor-pointer">
-                    [Admin] Test Wellness Mode
-                </button>
             </div>
         </div>
     </footer>
@@ -1520,16 +1515,6 @@
              const loadMoreBtn = document.getElementById('loadMoreBtn');
              if(loadMoreBtn) {
                  loadMoreBtn.addEventListener('click', loadMoreStories);
-             }
-             
-             // Wellness Mode Test Button
-             const wellnessBtn = document.getElementById('toggleWellness');
-             if(wellnessBtn) {
-                 wellnessBtn.addEventListener('click', () => {
-                     const isCurrentlyActive = document.body.classList.contains('wellness-active');
-                     toggleWellnessMode(!isCurrentlyActive);
-                     wellnessBtn.innerText = isCurrentlyActive ? "[Admin] Test Wellness Mode" : "[Admin] Exit Wellness Mode";
-                 });
              }
 
              // Support Section Toggle Logic
