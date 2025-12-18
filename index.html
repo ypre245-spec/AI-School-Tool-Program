@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI School Tool Program | Holiday Edition 🎄</title>
+    <title>AI School Tool Program | New Year 2025 🎉</title>
     
     <!-- Favicon -->
-    <link rel="icon" href="https://ui-avatars.com/api/?name=AI+School&background=b91c1c&color=fff&rounded=true" type="image/png">
+    <link rel="icon" href="https://ui-avatars.com/api/?name=AI+School&background=fbbf24&color=000&rounded=true" type="image/png">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Google Fonts: Inter & Mountains of Christmas -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Inter & Cinzel (New Year Font) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Cinzel:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -23,20 +23,21 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        holiday: ['"Mountains of Christmas"', 'cursive'],
+                        holiday: ['"Cinzel"', 'serif'], // Changed to Cinzel for New Year
                     },
                     colors: {
                         deped: {
-                            blue: '#1e3a8a', // Deep Royal Blue
-                            red: '#dc2626',  // Vivid Red
-                            yellow: '#facc15', // Sun Yellow
+                            blue: '#1e3a8a', 
+                            red: '#dc2626',
+                            yellow: '#facc15',
                             light: '#f8fafc',
                         },
-                        xmas: {
-                            red: '#b91c1c',
-                            green: '#15803d',
+                        ny: { // New Year Palette
                             gold: '#fbbf24',
-                            snow: '#f1f5f9'
+                            goldlight: '#fcd34d',
+                            midnight: '#0f172a',
+                            silver: '#e2e8f0',
+                            accent: '#4f46e5' // Indigo
                         },
                         wellness: {
                             dark: '#0f172a',
@@ -45,12 +46,13 @@
                         }
                     },
                     boxShadow: {
-                        'glow': '0 0 15px rgba(220, 38, 38, 0.3)',
+                        'glow': '0 0 20px rgba(251, 191, 36, 0.4)', // Gold Glow
                         'card-hover': '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
                     },
                     animation: {
                         'float': 'float 6s ease-in-out infinite',
                         'breathe': 'breathe 4s ease-in-out infinite',
+                        'spin-slow': 'spin 8s linear infinite',
                     },
                     keyframes: {
                         float: {
@@ -69,22 +71,24 @@
     
     <style>
         .glass-nav {
-            background: rgba(30, 58, 138, 0.95);
+            background: rgba(15, 23, 42, 0.95); /* Midnight Blue */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2); /* Gold border */
         }
         
         .hero-pattern {
             background-color: #f8fafc;
-            background-image: radial-gradient(#b91c1c 0.5px, transparent 0.5px), radial-gradient(#15803d 0.5px, #f8fafc 0.5px);
+            /* Gold and Blue dots */
+            background-image: radial-gradient(#fbbf24 0.5px, transparent 0.5px), radial-gradient(#1e3a8a 0.5px, #f8fafc 0.5px);
             background-size: 24px 24px;
             background-position: 0 0, 12px 12px;
-            opacity: 0.15;
+            opacity: 0.2;
         }
         
         .chat-pattern {
             background-color: #f8fafc;
-            background-image: radial-gradient(rgba(185, 28, 28, 0.05) 1px, transparent 1px), radial-gradient(rgba(21, 128, 61, 0.05) 1px, #f8fafc 1px);
+            background-image: radial-gradient(rgba(251, 191, 36, 0.1) 1px, transparent 1px), radial-gradient(rgba(30, 58, 138, 0.05) 1px, #f8fafc 1px);
             background-size: 30px 30px;
             background-position: 0 0, 15px 15px;
         }
@@ -141,43 +145,50 @@
             display: none !important;
         }
 
-        /* Improved Snowflake Animation */
-        .snowflake {
-            color: #dbeafe;
+        /* Falling Stars/Confetti Animation (Replaces Snowflakes) */
+        .star {
+            color: #fbbf24; /* Gold */
             font-size: 1.2em;
             font-family: Arial;
-            text-shadow: 0 0 5px rgba(255,255,255,0.8);
+            text-shadow: 0 0 5px rgba(251, 191, 36, 0.8);
             position: fixed;
             top: -10%;
             z-index: 9999;
             user-select: none;
             cursor: default;
-            animation-name: snowflakes-fall, snowflakes-shake;
-            animation-duration: 12s, 4s;
+            animation-name: snowflakes-fall, snowflakes-shake; /* Reusing same keyframes */
+            animation-duration: 10s, 3s;
             animation-timing-function: linear, ease-in-out;
             animation-iteration-count: infinite, infinite;
             pointer-events: none;
-            opacity: 0.8;
+            opacity: 0.6;
         }
+        /* Make some stars silver/different */
+        .star:nth-child(even) {
+            color: #94a3b8; /* Silver */
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+            animation-duration: 12s, 4s;
+        }
+
         @keyframes snowflakes-fall {
             0% { top: -10%; }
             100% { top: 100%; }
         }
         @keyframes snowflakes-shake {
-            0% { transform: translateX(0px); }
-            50% { transform: translateX(80px); }
-            100% { transform: translateX(0px); }
+            0% { transform: translateX(0px) rotate(0deg); }
+            50% { transform: translateX(80px) rotate(180deg); }
+            100% { transform: translateX(0px) rotate(360deg); }
         }
-        .snowflake:nth-of-type(0) { left: 1%; animation-delay: 0s, 0s; }
-        .snowflake:nth-of-type(1) { left: 10%; animation-delay: 1s, 1s; }
-        .snowflake:nth-of-type(2) { left: 20%; animation-delay: 6s, .5s; }
-        .snowflake:nth-of-type(3) { left: 30%; animation-delay: 4s, 2s; }
-        .snowflake:nth-of-type(4) { left: 40%; animation-delay: 2s, 2s; }
-        .snowflake:nth-of-type(5) { left: 50%; animation-delay: 8s, 3s; }
-        .snowflake:nth-of-type(6) { left: 60%; animation-delay: 6s, 2s; }
-        .snowflake:nth-of-type(7) { left: 70%; animation-delay: 2.5s, 1s; }
-        .snowflake:nth-of-type(8) { left: 80%; animation-delay: 1s, 0s; }
-        .snowflake:nth-of-type(9) { left: 90%; animation-delay: 3s, 1.5s; }
+        .star:nth-of-type(0) { left: 1%; animation-delay: 0s, 0s; font-size: 1.5em; }
+        .star:nth-of-type(1) { left: 10%; animation-delay: 1s, 1s; }
+        .star:nth-of-type(2) { left: 20%; animation-delay: 6s, .5s; font-size: 0.8em; }
+        .star:nth-of-type(3) { left: 30%; animation-delay: 4s, 2s; }
+        .star:nth-of-type(4) { left: 40%; animation-delay: 2s, 2s; font-size: 1.2em; }
+        .star:nth-of-type(5) { left: 50%; animation-delay: 8s, 3s; }
+        .star:nth-of-type(6) { left: 60%; animation-delay: 6s, 2s; font-size: 1.5em; }
+        .star:nth-of-type(7) { left: 70%; animation-delay: 2.5s, 1s; }
+        .star:nth-of-type(8) { left: 80%; animation-delay: 1s, 0s; }
+        .star:nth-of-type(9) { left: 90%; animation-delay: 3s, 1.5s; font-size: 0.9em; }
 
         /* Custom Scrollbar */
         .custom-scroll::-webkit-scrollbar {
@@ -215,33 +226,33 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen font-sans selection:bg-xmas-red selection:text-white transition-colors duration-700">
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen font-sans selection:bg-ny-gold selection:text-ny-midnight transition-colors duration-700">
 
-    <!-- Preloader (Prevents Content Flash) -->
+    <!-- Preloader -->
     <div id="initial-loader" class="fixed inset-0 z-[100] bg-slate-50 flex flex-col items-center justify-center transition-opacity duration-700">
         <div class="relative">
-             <i class="fa-solid fa-circle-notch fa-spin text-5xl text-deped-blue/20"></i>
+             <i class="fa-solid fa-circle-notch fa-spin text-5xl text-ny-gold/20"></i>
              <div class="absolute inset-0 flex items-center justify-center">
-                 <i class="fa-solid fa-snowflake text-2xl text-deped-blue animate-pulse"></i>
+                 <i class="fa-solid fa-star text-2xl text-ny-gold animate-pulse"></i>
              </div>
         </div>
-        <p class="mt-4 text-slate-400 text-sm font-bold tracking-widest uppercase animate-pulse">Checking Holiday Schedule...</p>
+        <p class="mt-4 text-slate-400 text-sm font-bold tracking-widest uppercase animate-pulse">Checking 2025 Schedule...</p>
     </div>
 
-    <!-- Snowflakes -->
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
-    <div class="snowflake">❅</div>
-    <div class="snowflake">❆</div>
+    <!-- Falling Stars/Confetti -->
+    <div class="star">★</div>
+    <div class="star">✦</div>
+    <div class="star">✨</div>
+    <div class="star">★</div>
+    <div class="star">✦</div>
+    <div class="star">✨</div>
+    <div class="star">★</div>
+    <div class="star">✦</div>
+    <div class="star">✨</div>
+    <div class="star">★</div>
 
     <!-- Navigation -->
-    <nav class="glass-nav text-white shadow-lg sticky top-0 z-50 border-b border-white/10 transition-all duration-300">
+    <nav class="glass-nav text-white shadow-lg sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-20 items-center">
                 <!-- Logo / Brand -->
@@ -249,13 +260,13 @@
                     <div class="relative transform group-hover:scale-105 transition duration-300">
                         <img src="https://ui-avatars.com/api/?name=AI+School&background=ffffff&color=1e3a8a&size=128&rounded=true&bold=true" 
                              alt="AI School Tool Logo" 
-                             class="h-10 w-10 rounded-full shadow-lg ring-2 ring-white/30">
-                        <!-- Santa Hat Icon Overlay -->
-                        <i class="fa-solid fa-hat-santa text-xmas-red absolute -top-4 -right-2 text-xl drop-shadow-lg transform rotate-12 group-hover:rotate-6 transition"></i>
+                             class="h-10 w-10 rounded-full shadow-lg ring-2 ring-ny-gold/50">
+                        <!-- Party Hat Icon Overlay -->
+                        <i class="fa-solid fa-wand-magic-sparkles text-ny-gold absolute -top-4 -right-2 text-xl drop-shadow-lg transform rotate-12 group-hover:rotate-6 transition"></i>
                     </div>
                     <div>
-                        <h1 class="font-holiday font-bold text-2xl leading-tight tracking-wide">AI School Tool</h1>
-                        <p id="nav-subtitle" class="text-[10px] text-blue-200 font-medium tracking-widest uppercase bg-blue-900/50 px-2 py-0.5 rounded-full inline-block">Holiday Edition 🎄</p>
+                        <h1 class="font-holiday font-bold text-2xl leading-tight tracking-wide text-ny-goldlight">AI School Tool</h1>
+                        <p id="nav-subtitle" class="text-[10px] text-ny-midnight font-bold tracking-widest uppercase bg-ny-gold px-2 py-0.5 rounded-full inline-block">New Year Edition 🎉</p>
                     </div>
                 </a>
 
@@ -269,11 +280,11 @@
                     <!-- Productivity Links (Hidden in Wellness Mode) -->
                     <div class="productivity-zone flex space-x-1 items-center">
                         <a href="#home" class="px-4 py-2 rounded-full hover:bg-white/10 transition font-medium text-sm">Home</a>
-                        <a href="#tools" class="px-4 py-2 rounded-full hover:bg-white/10 transition font-medium text-sm">AI Gifts</a>
+                        <a href="#tools" class="px-4 py-2 rounded-full hover:bg-white/10 transition font-medium text-sm">AI Tools</a>
                         <a href="#about" class="px-4 py-2 rounded-full hover:bg-white/10 transition font-medium text-sm">Mission</a>
                     </div>
                     
-                    <a href="#community" class="ml-4 bg-gradient-to-r from-xmas-red to-red-600 text-white px-6 py-2.5 rounded-full font-bold transition shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 text-sm flex items-center border border-red-400">
+                    <a href="#community" class="ml-4 bg-gradient-to-r from-ny-gold to-yellow-600 text-ny-midnight px-6 py-2.5 rounded-full font-bold transition shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 text-sm flex items-center border border-yellow-300">
                         <i class="fa-solid fa-comments mr-2"></i> Community Hub
                     </a>
                 </div>
@@ -288,14 +299,14 @@
         </div>
 
         <!-- Mobile Menu Panel -->
-        <div id="mobile-menu" class="hidden md:hidden bg-deped-blue border-t border-blue-800 absolute w-full shadow-2xl">
+        <div id="mobile-menu" class="hidden md:hidden bg-ny-midnight border-t border-slate-700 absolute w-full shadow-2xl">
             <div class="px-4 pt-4 pb-6 space-y-2">
                 <div class="productivity-zone">
-                    <a href="#home" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Home</a>
-                    <a href="#tools" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">AI Gifts</a>
-                    <a href="#about" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Mission</a>
+                    <a href="#home" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition font-medium">Home</a>
+                    <a href="#tools" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition font-medium">AI Tools</a>
+                    <a href="#about" class="block px-4 py-3 rounded-lg hover:bg-slate-800 transition font-medium">Mission</a>
                 </div>
-                <a href="#community" class="block px-4 py-3 rounded-lg bg-xmas-red text-white hover:bg-red-700 mt-4 text-center font-bold shadow-md">Community Hub</a>
+                <a href="#community" class="block px-4 py-3 rounded-lg bg-ny-gold text-ny-midnight hover:bg-yellow-500 mt-4 text-center font-bold shadow-md">Community Hub</a>
             </div>
         </div>
     </nav>
@@ -303,39 +314,39 @@
     <!-- WRAPPER: PRODUCTIVITY ZONE -->
     <div class="productivity-zone">
         <!-- Hero Section -->
-        <section id="home" class="relative pt-24 pb-28 overflow-hidden">
-            <div class="absolute inset-0 hero-pattern z-0"></div>
+        <section id="home" class="relative pt-24 pb-28 overflow-hidden bg-slate-900">
+            <div class="absolute inset-0 hero-pattern z-0 opacity-10"></div>
             
             <!-- Decorative Elements -->
-            <div class="absolute top-0 right-0 -mr-40 -mt-20 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-red-100 to-transparent opacity-60 blur-3xl z-0 animate-pulse" style="animation-duration: 4s;"></div>
-            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-gradient-to-tr from-green-100 to-transparent opacity-60 blur-3xl z-0 animate-pulse" style="animation-duration: 5s;"></div>
+            <div class="absolute top-0 right-0 -mr-40 -mt-20 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-ny-gold to-transparent opacity-20 blur-3xl z-0 animate-pulse" style="animation-duration: 4s;"></div>
+            <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 rounded-full bg-gradient-to-tr from-blue-700 to-transparent opacity-30 blur-3xl z-0 animate-pulse" style="animation-duration: 5s;"></div>
 
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center reveal">
-                <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-red-100 shadow-sm text-xmas-red text-xs font-bold tracking-widest uppercase mb-8 hover:scale-105 transition cursor-default">
-                    <i class="fa-solid fa-snowflake mr-2 animate-spin-slow"></i> Maligayang Pasko, Teachers!
+                <span class="inline-flex items-center px-4 py-1.5 rounded-full bg-ny-midnight border border-ny-gold shadow-sm text-ny-gold text-xs font-bold tracking-widest uppercase mb-8 hover:scale-105 transition cursor-default">
+                    <i class="fa-solid fa-star mr-2 animate-spin-slow"></i> Manigong Bagong Taon, Teachers!
                 </span>
-                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-slate-900 tracking-tight mb-8 font-holiday leading-none">
-                    Unwrap the Gift of <br>
-                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-xmas-red via-red-600 to-xmas-green drop-shadow-sm pb-2">Smart AI Tools</span>
+                <h1 class="text-5xl md:text-7xl lg:text-8xl font-bold text-white tracking-tight mb-8 font-holiday leading-none drop-shadow-lg">
+                    Start 2025 Strong with<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-ny-gold via-yellow-200 to-ny-gold drop-shadow-sm pb-2">Smart AI Tools</span>
                 </h1>
-                <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-600 leading-relaxed font-light">
-                    This holiday season, give yourself the gift of <span class="font-semibold text-slate-800">time</span>. Streamline your planning, simplify your grading, and focus on the joy of teaching.
+                <p class="mt-4 max-w-2xl mx-auto text-xl text-slate-300 leading-relaxed font-light">
+                    New year, new potential. Streamline your workflow, embrace innovation, and make <span class="font-semibold text-ny-gold">2025</span> your best teaching year yet.
                 </p>
                 <div class="mt-12 flex flex-col sm:flex-row justify-center gap-4">
-                    <a href="#tools" class="group px-8 py-4 bg-xmas-red text-white rounded-xl font-bold shadow-lg hover:shadow-red-500/30 hover:bg-red-700 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 relative overflow-hidden">
-                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                        <i class="fa-solid fa-gift text-xl"></i> Open Tools
+                    <a href="#tools" class="group px-8 py-4 bg-gradient-to-r from-ny-gold to-yellow-600 text-ny-midnight rounded-xl font-bold shadow-lg hover:shadow-yellow-500/30 transition-all transform hover:-translate-y-1 flex items-center justify-center gap-3 relative overflow-hidden border border-yellow-400">
+                        <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                        <i class="fa-solid fa-rocket text-xl"></i> Launch Tools
                     </a>
-                    <a href="#about" class="px-8 py-4 bg-white text-slate-700 border border-slate-200 rounded-xl font-semibold shadow-sm hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-2">
+                    <a href="#about" class="px-8 py-4 bg-transparent text-white border border-slate-600 rounded-xl font-semibold shadow-sm hover:bg-slate-800 hover:border-slate-400 transition-all flex items-center justify-center gap-2">
                         <i class="fa-solid fa-circle-info text-slate-400"></i> Learn More
                     </a>
                 </div>
                 
                 <!-- Trust Indicators -->
-                <div class="mt-12 pt-8 border-t border-slate-200/60 max-w-lg mx-auto flex justify-center items-center gap-6 text-slate-400 text-sm font-medium">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Free to Use</span>
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> DepEd Aligned</span>
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-500"></i> Mobile Ready</span>
+                <div class="mt-12 pt-8 border-t border-slate-800/60 max-w-lg mx-auto flex justify-center items-center gap-6 text-slate-400 text-sm font-medium">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> Free to Use</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> DepEd Aligned</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-check text-green-400"></i> Mobile Ready</span>
                 </div>
             </div>
         </section>
@@ -344,20 +355,20 @@
         <section class="py-16 bg-white border-y border-slate-100 relative z-20">
             <div class="max-w-4xl mx-auto px-4 relative reveal">
                 <!-- Floating Decoration -->
-                <div class="absolute -top-10 -left-10 text-8xl text-red-50 transform -rotate-12 font-holiday hidden lg:block select-none pointer-events-none">"</div>
+                <div class="absolute -top-10 -left-10 text-8xl text-yellow-50 transform -rotate-12 font-holiday hidden lg:block select-none pointer-events-none">"</div>
                 
                 <div class="text-center mb-10">
                     <h2 class="text-3xl font-bold text-slate-800 font-holiday">Voices of Our Teachers</h2>
                     <div class="flex justify-center mt-3 space-x-2">
-                         <span class="w-1.5 h-1.5 rounded-full bg-xmas-red"></span>
-                         <span class="w-8 h-1.5 rounded-full bg-xmas-green"></span>
-                         <span class="w-1.5 h-1.5 rounded-full bg-xmas-red"></span>
+                         <span class="w-1.5 h-1.5 rounded-full bg-ny-gold"></span>
+                         <span class="w-8 h-1.5 rounded-full bg-ny-midnight"></span>
+                         <span class="w-1.5 h-1.5 rounded-full bg-ny-gold"></span>
                     </div>
                 </div>
 
                 <!-- Spotlight Card -->
                 <div class="relative max-w-3xl mx-auto">
-                    <div class="absolute inset-0 bg-gradient-to-r from-red-500 to-green-500 rounded-3xl blur opacity-10 transform translate-y-4"></div>
+                    <div class="absolute inset-0 bg-gradient-to-r from-ny-gold to-blue-600 rounded-3xl blur opacity-20 transform translate-y-4"></div>
                     <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 relative overflow-hidden">
                         <!-- Card Decoration -->
                         <div class="absolute top-0 right-0 w-32 h-32 bg-yellow-50 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
@@ -365,7 +376,7 @@
                         <div class="text-center relative z-10">
                             <i class="fa-solid fa-quote-left text-4xl text-slate-200 mb-6 block mx-auto"></i>
                             <div id="spotlight-content" class="min-h-[140px] flex flex-col justify-center items-center transition-opacity duration-500 opacity-100">
-                                <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed font-holiday">"Loading holiday cheer..."</p>
+                                <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed font-holiday">"Loading inspiring stories..."</p>
                             </div>
                         </div>
                         
@@ -380,28 +391,28 @@
         <section id="tools" class="bg-slate-50 py-24 relative">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12 reveal">
-                    <span class="text-xmas-green font-bold text-sm tracking-widest uppercase mb-2 block">Powered by Gemini</span>
-                    <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-holiday"><i class="fa-solid fa-gifts mr-3 text-xmas-red"></i>Digital Stocking Stuffers</h2>
+                    <span class="text-ny-accent font-bold text-sm tracking-widest uppercase mb-2 block">Powered by Gemini</span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-holiday"><i class="fa-solid fa-wand-magic-sparkles mr-3 text-ny-gold"></i>Tools for the New Year</h2>
                     <p class="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">
-                        Select a tool below to launch the Gemini-powered assistant. <br class="hidden md:block">Designed to be as helpful as Santa's elves!
+                        Select a tool below to launch the Gemini-powered assistant. <br class="hidden md:block">Innovate your classroom for 2025.
                     </p>
                 </div>
 
                 <!-- Filter Buttons -->
                 <div class="flex flex-wrap justify-center gap-3 mb-16 reveal">
-                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-slate-800 text-white transform hover:-translate-y-0.5" data-filter="all">
-                        All Gifts
+                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-ny-midnight text-white transform hover:-translate-y-0.5 border border-ny-midnight" data-filter="all">
+                        All Tools
                     </button>
-                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-xmas-red hover:text-xmas-red" data-filter="planning">
+                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-ny-gold hover:text-ny-midnight" data-filter="planning">
                         Planning
                     </button>
-                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-xmas-red hover:text-xmas-red" data-filter="content">
+                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-ny-gold hover:text-ny-midnight" data-filter="content">
                         Content
                     </button>
-                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-xmas-red hover:text-xmas-red" data-filter="assessment">
+                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-ny-gold hover:text-ny-midnight" data-filter="assessment">
                         Assessment
                     </button>
-                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-xmas-red hover:text-xmas-red" data-filter="prof-dev">
+                    <button class="filter-btn px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-sm bg-white text-slate-600 border border-slate-200 hover:border-ny-gold hover:text-ny-midnight" data-filter="prof-dev">
                         Prof. Dev
                     </button>
                 </div>
@@ -422,7 +433,7 @@
                                 Craft K–12 aligned lesson plans complete with learning competencies, structured activities, and assessments.
                             </p>
                             <div class="flex items-center text-deped-blue font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -442,7 +453,7 @@
                                 Generate lesson plans aligned with the new MATATAG Curriculum, focusing on foundational skills.
                             </p>
                             <div class="flex items-center text-deped-red font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -456,12 +467,12 @@
                             <div class="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:scale-110 transition duration-300">
                                 <i class="fa-solid fa-user-tie"></i>
                             </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition">NEAP Planner</h3>
+                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition">PMES with COI</h3>
                             <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Plan according to NEAP professional development standards. Ideal for training portfolios.
+                                Plan according to PMES standards and generate COI. Ideal for training portfolios.
                             </p>
                             <div class="flex items-center text-yellow-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -480,7 +491,7 @@
                                 Create engaging children's storybooks with customizable themes and local context.
                             </p>
                             <div class="flex items-center text-teal-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -499,7 +510,7 @@
                                 Create a Table of Specifications (TOS) quickly to ensure your periodic tests are valid and balanced.
                             </p>
                             <div class="flex items-center text-purple-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -518,7 +529,7 @@
                                 Instantly create structured presentation outlines and slide content tailored to your lesson topics.
                             </p>
                             <div class="flex items-center text-orange-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Unwrap Tool</span> 
+                                <span>Use Tool</span> 
                                 <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
                             </div>
                         </div>
@@ -535,42 +546,42 @@
                     <div class="mb-12 lg:mb-0 relative reveal">
                         <!-- Image/Illustration Area -->
                         <div class="relative bg-white rounded-3xl p-10 border-2 border-slate-100 shadow-sm">
-                            <i class="fa-solid fa-sleigh text-red-200 text-9xl absolute bottom-0 right-0 -mr-4 -mb-4 opacity-50"></i>
-                            <h3 class="text-2xl font-bold text-slate-900 mb-6 font-holiday text-3xl">Why AI this Christmas?</h3>
+                            <i class="fa-solid fa-calendar-check text-blue-200 text-9xl absolute bottom-0 right-0 -mr-4 -mb-4 opacity-50"></i>
+                            <h3 class="text-2xl font-bold text-slate-900 mb-6 font-holiday text-3xl">Why AI in 2025?</h3>
                             <ul class="space-y-6">
                                 <li class="flex items-start">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-4">
-                                        <i class="fa-solid fa-check text-green-600 text-sm"></i>
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-4">
+                                        <i class="fa-solid fa-check text-blue-600 text-sm"></i>
                                     </div>
-                                    <span class="text-slate-700 font-medium leading-snug">Finish grading and planning faster so you can enjoy the holidays.</span>
+                                    <span class="text-slate-700 font-medium leading-snug">Start the new year with efficient grading and planning.</span>
                                 </li>
                                 <li class="flex items-start">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-4">
-                                        <i class="fa-solid fa-check text-green-600 text-sm"></i>
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-4">
+                                        <i class="fa-solid fa-check text-blue-600 text-sm"></i>
                                     </div>
-                                    <span class="text-slate-700 font-medium leading-snug">Reduce the year-end rush administrative burden.</span>
+                                    <span class="text-slate-700 font-medium leading-snug">Reduce administrative burden for a fresh start.</span>
                                 </li>
                                 <li class="flex items-start">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-4">
-                                        <i class="fa-solid fa-check text-green-600 text-sm"></i>
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-4">
+                                        <i class="fa-solid fa-check text-blue-600 text-sm"></i>
                                     </div>
-                                    <span class="text-slate-700 font-medium leading-snug">Create fun, contextualized materials for the new year.</span>
+                                    <span class="text-slate-700 font-medium leading-snug">Create futuristic, engaging materials for your students.</span>
                                 </li>
                                 <li class="flex items-start">
-                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 flex items-center justify-center mt-1 mr-4">
-                                        <i class="fa-solid fa-check text-green-600 text-sm"></i>
+                                    <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mt-1 mr-4">
+                                        <i class="fa-solid fa-check text-blue-600 text-sm"></i>
                                     </div>
-                                    <span class="text-slate-700 font-medium leading-snug">Start 2025 with innovation in your classroom.</span>
+                                    <span class="text-slate-700 font-medium leading-snug">Lead with innovation in your classroom this 2025.</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     
                     <div class="reveal">
-                        <span class="text-xmas-red font-bold tracking-widest uppercase text-sm mb-2 block">Our Mission</span>
+                        <span class="text-ny-accent font-bold tracking-widest uppercase text-sm mb-2 block">Our Mission</span>
                         <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6 font-holiday">"Bagong Taon, <br>Bagong Edukasyon."</h2>
                         <p class="text-slate-600 leading-relaxed mb-6 text-lg">
-                            The AI School Tool Program aims to be the helping hand every teacher deserves. We believe that Artificial Intelligence should not replace teachers, but rather act as a supportive elf that amplifies their capacity to inspire.
+                            The AI School Tool Program aims to be the helping hand every teacher deserves. We believe that Artificial Intelligence should not replace teachers, but rather act as a supportive partner that amplifies their capacity to inspire.
                         </p>
                         <p class="text-slate-600 leading-relaxed text-lg">
                             By providing accessible and curriculum-aligned tools, we hope to give you back the precious gift of time for your family and yourself.
@@ -581,13 +592,13 @@
         </section>
 
         <!-- Call to Action -->
-        <section class="bg-gradient-to-r from-green-700 to-green-800 py-20 relative overflow-hidden reveal">
+        <section class="bg-gradient-to-r from-slate-900 to-blue-900 py-20 relative overflow-hidden reveal">
             <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
             <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
-                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 font-holiday">Ready to unwrap your potential?</h2>
-                <p class="text-green-100 mb-10 text-xl font-light">Join thousands of Filipino educators integrating AI into their classrooms today.</p>
-                <a href="#tools" class="inline-block bg-white text-green-800 font-bold py-4 px-10 rounded-full shadow-2xl hover:bg-slate-100 transition transform hover:scale-105">
-                    <i class="fa-solid fa-sleigh mr-2"></i> Start Planning Now
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6 font-holiday">Ready for 2025?</h2>
+                <p class="text-blue-100 mb-10 text-xl font-light">Join thousands of Filipino educators upgrading their classrooms today.</p>
+                <a href="#tools" class="inline-block bg-ny-gold text-ny-midnight font-bold py-4 px-10 rounded-full shadow-2xl hover:bg-white transition transform hover:scale-105">
+                    <i class="fa-solid fa-rocket mr-2"></i> Start Planning Now
                 </a>
             </div>
         </section>
@@ -613,11 +624,73 @@
             <i class="fa-solid fa-wrench text-3xl text-slate-300 absolute bottom-0 -left-2 animate-bounce"></i>
         </div>
         
-        <h2 class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">System Upgrade in Progress</h2>
+        <h2 class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">System Maintenance Underway</h2>
         <p class="text-lg md:text-xl text-blue-300 max-w-2xl mx-auto font-light leading-relaxed">
-            The tech elves are currently installing new features to serve you better.<br>
-            We are performing necessary maintenance. The tools will be back online shortly.
+            We are currently performing scheduled upgrades to enhance platform performance and reliability.<br>
+            Thank you for your patience as we prepare a better experience for you.
         </p>
+
+        <!-- Upgrading Capabilities List -->
+        <div class="mt-8">
+            <p class="text-blue-400/60 text-[10px] uppercase tracking-widest mb-4 font-semibold">Optimizing Core Systems:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-w-4xl mx-auto text-left">
+                
+                <!-- Tool 1 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-book-open text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">K-12 Lesson Planner</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Comprehensive daily lesson log builder for all grade levels.</p>
+                </div>
+
+                <!-- Tool 2 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-shield-halved text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">MATATAG Planner</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Aligned with the new MATATAG curriculum standards.</p>
+                </div>
+
+                <!-- Tool 3 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-book-journal-whills text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">Story Generator</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Create engaging, contextualized stories for young learners.</p>
+                </div>
+
+                <!-- Tool 4 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-table-list text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">TOS Generator</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Automated Table of Specifications for valid assessments.</p>
+                </div>
+
+                <!-- Tool 5 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-chalkboard-user text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">Presentation Maker</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Instant slide outlines and educational content generation.</p>
+                </div>
+
+                <!-- Tool 6 -->
+                <div class="p-3 bg-blue-900/40 rounded-xl border border-blue-800/50 backdrop-blur-sm hover:bg-blue-800/40 transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-user-tie text-ny-gold"></i>
+                        <h4 class="text-blue-100 font-bold text-xs uppercase">PMES with COI</h4>
+                    </div>
+                    <p class="text-[10px] text-blue-300 leading-tight">Teacher performance assessment with PPST-based classroom observation indicators.</p>
+                </div>
+
+            </div>
+        </div>
 
         <div class="mt-8 px-6 py-2 bg-slate-800/50 rounded-full border border-slate-700 inline-block backdrop-blur-sm">
             <span class="text-slate-400 text-xs uppercase tracking-widest font-bold" id="wellness-hours-text">Scheduled Maintenance</span>
@@ -642,7 +715,7 @@
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold transition-colors duration-700 mb-4 font-holiday section-title">Teacher Community Hub</h2>
-                <div class="h-1.5 w-24 bg-gradient-to-r from-red-500 to-green-500 mx-auto rounded-full"></div>
+                <div class="h-1.5 w-24 bg-gradient-to-r from-ny-gold to-yellow-600 mx-auto rounded-full"></div>
                 <p class="mt-4 transition-colors duration-700 section-desc">See what others are saying and share your own story!</p>
             </div>
 
@@ -653,7 +726,7 @@
                     <!-- App Header -->
                     <div class="bg-white/80 backdrop-blur-md p-4 border-b border-slate-200 flex items-center justify-between sticky top-0 z-20">
                         <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-xmas-red to-pink-500 text-white flex items-center justify-center shadow-lg">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-ny-gold to-yellow-600 text-white flex items-center justify-center shadow-lg">
                                 <i class="fa-solid fa-heart"></i>
                             </div>
                             <div>
@@ -673,7 +746,7 @@
                     <div id="stories-grid" class="flex-grow overflow-y-auto p-4 md:p-6 chat-pattern space-y-6 custom-scroll bg-white/50">
                         <div class="text-center py-20 opacity-50">
                             <i class="fa-solid fa-circle-notch fa-spin text-2xl text-deped-blue mb-3"></i>
-                            <p class="text-sm text-slate-500 font-medium">Fetching holiday cheers...</p>
+                            <p class="text-sm text-slate-500 font-medium">Fetching messages...</p>
                         </div>
                     </div>
                     
@@ -713,7 +786,7 @@
                                      <div class="flex items-end gap-2">
                                          <textarea id="message" name="entry.1499916649" rows="1" required 
                                              class="text-sm text-slate-700 bg-transparent outline-none resize-none placeholder-slate-400 w-full mb-2 max-h-24" 
-                                             placeholder="Share a holiday greeting..."
+                                             placeholder="Share a message..."
                                              oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 100) + 'px'"></textarea>
                                          
                                          <button type="submit" id="sendBtn" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white flex-shrink-0 flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5 transition transform active:scale-95 mb-1">
@@ -731,7 +804,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-300 py-16 border-t border-slate-800 relative overflow-hidden">
-         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-green-500 to-red-500 opacity-50"></div>
+         <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-ny-gold via-yellow-400 to-ny-gold opacity-50"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
@@ -744,7 +817,7 @@
                         <h4 class="text-white font-bold text-xl font-holiday">AI School Tool Program</h4>
                     </div>
                     <p class="text-sm text-slate-400 leading-relaxed max-w-sm">
-                        An independent, non-profit initiative dedicated to supporting Filipino teachers through accessible technology and innovation. Wishing you a restful and joyful break!
+                        An independent, non-profit initiative dedicated to supporting Filipino teachers through accessible technology and innovation. Wishing you a prosperous 2025!
                     </p>
                 </div>
                 
@@ -752,10 +825,10 @@
                 <div class="productivity-zone">
                     <h4 class="text-white font-bold text-lg mb-6 font-holiday">Quick Links</h4>
                     <ul class="space-y-3 text-sm">
-                        <li><a href="#home" class="hover:text-xmas-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Home</a></li>
-                        <li><a href="#tools" class="hover:text-xmas-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> AI Tools</a></li>
-                        <li><a href="#about" class="hover:text-xmas-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Mission</a></li>
-                        <li><a href="#community" class="hover:text-xmas-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Community</a></li>
+                        <li><a href="#home" class="hover:text-ny-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Home</a></li>
+                        <li><a href="#tools" class="hover:text-ny-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> AI Tools</a></li>
+                        <li><a href="#about" class="hover:text-ny-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Mission</a></li>
+                        <li><a href="#community" class="hover:text-ny-gold transition flex items-center gap-2"><i class="fa-solid fa-chevron-right text-[10px] text-slate-600"></i> Community</a></li>
                     </ul>
                 </div>
 
@@ -779,7 +852,7 @@
             <div class="border-t border-slate-800 pt-8 text-center text-sm text-slate-500 flex flex-col items-center">
                 <p>&copy; 2025 AI School Tool Program. All rights reserved.</p>
                 <div class="mt-4 px-4 py-2 bg-slate-800 rounded-full inline-block">
-                    Created with holiday cheer by <span class="text-xmas-gold font-bold">DAVID JESS F. ASAURO</span>
+                    Created with 2025 vision by <span class="text-ny-gold font-bold">DAVID JESS F. ASAURO</span>
                 </div>
             </div>
         </div>
@@ -830,11 +903,11 @@
             btn.addEventListener('click', () => {
                 // Update button states
                 filterBtns.forEach(b => {
-                    b.classList.remove('bg-slate-800', 'text-white', 'transform', '-translate-y-0.5');
+                    b.classList.remove('bg-ny-midnight', 'text-white', 'transform', '-translate-y-0.5', 'border-ny-midnight');
                     b.classList.add('bg-white', 'text-slate-600', 'border', 'border-slate-200');
                 });
                 btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
-                btn.classList.add('bg-slate-800', 'text-white', 'transform', '-translate-y-0.5');
+                btn.classList.add('bg-ny-midnight', 'text-white', 'transform', '-translate-y-0.5', 'border-ny-midnight');
 
                 // Filter cards
                 const filterValue = btn.getAttribute('data-filter');
@@ -1150,7 +1223,7 @@
             indicatorsContainer.innerHTML = '';
             stories.forEach((_, index) => {
                 const dot = document.createElement('div');
-                dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-xmas-red w-6' : 'bg-slate-300'}`;
+                dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-ny-gold w-6' : 'bg-slate-300'}`;
                 dot.id = `spotlight-dot-${index}`;
                 indicatorsContainer.appendChild(dot);
             });
@@ -1173,9 +1246,9 @@
                 document.querySelectorAll('#spotlight-indicators div').forEach((dot, i) => {
                     if (i === index) {
                         dot.classList.remove('bg-slate-300', 'w-2');
-                        dot.classList.add('bg-xmas-red', 'w-6');
+                        dot.classList.add('bg-ny-gold', 'w-6');
                     } else {
-                        dot.classList.remove('bg-xmas-red', 'w-6');
+                        dot.classList.remove('bg-ny-gold', 'w-6');
                         dot.classList.add('bg-slate-300', 'w-2');
                     }
                 });
@@ -1189,7 +1262,7 @@
             container.innerHTML = `
                 <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed">"${story.message}"</p>
                 <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-xmas-red to-orange-500 text-white flex items-center justify-center font-bold text-sm shadow-md">${story.name.charAt(0)}</div>
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-ny-gold to-yellow-600 text-white flex items-center justify-center font-bold text-sm shadow-md">${story.name.charAt(0)}</div>
                     <div class="text-left">
                         <p class="text-sm font-bold text-slate-800">${story.name}</p>
                         <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Verified Teacher</p>
@@ -1262,7 +1335,7 @@
                 }
             } else {
                 body.classList.remove('wellness-active');
-                if(subtitle) subtitle.innerText = "Holiday Edition 🎄";
+                if(subtitle) subtitle.innerText = "New Year Edition 🎉";
                 if(communityTitle) {
                     communityTitle.classList.add('text-slate-900');
                     communityTitle.classList.remove('text-blue-200', 'text-glow');
