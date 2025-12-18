@@ -263,7 +263,7 @@
                 <div class="hidden md:flex space-x-1 items-center">
                     <!-- Wellness Mode Only Links -->
                     <div class="wellness-zone hidden items-center gap-4 text-sm font-medium text-blue-200">
-                        <span id="wellness-status"><i class="fa-solid fa-moon mr-2 text-yellow-300"></i>Wellness Mode Active</span>
+                        <span id="wellness-status"><i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active</span>
                     </div>
 
                     <!-- Productivity Links (Hidden in Wellness Mode) -->
@@ -595,19 +595,28 @@
 
     <!-- WRAPPER: WELLNESS ZONE (Hidden by default) -->
     <div class="wellness-zone hidden flex-col items-center justify-center pt-32 pb-12 px-4 text-center relative overflow-hidden">
-        <!-- Floating Elements -->
-        <div class="absolute top-20 left-10 text-6xl opacity-20 animate-float" style="animation-delay: 1s;">🌿</div>
-        <div class="absolute top-40 right-10 text-4xl opacity-20 animate-float" style="animation-delay: 2s;">✨</div>
-        <div class="absolute bottom-20 left-20 text-5xl opacity-20 animate-float" style="animation-delay: 0.5s;">☕</div>
+        <!-- Floating Elements (Tech Themed) -->
+        <div class="absolute top-20 left-10 text-6xl opacity-20 animate-float text-blue-300" style="animation-delay: 1s;">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <div class="absolute top-40 right-10 text-4xl opacity-20 animate-float text-blue-300" style="animation-delay: 2s;">
+            <i class="fa-solid fa-code"></i>
+        </div>
+        <div class="absolute bottom-20 left-20 text-5xl opacity-20 animate-float text-blue-300" style="animation-delay: 0.5s;">
+            <i class="fa-solid fa-rocket"></i>
+        </div>
 
-        <div class="animate-breathe mb-8">
-            <i class="fa-solid fa-mug-hot text-6xl text-yellow-200 drop-shadow-[0_0_15px_rgba(253,224,71,0.5)]"></i>
+        <!-- Main Upgrading Animation -->
+        <div class="mb-8 relative">
+            <i class="fa-solid fa-gear text-8xl text-blue-500/20 absolute -top-4 -right-4 animate-[spin_8s_linear_infinite]"></i>
+            <i class="fa-solid fa-gear text-6xl text-yellow-400 drop-shadow-[0_0_15px_rgba(253,224,71,0.5)] animate-[spin_4s_linear_infinite_reverse]"></i>
+            <i class="fa-solid fa-wrench text-3xl text-slate-300 absolute bottom-0 -left-2 animate-bounce"></i>
         </div>
         
-        <h2 class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">Wellness Break in Progress.</h2>
+        <h2 class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">System Upgrade in Progress</h2>
         <p class="text-lg md:text-xl text-blue-300 max-w-2xl mx-auto font-light leading-relaxed">
-            We are currently observing a scheduled break to prioritize well-being. <br>
-            Disconnect, recharge, and enjoy the moment. The tools will be back soon.
+            The tech elves are currently installing new features to serve you better.<br>
+            We are performing necessary maintenance. The tools will be back online shortly.
         </p>
 
         <div class="mt-8 px-6 py-2 bg-slate-800/50 rounded-full border border-slate-700 inline-block backdrop-blur-sm">
@@ -616,14 +625,14 @@
 
         <!-- NEW: Countdown Timer -->
         <div id="countdown-container" class="mt-8">
-            <p class="text-blue-400/80 text-[10px] uppercase tracking-[0.2em] mb-3 font-semibold">Resuming In</p>
+            <p class="text-blue-400/80 text-[10px] uppercase tracking-[0.2em] mb-3 font-semibold">Estimated Completion In</p>
             <div id="wellness-countdown" class="text-3xl md:text-5xl font-mono font-bold text-white tracking-widest text-glow tabular-nums">
                 --d --h --m --s
             </div>
         </div>
         
         <div class="mt-12 w-full max-w-md border-t border-slate-700/50 pt-8">
-            <p class="text-slate-400 text-sm mb-4">You can still chat with fellow teachers:</p>
+            <p class="text-slate-400 text-sm mb-4">You can still chat with fellow teachers while you wait:</p>
             <i class="fa-solid fa-arrow-down text-blue-400 animate-bounce"></i>
         </div>
     </div>
@@ -1237,8 +1246,8 @@
 
             if (isNowWellness) {
                 body.classList.add('wellness-active');
-                if(subtitle) subtitle.innerText = "Wellness Mode 🌿";
-                if(statusIndicator) statusIndicator.innerHTML = '<i class="fa-solid fa-leaf mr-2 text-green-300"></i>Wellness Break Active';
+                if(subtitle) subtitle.innerText = "Maintenance Mode 🛠️";
+                if(statusIndicator) statusIndicator.innerHTML = '<i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active';
                 if(communityTitle) {
                     communityTitle.classList.remove('text-slate-900');
                     communityTitle.classList.add('text-blue-200', 'text-glow');
