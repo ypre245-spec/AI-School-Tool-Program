@@ -990,6 +990,10 @@
 
         let countdownInterval = null; 
         const BATCH_SIZE = 10; 
+        
+        // --- DATA HASHING FOR AUTO-REFRESH ---
+        let lastStoriesHash = "";
+        let lastToolsHash = "";
 
         // Helper to parse Gviz Date or Strings
         function parseGvizDate(val) {
@@ -1027,6 +1031,11 @@
                 
                 const json = JSON.parse(jsonMatch[1]);
                 const rows = json.table.rows;
+
+                // SMART CHECK: Only proceed if data changed
+                const currentHash = JSON.stringify(rows);
+                if (currentHash === lastStoriesHash) return; 
+                lastStoriesHash = currentHash;
 
                 if(rows && rows.length > 0) {
                     // Parse data safely
@@ -1085,6 +1094,12 @@
                     initSpotlight([...allStories].reverse().slice(0, 5));
 
                     const grid = document.getElementById('stories-grid');
+                    
+                    // Only maintain scroll if we are not at the very top (loading history)
+                    // For auto-refresh, we usually want to snap to bottom if new messages appear
+                    // or keep position. For simplicity in this "Live Feed", we rebuild.
+                    const wasAtBottom = grid.scrollHeight - grid.scrollTop === grid.clientHeight;
+                    
                     grid.innerHTML = ''; 
                     
                     storiesDisplayed = BATCH_SIZE; 
@@ -1099,6 +1114,7 @@
                         grid.appendChild(createChatBubble(story));
                     });
                     
+                    // Auto-scroll to bottom on fresh load or update
                     setTimeout(() => grid.scrollTop = grid.scrollHeight, 100);
 
                     const loadMoreBtn = document.getElementById('loadMoreBtn');
@@ -1113,7 +1129,7 @@
             } catch (err) {
                 console.log('Error', err);
                 const grid = document.getElementById('stories-grid');
-                grid.innerHTML = getStaticStoriesHTML(); 
+                if(grid.innerHTML.trim() === "") grid.innerHTML = getStaticStoriesHTML(); 
             }
         }
 
@@ -1130,6 +1146,12 @@
                 const json = JSON.parse(jsonText);
                 
                 const rows = json.table.rows;
+
+                // SMART CHECK: Only update if data changed
+                const currentHash = JSON.stringify(rows);
+                if (currentHash === lastToolsHash) return;
+                lastToolsHash = currentHash;
+
                 const container = document.getElementById('tools-container');
                 container.innerHTML = ''; // Clear loader
 
@@ -1190,8 +1212,8 @@
                     // D: Detail/Title, E: Message
                     if (row.c[3]?.v && row.c[4]?.v) {
                         globalNotification = {
-                            title: row.c[3].v,
-                            message: row.c[4].v
+                            title: String(row.c[3].v),
+                            message: String(row.c[4].v)
                         };
                     }
 
@@ -1219,11 +1241,13 @@
 
             } catch (err) {
                 console.error('Error fetching tools:', err);
-                document.getElementById('tools-container').innerHTML = `
-                    <div class="col-span-full text-center text-red-400 py-10">
-                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
-                        <p class="text-sm">Unable to load tools. Please refresh.</p>
-                    </div>`;
+                if (document.getElementById('tools-container').innerHTML.trim() === "") {
+                    document.getElementById('tools-container').innerHTML = `
+                        <div class="col-span-full text-center text-red-400 py-10">
+                            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                            <p class="text-sm">Unable to load tools. Please refresh.</p>
+                        </div>`;
+                }
             } finally {
                 // HIDE LOADER
                 const loader = document.getElementById('initial-loader');
@@ -1244,9 +1268,15 @@
             const ackBtn = document.getElementById('ack-announcement');
 
             if(modal && titleEl && msgEl) {
-                // Simple Check: has user seen this specific message?
-                const lastSeenMsg = localStorage.getItem('last_seen_announcement');
-                if (lastSeenMsg === globalNotification.message) return;
+                // IMPROVED CHECK: Use Title + Message as unique ID
+                // This ensures if you change ONLY the title, it still reappears.
+                const notificationId = globalNotification.title + "||" + globalNotification.message;
+                const lastSeenId = localStorage.getItem('last_seen_announcement_id');
+                
+                // Fallback for older version compatibility (check message content only if ID not present)
+                if (!lastSeenId && localStorage.getItem('last_seen_announcement') === globalNotification.message) return;
+                
+                if (lastSeenId === notificationId) return;
 
                 titleEl.innerText = globalNotification.title;
                 msgEl.innerText = globalNotification.message;
@@ -1264,7 +1294,10 @@
                     modal.firstElementChild.classList.add('scale-95');
                     setTimeout(() => {
                         modal.classList.add('hidden');
-                        localStorage.setItem('last_seen_announcement', globalNotification.message);
+                        // Save the new unique ID
+                        localStorage.setItem('last_seen_announcement_id', notificationId);
+                        // Clean up old key if exists
+                        localStorage.removeItem('last_seen_announcement');
                     }, 300);
                 };
 
@@ -1553,6 +1586,13 @@
              fetchStories();
              fetchTools(); // Call new function
              
+             // --- AUTO REFRESH LOGIC ---
+             // Check for changes every 5 seconds
+             setInterval(() => {
+                 fetchStories();
+                 fetchTools();
+             }, 5000);
+
              // Contact Form Logic
              const contactForm = document.getElementById('contactForm');
              if(contactForm) {
