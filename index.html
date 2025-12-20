@@ -251,6 +251,23 @@
     <div class="star">✨</div>
     <div class="star">★</div>
 
+    <!-- Notification Modal (Hidden by Default) -->
+    <div id="announcement-modal" class="fixed inset-0 z-[150] bg-black/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-ny-gold relative transform scale-95 transition-transform duration-300">
+            <button id="close-announcement" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center">
+                 <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-ny-gold text-3xl shadow-md border border-blue-100">
+                     <i class="fa-solid fa-bell animate-swing"></i>
+                 </div>
+                 <h3 id="announcement-title" class="text-xl font-bold text-slate-800 mb-3 font-holiday">Announcement</h3>
+                 <p id="announcement-message" class="text-slate-600 leading-relaxed text-sm bg-slate-50 p-4 rounded-xl border border-slate-100"></p>
+                 <button id="ack-announcement" class="mt-6 w-full bg-ny-gold hover:bg-yellow-500 text-ny-midnight font-bold py-3 rounded-xl transition shadow-lg text-sm uppercase tracking-wide">
+                     Okay, Got it!
+                 </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Navigation -->
     <nav class="glass-nav text-white shadow-lg sticky top-0 z-50 transition-all duration-300">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -417,124 +434,12 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- Tool 1: K-12 Lesson Planner (Planning) -->
-                    <a href="https://gemini.google.com/share/fc12e1d8ee61" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
-                        <div class="absolute inset-0 bg-gradient-to-br from-blue-600 to-blue-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                            <!-- Badge -->
-                            <div class="absolute top-4 right-4 bg-blue-100 text-blue-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">Popular</div>
-                            
-                            <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-deped-blue text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-book-open"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-blue transition">K–12 Lesson Planner</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Craft K–12 aligned lesson plans complete with learning competencies, structured activities, and assessments.
-                            </p>
-                            <div class="flex items-center text-deped-blue font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Tool 2: MATATAG Curriculum (Planning) -->
-                    <a href="https://gemini.google.com/share/6ed13bd2f8bf" target="_blank" class="tool-card group relative block h-full reveal" data-category="planning">
-                        <div class="absolute inset-0 bg-gradient-to-br from-red-600 to-red-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                             <div class="absolute top-4 right-4 bg-red-100 text-red-700 text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">New</div>
-                            
-                            <div class="w-16 h-16 bg-red-50 rounded-2xl flex items-center justify-center text-deped-red text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-shield-halved"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-deped-red transition">MATATAG Planner</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Generate lesson plans aligned with the new MATATAG Curriculum, focusing on foundational skills.
-                            </p>
-                            <div class="flex items-center text-deped-red font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Tool 3: NEAP Planner (Prof Dev) -->
-                    <a href="https://gemini.google.com/share/8ca4944eca50" target="_blank" class="tool-card group relative block h-full reveal" data-category="prof-dev">
-                        <div class="absolute inset-0 bg-gradient-to-br from-yellow-500 to-yellow-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                            
-                            <div class="w-16 h-16 bg-yellow-50 rounded-2xl flex items-center justify-center text-yellow-600 text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-user-tie"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-yellow-600 transition">PMES with COI</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Plan according to PMES standards and generate COI. Ideal for training portfolios.
-                            </p>
-                            <div class="flex items-center text-yellow-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Tool 4: Story Book Generator (Content) -->
-                    <a href="https://gemini.google.com/share/c3e58707632f" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
-                        <div class="absolute inset-0 bg-gradient-to-br from-teal-500 to-teal-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                            
-                            <div class="w-16 h-16 bg-teal-50 rounded-2xl flex items-center justify-center text-teal-600 text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-book-journal-whills"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-teal-600 transition">Story Book Generator</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Create engaging children's storybooks with customizable themes and local context.
-                            </p>
-                            <div class="flex items-center text-teal-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Tool 5: TOS Generator (Assessment) -->
-                    <a href="https://gemini.google.com/share/8b3073de1fd0" target="_blank" class="tool-card group relative block h-full reveal" data-category="assessment">
-                        <div class="absolute inset-0 bg-gradient-to-br from-purple-600 to-purple-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                            
-                            <div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-600 text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-table-list"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-purple-600 transition">TOS Generator</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Create a Table of Specifications (TOS) quickly to ensure your periodic tests are valid and balanced.
-                            </p>
-                            <div class="flex items-center text-purple-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
-                    <!-- Tool 6: AI Presentation Generator (Content) -->
-                    <a href="https://gemini.google.com/share/c3d0942eeb13" target="_blank" class="tool-card group relative block h-full reveal" data-category="content">
-                        <div class="absolute inset-0 bg-gradient-to-br from-orange-500 to-orange-400 rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
-                        <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
-                            
-                            <div class="w-16 h-16 bg-orange-50 rounded-2xl flex items-center justify-center text-orange-600 text-2xl mb-6 group-hover:scale-110 transition duration-300">
-                                <i class="fa-solid fa-chalkboard-user"></i>
-                            </div>
-                            <h3 class="text-xl font-bold text-slate-900 mb-3 group-hover:text-orange-600 transition">AI Presentation Generator</h3>
-                            <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
-                                Instantly create structured presentation outlines and slide content tailored to your lesson topics.
-                            </p>
-                            <div class="flex items-center text-orange-600 font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
-                                <span>Use Tool</span> 
-                                <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
-                            </div>
-                        </div>
-                    </a>
-
+                <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
+                    <!-- Loading Skeleton -->
+                    <div class="col-span-full flex flex-col items-center justify-center text-slate-400 py-12">
+                        <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-4 text-ny-gold"></i>
+                        <p class="text-sm font-medium animate-pulse">Fetching latest tools from cloud database...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -624,8 +529,8 @@
             <i class="fa-solid fa-wrench text-3xl text-slate-300 absolute bottom-0 -left-2 animate-bounce"></i>
         </div>
         
-        <h2 class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">System Maintenance Underway</h2>
-        <p class="text-lg md:text-xl text-blue-300 max-w-2xl mx-auto font-light leading-relaxed">
+        <h2 id="maintenance-title" class="text-4xl md:text-6xl font-bold font-holiday text-blue-100 mb-4 tracking-wide text-glow">System Maintenance Underway</h2>
+        <p id="maintenance-message" class="text-lg md:text-xl text-blue-300 max-w-2xl mx-auto font-light leading-relaxed">
             We are currently performing scheduled upgrades to enhance platform performance and reliability.<br>
             Thank you for your patience as we prepare a better experience for you.
         </p>
@@ -915,12 +820,21 @@
             </div>
             
             <!-- Bottom Bar -->
-            <div class="border-t border-slate-800/50 pt-8 flex flex-col items-center justify-center text-center">
-                <p class="text-slate-500 text-sm mb-4">&copy; 2025 AI School Tool Program. All rights reserved.</p>
-                <div class="px-5 py-2 bg-slate-800/50 rounded-full border border-slate-700/50 backdrop-blur-md">
-                    <p class="text-xs text-slate-400">
-                        Created with 2025 vision by <span class="text-ny-gold font-bold tracking-wide ml-1">DAVID JESS F. ASAURO</span>
-                    </p>
+            <div class="border-t border-slate-800/50 pt-8 flex flex-col items-center justify-center text-center relative z-10">
+                <p class="text-slate-500 text-sm mb-6">&copy; 2025 AI School Tool Program. All rights reserved.</p>
+                
+                <div class="group relative inline-flex items-center gap-2 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700/50 hover:border-ny-gold/40 transition-all duration-500 shadow-lg hover:shadow-ny-gold/10 hover:-translate-y-1 cursor-default">
+                    <!-- Glow effect behind -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-ny-gold/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-700 rounded-full"></div>
+                    
+                    <span class="text-xs text-slate-400 font-medium relative z-10">Created with 2025 Vision by</span>
+                    
+                    <span class="relative z-10 font-holiday font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-ny-gold via-yellow-100 to-ny-gold animate-pulse group-hover:animate-none transition-all duration-300">
+                        DAVID JESS F. ASAURO
+                    </span>
+                    
+                    <!-- Small sparkle icon -->
+                    <i class="fa-solid fa-wand-magic-sparkles text-ny-gold text-[10px] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300"></i>
                 </div>
             </div>
         </div>
@@ -970,7 +884,6 @@
 
         // 3. Tool Filtering Logic
         const filterBtns = document.querySelectorAll('.filter-btn');
-        const toolCards = document.querySelectorAll('.tool-card');
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
@@ -982,11 +895,13 @@
                 btn.classList.remove('bg-white', 'text-slate-600', 'border', 'border-slate-200');
                 btn.classList.add('bg-ny-midnight', 'text-white', 'transform', '-translate-y-0.5', 'border-ny-midnight');
 
-                // Filter cards
+                // Filter cards (Dynamic Selection)
                 const filterValue = btn.getAttribute('data-filter');
+                const currentCards = document.querySelectorAll('.tool-card');
                 
-                toolCards.forEach(card => {
-                    if (filterValue === 'all' || card.getAttribute('data-category') === filterValue) {
+                currentCards.forEach(card => {
+                    const categories = card.getAttribute('data-category') || '';
+                    if (filterValue === 'all' || categories.includes(filterValue)) {
                         card.classList.remove('hidden-tool');
                         card.classList.remove('active');
                         setTimeout(() => card.classList.add('active'), 50);
@@ -998,19 +913,14 @@
         });
 
         // 4. Contact Form Handler (Slow Mode + Profanity + Optimistic UI)
-        // Configuration
         const COOLDOWN_MS = 5 * 60 * 1000; // 5 Minutes
-        const STORAGE_KEY = 'ai_school_cooldown_target_v2'; // Unique key to prevent conflicts
+        const STORAGE_KEY = 'ai_school_cooldown_target_v2'; 
         
-        // Basic Profanity Filter
         const foulWords = [
-            // Filipino / Tagalog
             "bobo", "tanga", "gago", "ulol", "tarantado", "putangina", "pukingina", "tangina", "kupal", "kantot",
             "pota", "ina mo", "hayop", "gaga", "pakyu", "burat", "etits", "pepe", "kepiyas", "jakol", "hindot", 
             "pucha", "leche", "gagi", "buwisit", "bwisit", "hayuf", "demonyo", "lintik", "ungas", "abnoy", 
             "baliw", "sira ulo", "inutil", "ogag", "pakshet", "tite", "bilat",
-
-            // English
             "shit", "fuck", "damn", "bitch", "asshole", "stupid", "idiot", "kiss my ass", "ass", "fucker",
             "bullshit", "crap", "bastard", "dick", "cock", "pussy", "vagina", "penis", "sex", "porn", "xxx", 
             "nigger", "nigga", "slut", "whore", "cunt", "arse", "motherfucker", "son of a bitch", "retard"
@@ -1023,13 +933,11 @@
             });
         }
 
-        // Robust Timer Logic (Target Time Based)
         function startTimer(btn, targetTimestamp) {
             btn.disabled = true;
             btn.classList.add('bg-slate-400', 'cursor-not-allowed');
             btn.classList.remove('bg-gradient-to-r', 'from-blue-600', 'to-blue-500', 'hover:shadow-lg', 'hover:-translate-y-0.5', 'active:scale-95');
             
-            // Clear existing
             if (btn.dataset.timerId) clearInterval(parseInt(btn.dataset.timerId));
 
             const updateDisplay = () => {
@@ -1040,11 +948,8 @@
                     clearInterval(parseInt(btn.dataset.timerId));
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fa-solid fa-paper-plane text-xs"></i>';
-                    
-                    // Restore styles
                     btn.classList.remove('bg-slate-400', 'cursor-not-allowed');
                     btn.classList.add('bg-gradient-to-r', 'from-blue-600', 'to-blue-500', 'hover:shadow-lg', 'hover:-translate-y-0.5', 'active:scale-95');
-                    
                     localStorage.removeItem(STORAGE_KEY);
                 } else {
                     const minutes = Math.floor((remaining / 1000) / 60);
@@ -1066,10 +971,8 @@
             const now = Date.now();
             
             if (targetTime > now) {
-                // Resume timer
                 startTimer(btn, targetTime);
             } else {
-                // Expired
                 localStorage.removeItem(STORAGE_KEY);
             }
         }
@@ -1079,8 +982,13 @@
         let storiesDisplayed = 0;
         let currentSpotlightIndex = 0;
         let spotlightInterval;
-        let scheduledWellness = null; // Store remote config here
-        let countdownInterval = null; // Store timer interval
+        
+        // --- GLOBAL CONFIG VARS ---
+        let scheduledWellness = null; 
+        let maintenanceText = null;
+        let globalNotification = null;
+
+        let countdownInterval = null; 
         const BATCH_SIZE = 10; 
 
         // Helper to parse Gviz Date or Strings
@@ -1121,26 +1029,11 @@
                 const rows = json.table.rows;
 
                 if(rows && rows.length > 0) {
-                    // Reset Schedule found
-                    scheduledWellness = null;
-
                     // Parse data safely
                     allStories = rows.map(row => {
                         if (!row.c) return null;
                         
-                        // --- CONFIG SCANNER (Columns E & F -> Indexes 4 & 5) ---
-                        // We check every row. The LAST valid row found becomes the active config.
-                        const colE = row.c[4] ? row.c[4].v : null;
-                        const colF = row.c[5] ? row.c[5].v : null;
-                        
-                        if (colE && colF) {
-                            const start = parseGvizDate(colE);
-                            const end = parseGvizDate(colF);
-                            if (start && end) {
-                                scheduledWellness = { start, end };
-                            }
-                        }
-                        // -----------------------------------------------------
+                        // NOTE: Maintenance Logic moved to Sheet1 (fetchTools) as per request
 
                         const nameCell = row.c[1];
                         const name = (nameCell && nameCell.v) ? String(nameCell.v) : 'Anonymous';
@@ -1152,7 +1045,7 @@
                         const dateCell = row.c[0];
                         if (dateCell) {
                              let dateObj = parseGvizDate(dateCell.v);
-                             if(!dateObj && dateCell.f) dateObj = parseGvizDate(dateCell.f); // Try formatted string
+                             if(!dateObj && dateCell.f) dateObj = parseGvizDate(dateCell.f); 
 
                              if (dateObj) {
                                  timestamp = dateObj.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
@@ -1170,15 +1063,12 @@
                         }
 
                         // Message Finding Logic (Cols 2,3,4,5)
-                        // Note: We now skip Cols 4 & 5 IF they were parsed as config dates to avoid showing dates as messages
-                        // But to be safe, we just check if they look like typical messages
                         let candidates = [];
                         [2, 3, 4, 5].forEach(i => {
                             const cell = row.c[i];
                             if (cell && cell.v) {
                                 const txt = String(cell.v);
-                                // Filter out Dates, URLs, etc.
-                                const isDateLike = txt.startsWith('Date(') || !isNaN(Date.parse(txt)) && txt.length < 20; // heuristic
+                                const isDateLike = txt.startsWith('Date(') || !isNaN(Date.parse(txt)) && txt.length < 20; 
                                 if (!txt.includes('@') && !txt.includes('google.com') && !isDateLike && txt.length > 1) {
                                     candidates.push(txt);
                                 }
@@ -1192,10 +1082,6 @@
                         return { name, message, timestamp, dateGroup };
                     }).filter(story => story !== null);
                     
-                    // Run Wellness Check NOW that we have data
-                    // This will update the UI BEHIND the loader
-                    checkWellnessTime();
-
                     initSpotlight([...allStories].reverse().slice(0, 5));
 
                     const grid = document.getElementById('stories-grid');
@@ -1204,7 +1090,6 @@
                     storiesDisplayed = BATCH_SIZE; 
                     const initialBatch = allStories.slice(Math.max(allStories.length - BATCH_SIZE, 0));
                     
-                    // Render Initial Batch with Date Headers
                     let lastGroup = null;
                     initialBatch.forEach(story => {
                         if (story.dateGroup !== lastGroup) {
@@ -1229,13 +1114,162 @@
                 console.log('Error', err);
                 const grid = document.getElementById('stories-grid');
                 grid.innerHTML = getStaticStoriesHTML(); 
+            }
+        }
+
+        // NEW: Fetch Tools + Config from Sheet1
+        async function fetchTools() {
+            const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
+            const sheetName = 'Sheet1';
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
+
+            try {
+                const res = await fetch(url);
+                const text = await res.text();
+                const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
+                const json = JSON.parse(jsonText);
+                
+                const rows = json.table.rows;
+                const container = document.getElementById('tools-container');
+                container.innerHTML = ''; // Clear loader
+
+                if (!rows || rows.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10"><i class="fa-solid fa-folder-open text-4xl mb-3 opacity-30"></i><p>No tools available right now.</p></div>';
+                    return;
+                }
+
+                // Reset Configs
+                scheduledWellness = null;
+                globalNotification = null;
+                maintenanceText = null;
+
+                // Palette for dynamic cards
+                const styles = [
+                    { bg: 'from-blue-600 to-blue-400', text: 'text-deped-blue', bgIcon: 'bg-blue-50', group: 'group-hover:text-deped-blue', badge: 'bg-blue-100 text-blue-700' },
+                    { bg: 'from-red-600 to-red-400', text: 'text-deped-red', bgIcon: 'bg-red-50', group: 'group-hover:text-deped-red', badge: 'bg-red-100 text-red-700' },
+                    { bg: 'from-yellow-500 to-yellow-400', text: 'text-yellow-600', bgIcon: 'bg-yellow-50', group: 'group-hover:text-yellow-600', badge: 'bg-yellow-100 text-yellow-700' },
+                    { bg: 'from-teal-500 to-teal-400', text: 'text-teal-600', bgIcon: 'bg-teal-50', group: 'group-hover:text-teal-600', badge: 'bg-teal-100 text-teal-700' },
+                    { bg: 'from-purple-600 to-purple-400', text: 'text-purple-600', bgIcon: 'bg-purple-50', group: 'group-hover:text-purple-600', badge: 'bg-purple-100 text-purple-700' },
+                    { bg: 'from-orange-500 to-orange-400', text: 'text-orange-600', bgIcon: 'bg-orange-50', group: 'group-hover:text-orange-600', badge: 'bg-orange-100 text-orange-700' }
+                ];
+
+                rows.forEach((row, index) => {
+                    // --- 1. TOOL DATA (Cols A, B, C) ---
+                    const name = row.c[0] ? row.c[0].v : null;
+                    const link = row.c[1] ? row.c[1].v : "#";
+                    const details = row.c[2] ? row.c[2].v : "No details provided.";
+                    
+                    if(name) {
+                        const style = styles[index % styles.length];
+                        const categories = "planning content assessment prof-dev"; 
+
+                        const cardHTML = `
+                        <a href="${link}" target="_blank" class="tool-card group relative block h-full reveal active" data-category="${categories}">
+                            <div class="absolute inset-0 bg-gradient-to-br ${style.bg} rounded-3xl transform rotate-2 opacity-0 group-hover:opacity-100 transition duration-500 blur-sm"></div>
+                            <div class="relative h-full bg-white rounded-3xl p-8 shadow-sm border border-slate-100 group-hover:-translate-y-2 group-hover:shadow-card-hover transition duration-300 flex flex-col overflow-hidden">
+                                <div class="absolute top-4 right-4 ${style.badge} text-[10px] font-bold px-2 py-1 rounded-full uppercase tracking-wider">New</div>
+                                
+                                <div class="w-16 h-16 ${style.bgIcon} rounded-2xl flex items-center justify-center ${style.text} text-2xl mb-6 group-hover:scale-110 transition duration-300">
+                                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                </div>
+                                <h3 class="text-xl font-bold text-slate-900 mb-3 ${style.group} transition">${name}</h3>
+                                <p class="text-slate-500 text-sm leading-relaxed mb-8 flex-grow">
+                                    ${details}
+                                </p>
+                                <div class="flex items-center ${style.text} font-bold text-sm border-t border-slate-50 pt-4 mt-auto">
+                                    <span>Use Tool</span> 
+                                    <i class="fa-solid fa-arrow-right ml-2 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300"></i>
+                                </div>
+                            </div>
+                        </a>
+                        `;
+                        container.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+
+                    // --- 2. NOTIFICATIONS (Cols D, E) ---
+                    // D: Detail/Title, E: Message
+                    if (row.c[3]?.v && row.c[4]?.v) {
+                        globalNotification = {
+                            title: row.c[3].v,
+                            message: row.c[4].v
+                        };
+                    }
+
+                    // --- 3. MAINTENANCE CONFIG (Cols F, G, H, I) ---
+                    // F: Start, G: End, H: Details(Title), I: Message(Body)
+                    if (row.c[5] && row.c[6]) {
+                        const start = parseGvizDate(row.c[5].v);
+                        const end = parseGvizDate(row.c[6].v);
+                        if(start && end) {
+                            scheduledWellness = { start, end };
+                            // Check for custom Text
+                            if(row.c[7]?.v || row.c[8]?.v) {
+                                maintenanceText = {
+                                    title: row.c[7]?.v || "System Maintenance Underway",
+                                    message: row.c[8]?.v || "We are currently performing scheduled upgrades."
+                                };
+                            }
+                        }
+                    }
+                });
+                
+                // After processing all rows, check configurations
+                checkWellnessTime();
+                showNotification();
+
+            } catch (err) {
+                console.error('Error fetching tools:', err);
+                document.getElementById('tools-container').innerHTML = `
+                    <div class="col-span-full text-center text-red-400 py-10">
+                        <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                        <p class="text-sm">Unable to load tools. Please refresh.</p>
+                    </div>`;
             } finally {
-                // HIDE LOADER: Now that the UI is in the correct state (Wellness or Normal), remove the loader
+                // HIDE LOADER
                 const loader = document.getElementById('initial-loader');
                 if(loader) {
                     loader.classList.add('opacity-0');
                     setTimeout(() => loader.remove(), 700);
                 }
+            }
+        }
+
+        function showNotification() {
+            if(!globalNotification) return;
+
+            const modal = document.getElementById('announcement-modal');
+            const titleEl = document.getElementById('announcement-title');
+            const msgEl = document.getElementById('announcement-message');
+            const closeBtn = document.getElementById('close-announcement');
+            const ackBtn = document.getElementById('ack-announcement');
+
+            if(modal && titleEl && msgEl) {
+                // Simple Check: has user seen this specific message?
+                const lastSeenMsg = localStorage.getItem('last_seen_announcement');
+                if (lastSeenMsg === globalNotification.message) return;
+
+                titleEl.innerText = globalNotification.title;
+                msgEl.innerText = globalNotification.message;
+                
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.firstElementChild.classList.remove('scale-95');
+                    modal.firstElementChild.classList.add('scale-100');
+                }, 100);
+
+                const closeModal = () => {
+                    modal.classList.add('opacity-0');
+                    modal.firstElementChild.classList.remove('scale-100');
+                    modal.firstElementChild.classList.add('scale-95');
+                    setTimeout(() => {
+                        modal.classList.add('hidden');
+                        localStorage.setItem('last_seen_announcement', globalNotification.message);
+                    }, 300);
+                };
+
+                closeBtn.onclick = closeModal;
+                ackBtn.onclick = closeModal;
             }
         }
 
@@ -1377,7 +1411,7 @@
             `;
         }
         
-        // 6. WELLNESS MODE LOGIC (Updated to support Remote Config ONLY)
+        // 6. WELLNESS MODE LOGIC (Remote Config Sheet1)
         function toggleWellnessMode(forceState) {
             const body = document.body;
             const subtitle = document.getElementById('nav-subtitle');
@@ -1385,6 +1419,10 @@
             const communityDesc = document.querySelector('.section-desc');
             const chatContainer = document.getElementById('chat-container');
             const statusIndicator = document.getElementById('wellness-status');
+            
+            // Dynamic Text Elements
+            const maintTitle = document.getElementById('maintenance-title');
+            const maintMsg = document.getElementById('maintenance-message');
 
             const isNowWellness = typeof forceState !== 'undefined' ? forceState : !body.classList.contains('wellness-active');
 
@@ -1392,6 +1430,16 @@
                 body.classList.add('wellness-active');
                 if(subtitle) subtitle.innerText = "Maintenance Mode 🛠️";
                 if(statusIndicator) statusIndicator.innerHTML = '<i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active';
+                
+                // Set Custom Text if available
+                if(maintenanceText && maintTitle && maintMsg) {
+                    maintTitle.innerText = maintenanceText.title;
+                    maintMsg.innerText = maintenanceText.message;
+                } else {
+                    if(maintTitle) maintTitle.innerText = "System Maintenance Underway";
+                    if(maintMsg) maintMsg.innerHTML = "We are currently performing scheduled upgrades to enhance platform performance and reliability.<br>Thank you for your patience as we prepare a better experience for you.";
+                }
+
                 if(communityTitle) {
                     communityTitle.classList.remove('text-slate-900');
                     communityTitle.classList.add('text-blue-200', 'text-glow');
@@ -1503,6 +1551,7 @@
              }, 5000); // 5s fallback
 
              fetchStories();
+             fetchTools(); // Call new function
              
              // Contact Form Logic
              const contactForm = document.getElementById('contactForm');
@@ -1608,34 +1657,27 @@
         });
 
         /* --- BASIC SECURITY DETERRENTS --- */
-        // 1. Disable Right Click
         document.addEventListener('contextmenu', (e) => {
             e.preventDefault();
         });
 
-        // 2. Disable Keyboard Shortcuts (F12, Ctrl+Shift+I, Ctrl+U, etc.)
         document.addEventListener('keydown', (e) => {
-            // F12
             if(e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl+Shift+I (Inspect)
             if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl+Shift+C (Inspect Element)
             if(e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl+Shift+J (Console)
             if(e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
                 e.preventDefault();
                 return false;
             }
-            // Ctrl+U (View Source)
             if(e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
                 e.preventDefault();
                 return false;
