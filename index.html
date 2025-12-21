@@ -253,7 +253,7 @@
 
     <!-- Notification Modal (Hidden by Default) -->
     <div id="announcement-modal" class="fixed inset-0 z-[150] bg-black/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-ny-gold relative transform scale-95 transition-transform duration-300">
+        <div class="bg-white rounded-2xl max-w-md w-full p-6 shadow-2xl border-2 border-ny-gold relative transform scale-95 transition-transform duration-300 max-h-[80vh] overflow-y-auto custom-scroll">
             <button id="close-announcement" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600 transition"><i class="fa-solid fa-xmark text-xl"></i></button>
             <div class="text-center">
                  <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-4 text-ny-gold text-3xl shadow-md border border-blue-100">
@@ -392,7 +392,8 @@
                         
                         <div class="text-center relative z-10">
                             <i class="fa-solid fa-quote-left text-4xl text-slate-200 mb-6 block mx-auto"></i>
-                            <div id="spotlight-content" class="min-h-[140px] flex flex-col justify-center items-center transition-opacity duration-500 opacity-100">
+                            <!-- CHANGED: min-h-[140px] -> h-[350px] to fix layout shifting -->
+                            <div id="spotlight-content" class="h-[350px] flex flex-col justify-center items-center transition-opacity duration-500 opacity-100">
                                 <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed font-holiday">"Loading inspiring stories..."</p>
                             </div>
                         </div>
@@ -689,9 +690,9 @@
                                      </div>
                                      <!-- Message Row -->
                                      <div class="flex items-end gap-2">
-                                         <textarea id="message" name="entry.1499916649" rows="1" required 
+                                         <textarea id="message" name="entry.1499916649" rows="1" required maxlength="300"
                                              class="text-sm text-slate-700 bg-transparent outline-none resize-none placeholder-slate-400 w-full mb-2 max-h-24" 
-                                             placeholder="Share a message..."
+                                             placeholder="Share a message (Max 300 chars)..."
                                              oninput="this.style.height = ''; this.style.height = Math.min(this.scrollHeight, 100) + 'px'"></textarea>
                                          
                                          <button type="submit" id="sendBtn" class="w-10 h-10 rounded-full bg-gradient-to-r from-blue-600 to-blue-500 text-white flex-shrink-0 flex items-center justify-center shadow-md hover:shadow-lg hover:-translate-y-0.5 transition transform active:scale-95 mb-1">
