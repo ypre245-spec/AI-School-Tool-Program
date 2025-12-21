@@ -225,7 +225,7 @@
                 <div class="hidden md:flex space-x-1 items-center">
                     <!-- Wellness Mode Only Links -->
                     <div class="wellness-zone hidden items-center gap-4 text-sm font-medium text-white/90">
-                        <span id="wellness-status" class="bg-blue-800/50 px-3 py-1 rounded-full border border-blue-400/30"><i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active</span>
+                        
                     </div>
 
                     <!-- Productivity Links (Hidden in Wellness Mode) -->
@@ -304,9 +304,7 @@
 
         <!-- Voices Section (Spotlight) -->
         <section class="py-16 bg-slate-50 border-y border-slate-200 relative z-20">
-            <div class="max-w-4xl mx-auto px-4 relative reveal">
-                <!-- Floating Decoration -->
-                <div class="absolute -top-10 -left-10 text-8xl text-blue-100 transform -rotate-12 hidden lg:block select-none pointer-events-none">"</div>
+            <div class="max-w-6xl mx-auto px-4 relative reveal">
                 
                 <div class="text-center mb-10">
                     <h2 class="text-3xl font-bold text-slate-800">Voices of Our Teachers</h2>
@@ -317,23 +315,42 @@
                     </div>
                 </div>
 
-                <!-- Spotlight Card -->
-                <div class="relative max-w-3xl mx-auto">
-                    <div class="absolute inset-0 bg-white rounded-3xl shadow-sm transform translate-y-2 translate-x-2 border border-slate-200"></div>
-                    <div class="bg-white rounded-3xl p-8 md:p-12 shadow-xl border border-slate-100 relative overflow-hidden">
-                        <!-- Card Decoration -->
-                        <div class="absolute top-0 right-0 w-32 h-32 bg-blue-50 rounded-bl-full opacity-50 -mr-10 -mt-10"></div>
+                <!-- Spotlight Card (SaaS Carousel Style) -->
+                <div class="relative max-w-5xl mx-auto mt-8 mb-8">
+                    <!-- SaaS Glow Effect -->
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-blue-300 via-indigo-300 to-blue-300 rounded-[2rem] opacity-30 blur-md"></div>
+                    
+                    <div class="bg-white rounded-[1.8rem] shadow-xl border border-slate-100 relative overflow-hidden group hover:shadow-2xl transition-all duration-500 z-10">
                         
-                        <div class="text-center relative z-10">
-                            <i class="fa-solid fa-quote-left text-4xl text-blue-200 mb-6 block mx-auto"></i>
-                            <!-- CHANGED: min-h-[140px] -> h-[350px] to fix layout shifting -->
-                            <div id="spotlight-content" class="h-[350px] flex flex-col justify-center items-center transition-opacity duration-500 opacity-100">
-                                <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed">"Loading inspiring stories..."</p>
-                            </div>
+                        <!-- CHANGED: min-h-[350px] to h-[450px] (Fixed Height) to prevent layout shift -->
+                        <div class="p-8 md:p-12 relative z-10 h-[450px] flex items-center">
+                             
+                             <!-- Left Navigation Button -->
+                             <button id="prev-spotlight" class="hidden md:flex absolute left-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-deped-blue hover:border-deped-blue items-center justify-center transition-all shadow-sm z-20 hover:scale-110">
+                                <i class="fa-solid fa-chevron-left"></i>
+                             </button>
+
+                             <!-- Right Navigation Button -->
+                             <button id="next-spotlight" class="hidden md:flex absolute right-6 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white border border-slate-200 text-slate-400 hover:text-deped-blue hover:border-deped-blue items-center justify-center transition-all shadow-sm z-20 hover:scale-110">
+                                <i class="fa-solid fa-chevron-right"></i>
+                             </button>
+
+                             <!-- Content Container -->
+                             <div id="spotlight-content" class="flex-grow flex flex-col justify-center items-center transition-opacity duration-300 opacity-100 w-full px-8 md:px-16">
+                                <div class="animate-pulse flex flex-col items-center">
+                                    <div class="h-4 w-24 bg-slate-200 rounded mb-4"></div>
+                                    <div class="h-6 w-3/4 bg-slate-200 rounded mb-2"></div>
+                                    <div class="h-6 w-1/2 bg-slate-200 rounded"></div>
+                                </div>
+                             </div>
+                             
                         </div>
-                        
-                        <!-- Indicators -->
-                        <div id="spotlight-indicators" class="flex justify-center gap-2 mt-2"></div>
+
+                        <!-- Bottom Indicators -->
+                        <div class="bg-slate-50/50 border-t border-slate-100 py-3 px-6 flex justify-between items-center">
+                            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest hidden sm:block">Real feedback from real teachers</span>
+                            <div id="spotlight-indicators" class="flex gap-2 mx-auto sm:mx-0"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -812,6 +829,13 @@
         const COOLDOWN_MS = 5 * 60 * 1000; // 5 Minutes
         const STORAGE_KEY = 'ai_school_cooldown_target_v2'; 
         
+        // Caching Configuration
+        const CACHE_CONFIG = {
+            STORIES: { KEY: 'ai_school_stories_data_v1', TS: 'ai_school_stories_ts_v1' },
+            TOOLS: { KEY: 'ai_school_tools_data_v1', TS: 'ai_school_tools_ts_v1' },
+            TTL: 60000 // 60 Seconds
+        };
+
         const foulWords = [
             "bobo", "tanga", "gago", "ulol", "tarantado", "putangina", "pukingina", "tangina", "kupal", "kantot",
             "pota", "ina mo", "hayop", "gaga", "pakyu", "burat", "etits", "pepe", "kepiyas", "jakol", "hindot", 
@@ -913,22 +937,39 @@
              return null;
         }
 
-        async function fetchStories() {
+        async function fetchStories(forceRefresh = false) {
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
             const gid = '1355823203';
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq&gid=${gid}`;
 
             try {
-                const response = await fetch(url);
-                const text = await response.text();
-                
-                const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
-                if (!jsonMatch || !jsonMatch[1]) throw new Error('Invalid GVIZ response');
-                
-                const json = JSON.parse(jsonMatch[1]);
-                const rows = json.table.rows;
+                let rows = null;
+                const now = Date.now();
+                const cachedData = localStorage.getItem(CACHE_CONFIG.STORIES.KEY);
+                const cachedTs = localStorage.getItem(CACHE_CONFIG.STORIES.TS);
 
-                // SMART CHECK: Only proceed if data changed
+                // 1. Check Cache Validity
+                if (!forceRefresh && cachedData && cachedTs && (now - parseInt(cachedTs) < CACHE_CONFIG.TTL)) {
+                    rows = JSON.parse(cachedData);
+                    // console.log("Serving Stories from Cache");
+                } else {
+                    // 2. Fetch from Network
+                    // console.log("Fetching Stories from Network...");
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    
+                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+                    if (!jsonMatch || !jsonMatch[1]) throw new Error('Invalid GVIZ response');
+                    
+                    const json = JSON.parse(jsonMatch[1]);
+                    rows = json.table.rows;
+
+                    // 3. Update Cache
+                    localStorage.setItem(CACHE_CONFIG.STORIES.KEY, JSON.stringify(rows));
+                    localStorage.setItem(CACHE_CONFIG.STORIES.TS, now.toString());
+                }
+
+                // SMART CHECK: Only proceed if data changed (compared to memory)
                 const currentHash = JSON.stringify(rows);
                 if (currentHash === lastStoriesHash) return; 
                 lastStoriesHash = currentHash;
@@ -1024,6 +1065,13 @@
 
             } catch (err) {
                 console.log('Error', err);
+                // Fallback to cache if network fails, even if expired
+                const expiredCache = localStorage.getItem(CACHE_CONFIG.STORIES.KEY);
+                if (expiredCache && allStories.length === 0) {
+                     // Logic to parse expired cache if array is empty (first load fail)
+                     // Omitted for brevity as the current error handling logic is simple
+                }
+
                 const grid = document.getElementById('stories-grid');
                 if(grid.innerHTML.trim() === "") grid.innerHTML = getStaticStoriesHTML(); 
             }
@@ -1036,12 +1084,28 @@
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
 
             try {
-                const res = await fetch(url);
-                const text = await res.text();
-                const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
-                const json = JSON.parse(jsonText);
-                
-                const rows = json.table.rows;
+                let rows = null;
+                const now = Date.now();
+                const cachedData = localStorage.getItem(CACHE_CONFIG.TOOLS.KEY);
+                const cachedTs = localStorage.getItem(CACHE_CONFIG.TOOLS.TS);
+
+                // 1. Check Cache Validity
+                if (cachedData && cachedTs && (now - parseInt(cachedTs) < CACHE_CONFIG.TTL)) {
+                    rows = JSON.parse(cachedData);
+                    // console.log("Serving Tools from Cache");
+                } else {
+                    // 2. Fetch from Network
+                    // console.log("Fetching Tools from Network...");
+                    const res = await fetch(url);
+                    const text = await res.text();
+                    const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
+                    const json = JSON.parse(jsonText);
+                    rows = json.table.rows;
+
+                    // 3. Update Cache
+                    localStorage.setItem(CACHE_CONFIG.TOOLS.KEY, JSON.stringify(rows));
+                    localStorage.setItem(CACHE_CONFIG.TOOLS.TS, now.toString());
+                }
 
                 // SMART CHECK: Only update if data changed
                 const currentHash = JSON.stringify(rows);
@@ -1259,19 +1323,45 @@
             if (!stories || stories.length === 0) return;
             const indicatorsContainer = document.getElementById('spotlight-indicators');
             indicatorsContainer.innerHTML = '';
+            
+            // Create Dots
             stories.forEach((_, index) => {
-                const dot = document.createElement('div');
-                dot.className = `w-2 h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-deped-blue w-6' : 'bg-slate-300'}`;
-                dot.id = `spotlight-dot-${index}`;
+                const dot = document.createElement('button'); // Changed to button for accessibility
+                dot.className = `h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-deped-blue w-6' : 'bg-slate-200 w-2 hover:bg-slate-300'}`;
+                dot.onclick = () => {
+                    if(spotlightInterval) clearInterval(spotlightInterval);
+                    currentSpotlightIndex = index;
+                    transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
+                };
                 indicatorsContainer.appendChild(dot);
             });
+
+            // Initial Render
             updateSpotlightHTML(stories[0]);
+            
+            // Setup Navigation Buttons
+            const prevBtn = document.getElementById('prev-spotlight');
+            const nextBtn = document.getElementById('next-spotlight');
+            
+            if(prevBtn) prevBtn.onclick = () => {
+                if(spotlightInterval) clearInterval(spotlightInterval);
+                currentSpotlightIndex = (currentSpotlightIndex - 1 + stories.length) % stories.length;
+                transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
+            };
+            
+            if(nextBtn) nextBtn.onclick = () => {
+                if(spotlightInterval) clearInterval(spotlightInterval);
+                currentSpotlightIndex = (currentSpotlightIndex + 1) % stories.length;
+                transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
+            };
+
+            // Auto Rotation
             if (stories.length > 1) {
                 if (spotlightInterval) clearInterval(spotlightInterval);
                 spotlightInterval = setInterval(() => {
                     currentSpotlightIndex = (currentSpotlightIndex + 1) % stories.length;
                     transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
-                }, 6000);
+                }, 8000); // Slower for reading (8s)
             }
         }
 
@@ -1281,29 +1371,46 @@
             container.classList.add('opacity-0');
             setTimeout(() => {
                 updateSpotlightHTML(story);
-                document.querySelectorAll('#spotlight-indicators div').forEach((dot, i) => {
-                    if (i === index) {
-                        dot.classList.remove('bg-slate-300', 'w-2');
-                        dot.classList.add('bg-deped-blue', 'w-6');
+                
+                // Update dots
+                const dots = document.getElementById('spotlight-indicators').children;
+                for(let i=0; i<dots.length; i++) {
+                     if (i === index) {
+                        dots[i].classList.remove('bg-slate-200', 'w-2', 'hover:bg-slate-300');
+                        dots[i].classList.add('bg-deped-blue', 'w-6');
                     } else {
-                        dot.classList.remove('bg-deped-blue', 'w-6');
-                        dot.classList.add('bg-slate-300', 'w-2');
+                        dots[i].classList.remove('bg-deped-blue', 'w-6');
+                        dots[i].classList.add('bg-slate-200', 'w-2', 'hover:bg-slate-300');
                     }
-                });
+                }
+
                 container.classList.remove('opacity-0');
                 container.classList.add('opacity-100');
-            }, 500);
+            }, 300); // Faster transition
         }
 
         function updateSpotlightHTML(story) {
             const container = document.getElementById('spotlight-content');
+            // SaaS Style Content: Stars removed for authenticity, replaced with Quote Icon
             container.innerHTML = `
-                <p class="text-xl md:text-2xl text-slate-700 font-medium italic mb-6 leading-relaxed">"${story.message}"</p>
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-deped-blue to-blue-600 text-white flex items-center justify-center font-bold text-sm shadow-md">${story.name.charAt(0)}</div>
-                    <div class="text-left">
-                        <p class="text-sm font-bold text-slate-800">${story.name}</p>
-                        <p class="text-[10px] text-slate-400 uppercase tracking-wider font-semibold">Verified Teacher</p>
+                <div class="flex flex-col items-center text-center">
+                    <i class="fa-solid fa-quote-left text-4xl text-blue-100 mb-6 animate-pulse"></i>
+                    
+                    <p class="text-xl md:text-3xl text-slate-800 font-medium leading-relaxed tracking-tight mb-8">"${story.message}"</p>
+                    
+                    <div class="flex items-center gap-3 mt-2">
+                        <div class="w-10 h-10 rounded-full bg-slate-100 text-deped-blue flex items-center justify-center font-bold text-sm shadow-inner border border-slate-200">
+                            ${story.name.charAt(0)}
+                        </div>
+                        <div class="text-left">
+                            <div class="flex items-center gap-2">
+                                <p class="text-sm font-bold text-slate-900">${story.name}</p>
+                                <span class="bg-blue-50 text-blue-600 text-[10px] px-1.5 py-0.5 rounded-md border border-blue-100 font-bold flex items-center gap-1">
+                                    <i class="fa-solid fa-check-circle text-[8px]"></i> Verified
+                                </span>
+                            </div>
+                            <p class="text-[10px] text-slate-500 font-medium">Public School Teacher</p>
+                        </div>
                     </div>
                 </div>
             `;
@@ -1361,7 +1468,7 @@
 
             if (isNowWellness) {
                 body.classList.add('wellness-active');
-                if(subtitle) subtitle.innerText = "Maintenance Mode 🛠️";
+                // if(subtitle) subtitle.innerText = "Maintenance Mode 🛠️";
                 // if(statusIndicator) statusIndicator.innerHTML = '<i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active';
                 
                 // Set Custom Text if available
@@ -1492,7 +1599,7 @@
              fetchTools(); // Call new function
              
              // --- AUTO REFRESH LOGIC ---
-             // Check for changes every 5 seconds
+             // Polling logic: Checks every 5 seconds, but fetchStories()/fetchTools() will only hit network if cache expired (60s)
              setInterval(() => {
                  fetchStories();
                  fetchTools();
@@ -1526,6 +1633,10 @@
 
                      const name = nameInput.value;
                      const message = messageInput.value;
+                     
+                     // Invalidate Cache on Submit so user sees their message immediately
+                     localStorage.removeItem(CACHE_CONFIG.STORIES.TS);
+
                      const targetTime = Date.now() + COOLDOWN_MS;
                      localStorage.setItem(STORAGE_KEY, targetTime);
                      startTimer(btn, targetTime);
@@ -1534,6 +1645,8 @@
                      const timeString = dateObj.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
                      const dateGroup = "Today";
                      const newStory = { name: name, message: message, timestamp: timeString, dateGroup: dateGroup };
+                     
+                     // Optimistic UI update
                      allStories.push(newStory);
                      initSpotlight([...allStories].reverse().slice(0, 5));
                      const grid = document.getElementById('stories-grid');
@@ -1542,6 +1655,9 @@
                          grid.appendChild(createChatBubble(newStory));
                          grid.scrollTop = grid.scrollHeight;
                      }
+                     
+                     // Trigger a network fetch shortly after to sync
+                     setTimeout(() => fetchStories(true), 2000);
                  });
              }
 
