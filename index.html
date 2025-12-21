@@ -1640,7 +1640,14 @@
                      const targetTime = Date.now() + COOLDOWN_MS;
                      localStorage.setItem(STORAGE_KEY, targetTime);
                      startTimer(btn, targetTime);
-                     setTimeout(() => { messageInput.value = ''; }, 100);
+                     
+                     // FIXED: Reset input value, character count, and height
+                     setTimeout(() => { 
+                         messageInput.value = ''; 
+                         document.getElementById('char-count').innerText = '0/300';
+                         messageInput.style.height = ''; 
+                     }, 100);
+
                      const dateObj = new Date();
                      const timeString = dateObj.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
                      const dateGroup = "Today";
