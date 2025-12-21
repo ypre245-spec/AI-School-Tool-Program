@@ -172,6 +172,15 @@
             width: fit-content;
             box-shadow: 0 1px 2px rgba(0,0,0,0.05);
         }
+
+        /* Credits Animation */
+        @keyframes zoomIn {
+            0% { transform: scale(0.8); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .animate-zoom-in {
+            animation: zoomIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen font-sans selection:bg-deped-blue selection:text-white transition-colors duration-700">
@@ -787,6 +796,43 @@
     <div id="image-modal" class="fixed inset-0 z-[200] bg-black/95 hidden flex items-center justify-center p-4 cursor-zoom-out transition-opacity duration-300 opacity-0 backdrop-blur-sm">
         <img id="modal-img" src="" alt="Full Screen Support" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transform scale-95 transition-transform duration-300 border-2 border-yellow-500">
         <p class="absolute bottom-10 text-white/50 text-sm animate-pulse">Click anywhere to close</p>
+    </div>
+
+    <!-- SECRET CREDITS OVERLAY (Shift + F10) -->
+    <div id="credits-overlay" class="fixed inset-0 z-[300] bg-slate-900/95 hidden flex items-center justify-center p-4 backdrop-blur-md">
+        <div class="bg-slate-900 border border-slate-700 rounded-2xl p-8 max-w-md w-full text-center relative shadow-[0_0_50px_rgba(30,58,138,0.5)] transform scale-95 opacity-0 transition-all duration-500" id="credits-card">
+            
+            <button id="close-credits" class="absolute top-4 right-4 text-slate-500 hover:text-white transition"><i class="fa-solid fa-xmark text-xl"></i></button>
+            
+            <!-- Animated Icon -->
+            <div class="mb-8 relative inline-block">
+                <div class="absolute inset-0 bg-blue-500 blur-xl opacity-20 rounded-full animate-pulse"></div>
+                <i class="fa-solid fa-code text-5xl text-blue-400 relative z-10 animate-float"></i>
+            </div>
+
+            <div class="space-y-8 font-mono">
+                <div class="space-y-1">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">System Identity</p>
+                    <h2 class="text-2xl font-bold text-white tracking-tight">AI School Tool Program</h2>
+                </div>
+
+                <div class="space-y-2">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">Lead Developer & Author</p>
+                    <div class="relative inline-block px-6 py-2 border border-blue-500/30 rounded-lg bg-blue-900/20">
+                        <p class="text-xl font-bold text-blue-300 tracking-wider">DAVID JESS F. ASAURO</p>
+                    </div>
+                </div>
+
+                <div class="space-y-1">
+                    <p class="text-[10px] uppercase tracking-[0.3em] text-slate-500 font-bold">Build Date</p>
+                    <p class="text-lg font-bold text-yellow-400">December 21, 2025</p>
+                </div>
+            </div>
+
+            <div class="mt-10 pt-6 border-t border-slate-800">
+                <p class="text-[10px] text-slate-600 uppercase tracking-widest">© 2025 All Rights Reserved</p>
+            </div>
+        </div>
     </div>
 
     <!-- Logic Script -->
@@ -1722,6 +1768,27 @@
                      }, 300);
                  });
              }
+
+             // Credits Overlay Close Logic
+             const creditsOverlay = document.getElementById('credits-overlay');
+             const closeCredits = document.getElementById('close-credits');
+             const creditsCard = document.getElementById('credits-card');
+
+             if(closeCredits && creditsOverlay && creditsCard) {
+                 const hideCredits = () => {
+                     creditsCard.classList.remove('animate-zoom-in');
+                     creditsCard.classList.remove('opacity-100', 'scale-100');
+                     creditsCard.classList.add('opacity-0', 'scale-95');
+                     setTimeout(() => {
+                         creditsOverlay.classList.add('hidden');
+                     }, 300);
+                 };
+
+                 closeCredits.addEventListener('click', hideCredits);
+                 creditsOverlay.addEventListener('click', (e) => {
+                     if(e.target === creditsOverlay) hideCredits();
+                 });
+             }
         });
 
         /* --- BASIC SECURITY DETERRENTS --- */
@@ -1730,6 +1797,22 @@
         });
 
         document.addEventListener('keydown', (e) => {
+            // Secret Credits: Ctrl + Shift + F10
+            if(e.ctrlKey && e.shiftKey && e.key === 'F10') {
+                e.preventDefault();
+                const overlay = document.getElementById('credits-overlay');
+                const card = document.getElementById('credits-card');
+                if(overlay && card) {
+                    overlay.classList.remove('hidden');
+                    // Add animation class after removing hidden to trigger CSS transition/animation
+                    setTimeout(() => {
+                        card.classList.remove('opacity-0', 'scale-95');
+                        card.classList.add('opacity-100', 'scale-100', 'animate-zoom-in');
+                    }, 10);
+                }
+                return false;
+            }
+
             if(e.key === 'F12' || e.keyCode === 123) {
                 e.preventDefault();
                 return false;
