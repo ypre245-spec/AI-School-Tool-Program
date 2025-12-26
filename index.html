@@ -55,7 +55,6 @@
                         'float': 'float 6s ease-in-out infinite',
                         'breathe': 'breathe 4s ease-in-out infinite',
                         'spin-slow': 'spin 8s linear infinite',
-                        'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
                     },
                     keyframes: {
                         float: {
@@ -65,11 +64,6 @@
                         breathe: {
                             '0%, 100%': { opacity: '0.6', transform: 'scale(1)' },
                             '50%': { opacity: '1', transform: 'scale(1.05)' },
-                        },
-                        shake: {
-                            '0%, 100%': { transform: 'translateX(0)' },
-                            '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-4px)' },
-                            '20%, 40%, 60%, 80%': { transform: 'translateX(4px)' },
                         }
                     }
                 }
@@ -250,59 +244,9 @@
                         <a href="#about" class="px-4 py-2 rounded-full hover:bg-white/10 transition font-medium text-sm">Mission</a>
                     </div>
                     
-                    <!-- Added ID: nav-community-desktop to toggle visibility -->
-                    <a href="#community" id="nav-community-desktop" class="hidden ml-2 bg-white text-deped-blue px-6 py-2.5 rounded-full font-bold transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm flex items-center border border-slate-200">
+                    <a href="#community" class="ml-4 bg-white text-deped-blue px-6 py-2.5 rounded-full font-bold transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-sm flex items-center border border-slate-200">
                         <i class="fa-solid fa-users mr-2"></i> Community Hub
                     </a>
-
-                    <!-- Guest State: Login / Register (Moved to right corner) -->
-                    <div id="auth-guest" class="flex items-center ml-4">
-                        <button id="trigger-login" class="px-4 py-2 rounded-full text-white/90 hover:bg-white/10 transition font-medium text-sm mr-1">
-                            Log In
-                        </button>
-                        <button class="trigger-register px-4 py-2 rounded-full bg-yellow-400 text-blue-900 hover:bg-yellow-300 transition font-bold text-sm shadow-md cursor-pointer">
-                            <i class="fa-solid fa-user-plus mr-1"></i> Register
-                        </button>
-                    </div>
-
-                    <!-- Authenticated State: User Profile (Moved to right corner) -->
-                    <!-- REMOVED 'group' class to disable CSS hover effects -->
-                    <div id="auth-user" class="hidden ml-4 relative">
-                        <button id="user-menu-btn" class="flex items-center gap-2 bg-blue-800/50 hover:bg-blue-700 border border-blue-400/30 px-3 py-1.5 rounded-full transition-all">
-                            <div class="w-7 h-7 rounded-full bg-white text-deped-blue flex items-center justify-center font-bold text-xs shadow-sm" id="user-avatar">
-                                U
-                            </div>
-                            <div class="text-left leading-tight hidden lg:block">
-                                <p class="text-xs font-bold text-white" id="user-name-display">User</p>
-                                <p class="text-[9px] text-blue-200 uppercase tracking-wider" id="user-role-display">Teacher</p>
-                            </div>
-                            <!-- ADDED ID 'user-menu-icon' for rotation animation -->
-                            <i id="user-menu-icon" class="fa-solid fa-chevron-down text-[10px] text-blue-300 ml-1 transition-transform duration-200"></i>
-                        </button>
-
-                        <!-- Dropdown -->
-                        <!-- REMOVED group-hover classes. ADDED id="user-dropdown". Default state is closed (opacity-0, etc.) -->
-                        <div id="user-dropdown" class="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden transform scale-95 opacity-0 pointer-events-none transition-all duration-200 origin-top-right z-50">
-                            <div class="p-3 border-b border-slate-100 relative">
-                                <!-- NEW: Manual Sync Button (Added) -->
-                                <button id="manual-sync-btn" class="absolute top-3 right-3 text-slate-300 hover:text-deped-blue transition-colors p-1" title="Sync Profile Status">
-                                    <i class="fa-solid fa-rotate"></i>
-                                </button>
-
-                                <p class="text-xs text-slate-500 font-medium">Signed in as</p>
-                                <p class="text-sm font-bold text-deped-blue truncate" id="user-dropdown-name">...</p>
-                                <!-- NEW: Validity Info in Dropdown -->
-                                <p class="text-[10px] text-slate-400 mt-0.5 font-medium" id="user-dropdown-validity"></p>
-                            </div>
-                            <a href="#" id="admin-panel-link" class="hidden flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition">
-                                <i class="fa-solid fa-gauge-high text-slate-400"></i> Admin Dashboard
-                            </a>
-                            <!-- Settings link removed -->
-                            <button id="btn-logout" class="w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition border-t border-slate-50">
-                                <i class="fa-solid fa-right-from-bracket"></i> Log Out
-                            </button>
-                        </div>
-                    </div>
                 </div>
 
                 <!-- Mobile Menu Button -->
@@ -318,30 +262,11 @@
         <div id="mobile-menu" class="hidden md:hidden bg-deped-blue border-t border-slate-700 absolute w-full shadow-2xl">
             <div class="px-4 pt-4 pb-6 space-y-2">
                 <div class="productivity-zone">
-                    <div id="mobile-auth-guest">
-                         <a href="#home" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Home</a>
-                         <a href="#tools" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">AI Tools</a>
-                         <button id="mobile-login-btn" class="w-full text-left block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Log In</button>
-                         <button class="trigger-register w-full text-left block px-4 py-3 rounded-lg bg-yellow-500 text-blue-900 hover:bg-yellow-400 transition font-bold mt-2">Register Account</button>
-                    </div>
-
-                    <div id="mobile-auth-user" class="hidden">
-                         <div class="flex items-center gap-3 px-4 py-3 border-b border-blue-800/50 mb-2">
-                             <div class="w-10 h-10 rounded-full bg-white text-deped-blue flex items-center justify-center font-bold text-lg" id="mobile-user-avatar">U</div>
-                             <div>
-                                 <p class="font-bold text-white" id="mobile-user-name">User</p>
-                                 <p class="text-xs text-blue-300 uppercase tracking-widest" id="mobile-user-role">Role</p>
-                             </div>
-                         </div>
-                         <a href="#home" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Home</a>
-                         <a href="#tools" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">AI Tools</a>
-                         <button id="mobile-logout-btn" class="w-full text-left block px-4 py-3 rounded-lg text-red-300 hover:bg-blue-800 transition font-medium">
-                             <i class="fa-solid fa-right-from-bracket mr-2"></i> Log Out
-                         </button>
-                    </div>
+                    <a href="#home" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Home</a>
+                    <a href="#tools" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">AI Tools</a>
+                    <a href="#about" class="block px-4 py-3 rounded-lg hover:bg-blue-800 transition font-medium">Mission</a>
                 </div>
-                <!-- Added ID: nav-community-mobile to toggle visibility -->
-                <a href="#community" id="nav-community-mobile" class="hidden block px-4 py-3 rounded-lg bg-white text-deped-blue hover:bg-slate-100 mt-4 text-center font-bold shadow-md">Community Hub</a>
+                <a href="#community" class="block px-4 py-3 rounded-lg bg-white text-deped-blue hover:bg-slate-100 mt-4 text-center font-bold shadow-md">Community Hub</a>
             </div>
         </div>
     </nav>
@@ -444,18 +369,18 @@
         <section id="tools" class="bg-white py-24 relative">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-12 reveal">
-                    <span id="tools-subtitle" class="text-deped-red font-bold text-sm tracking-widest uppercase mb-2 block">Powered by Gemini</span>
-                    <h2 id="tools-title" class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Tools for Education</h2>
+                    <span class="text-deped-red font-bold text-sm tracking-widest uppercase mb-2 block">Powered by Gemini</span>
+                    <h2 class="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Tools for Education</h2>
                     <p class="mt-4 text-slate-600 max-w-2xl mx-auto text-lg">
                         Select a tool below to launch the AI assistant. Designed to support your daily teaching tasks.
                     </p>
                 </div>
 
                 <div id="tools-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 min-h-[400px]">
-                    <!-- Default State: Loading / Locked -->
+                    <!-- Loading Skeleton -->
                     <div class="col-span-full flex flex-col items-center justify-center text-slate-400 py-12">
                         <i class="fa-solid fa-circle-notch fa-spin text-3xl mb-4 text-deped-blue"></i>
-                        <p class="text-sm font-medium animate-pulse">Initializing system...</p>
+                        <p class="text-sm font-medium animate-pulse">Fetching latest tools from cloud database...</p>
                     </div>
                 </div>
             </div>
@@ -513,404 +438,134 @@
             </div>
         </section>
 
-        <!-- Registration Modal -->
-        <!-- ADDED 'flex' class here to ensure centering works when 'hidden' is removed -->
-        <div id="register-modal" class="fixed inset-0 z-[200] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-            <!-- Modal Container -->
-            <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden relative transform scale-95 transition-all duration-300 flex flex-col lg:flex-row max-h-[90vh] lg:h-auto">
+        <!-- Call to Action -->
+        <section class="bg-deped-blue py-20 relative overflow-hidden reveal">
+            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+            <div class="max-w-4xl mx-auto px-4 text-center relative z-10">
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Ready to Innovate?</h2>
+                <p class="text-blue-100 mb-10 text-xl font-light">Join thousands of Filipino educators utilizing modern tools today.</p>
+                <a href="#tools" class="inline-block bg-white text-deped-blue font-bold py-4 px-10 rounded-full shadow-2xl hover:bg-yellow-400 hover:text-blue-900 transition transform hover:scale-105">
+                    <i class="fa-solid fa-rocket mr-2"></i> Start Planning Now
+                </a>
+            </div>
+        </section>
+    </div>
+
+    <!-- WRAPPER: WELLNESS ZONE (Updated for Light Theme) -->
+    <div class="wellness-zone hidden flex-col items-center justify-center pt-32 pb-12 px-4 text-center relative overflow-hidden">
+        
+        <!-- Background Decoration (Light) -->
+        <div class="absolute inset-0 z-0 opacity-10">
+             <div class="absolute top-20 left-10 w-64 h-64 bg-deped-blue rounded-full filter blur-3xl"></div>
+             <div class="absolute bottom-20 right-10 w-64 h-64 bg-deped-red rounded-full filter blur-3xl"></div>
+        </div>
+
+        <!-- Floating Elements (Tech Themed - Colors Adjusted) -->
+        <div class="absolute top-20 left-10 text-6xl opacity-10 animate-float text-deped-blue" style="animation-delay: 1s;">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+        </div>
+        <div class="absolute top-40 right-10 text-4xl opacity-10 animate-float text-deped-blue" style="animation-delay: 2s;">
+            <i class="fa-solid fa-code"></i>
+        </div>
+        <div class="absolute bottom-20 left-20 text-5xl opacity-10 animate-float text-deped-blue" style="animation-delay: 0.5s;">
+            <i class="fa-solid fa-rocket"></i>
+        </div>
+
+        <!-- Main Upgrading Animation -->
+        <div class="mb-8 relative z-10">
+            <i class="fa-solid fa-gear text-8xl text-deped-blue/10 absolute -top-4 -right-4 animate-[spin_8s_linear_infinite]"></i>
+            <i class="fa-solid fa-gear text-6xl text-yellow-400 drop-shadow-md animate-[spin_4s_linear_infinite_reverse]"></i>
+            <i class="fa-solid fa-wrench text-3xl text-slate-400 absolute bottom-0 -left-2 animate-bounce"></i>
+        </div>
+        
+        <h2 id="maintenance-title" class="text-4xl md:text-6xl font-bold text-slate-800 mb-4 tracking-wide relative z-10">System Maintenance Underway</h2>
+        <p id="maintenance-message" class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto font-light leading-relaxed relative z-10">
+            We are currently performing scheduled upgrades to enhance platform performance and reliability.<br>
+            Thank you for your patience as we prepare a better experience for you.
+        </p>
+
+        <!-- Upgrading Capabilities List (Light Theme Cards) -->
+        <div class="mt-8 relative z-10">
+            <p class="text-slate-500 text-[10px] uppercase tracking-widest mb-4 font-semibold">Optimizing Core Systems:</p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 max-w-4xl mx-auto text-left">
                 
-                <!-- Close Button -->
-                <button id="close-register-modal" class="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/20 hover:bg-black/10 flex items-center justify-center text-slate-500 hover:text-slate-800 transition">
-                    <i class="fa-solid fa-xmark text-xl"></i>
-                </button>
-
-                <!-- Left Side: Info Panel (Blue) -->
-                <div class="bg-deped-blue p-8 lg:p-12 lg:w-2/5 flex flex-col justify-between relative overflow-hidden text-white flex-shrink-0">
-                     <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                     <!-- Glows -->
-                     <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
-                     <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
-
-                     <div class="relative z-10">
-                         <div class="flex items-center gap-3 mb-8">
-                             <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                                <i class="fa-solid fa-id-card text-yellow-400"></i>
-                             </div>
-                             <span class="text-xs font-bold tracking-widest uppercase text-blue-200">Official Membership</span>
-                         </div>
-                         
-                         <h2 class="text-3xl lg:text-4xl font-bold leading-tight mb-6">Join the Digital AI Network</h2>
-                         <p class="text-blue-100 text-sm leading-relaxed mb-8">
-                             Unlock the full potential of our AI tools. Create an account to save lesson plans, customize assessments, and get priority support.
-                         </p>
-
-                         <div class="space-y-4">
-                            <div class="flex items-center gap-3 p-3 rounded-lg bg-blue-800/50 border border-blue-700/50">
-                                <div class="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center flex-shrink-0 text-blue-900 text-xs"><i class="fa-solid fa-check"></i></div>
-                                <span class="text-sm font-medium">Save generated content</span>
-                            </div>
-                            <div class="flex items-center gap-3 p-3 rounded-lg bg-blue-800/50 border border-blue-700/50">
-                                <div class="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center flex-shrink-0 text-blue-900 text-xs"><i class="fa-solid fa-robot"></i></div>
-                                <span class="text-sm font-medium">Exclusive new AI models</span>
-                            </div>
-                            <div class="flex items-center gap-3 p-3 rounded-lg bg-blue-800/50 border border-blue-700/50">
-                                <div class="w-6 h-6 rounded-full bg-yellow-400 flex items-center justify-center flex-shrink-0 text-blue-900 text-xs"><i class="fa-solid fa-certificate"></i></div>
-                                <span class="text-sm font-medium">Community badge</span>
-                            </div>
-                         </div>
-                     </div>
-
-                     <div class="relative z-10 mt-8 pt-6 border-t border-blue-800/50">
-                         <p class="text-xs text-blue-300 text-center">"Para sa Bata, Para sa Bayan"</p>
-                     </div>
-                </div>
-
-                <!-- Right Side: Embedded Form (White) -->
-                <div class="bg-white p-8 lg:p-12 lg:w-3/5 overflow-y-auto custom-scroll relative">
-                    
-                    <!-- WRAPPER FOR FORM CONTENT (To be hidden on success) -->
-                    <div id="reg-content">
-                        <div class="mb-6">
-                            <h3 class="text-2xl font-bold text-slate-800">Create Account</h3>
-                            <p class="text-sm text-slate-500">Free forever for public school teachers.</p>
-                        </div>
-
-                        <!-- Native-feel Form targeting hidden iframe -->
-                        <iframe name="register_iframe" id="register_iframe" style="display:none;"></iframe>
-                        
-                        <form id="registrationForm" 
-                              action="https://docs.google.com/forms/d/e/1FAIpQLScYNVo2LoBOeVwsN55XiFX0IVz4H_jNd99lqWUBXBH5-6TUSw/formResponse" 
-                              method="POST" 
-                              target="register_iframe"
-                              class="space-y-4">
-                            
-                            <!-- NEW: Registration Error Message -->
-                            <div id="reg-error" class="hidden bg-red-50 text-red-600 px-4 py-3 rounded-lg text-xs font-bold flex items-center gap-2 border border-red-100 animate-pulse">
-                                <i class="fa-solid fa-circle-exclamation text-lg"></i>
-                                <span id="reg-error-msg">Username already taken.</span>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Full Name -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">Full Name</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-id-card absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="text" name="entry.274563009" required placeholder="Juan Dela Cruz" 
-                                            class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                    </div>
-                                </div>
-
-                                <!-- Username -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">Username</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-user absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="text" name="entry.1514621509" required placeholder="TeacherJuan" 
-                                            class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- Password Section (Updated with Confirm) -->
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- Create Password -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">Create Password</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-lock absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="password" id="reg-password" name="entry.708553270" required placeholder="••••••••" 
-                                            class="w-full pl-8 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                        <button type="button" id="toggle-reg-password" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 focus:outline-none" tabindex="-1">
-                                            <i class="fa-solid fa-eye text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <!-- NEW: Length Indicator -->
-                                    <p id="pass-length-indicator" class="text-[10px] text-slate-400 mt-1 flex items-center gap-1 transition-colors">
-                                        <i class="fa-solid fa-circle-info"></i> Min. 8 characters
-                                    </p>
-                                </div>
-
-                                <!-- Confirm Password -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">Confirm Password</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-check-double absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="password" id="reg-confirm-password" required placeholder="••••••••" 
-                                            class="w-full pl-8 pr-10 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                        <button type="button" id="toggle-reg-confirm-password" class="absolute right-3 top-2.5 text-slate-400 hover:text-slate-600 focus:outline-none" tabindex="-1">
-                                            <i class="fa-solid fa-eye text-xs"></i>
-                                        </button>
-                                    </div>
-                                    <!-- NEW: Real-time Mismatch Warning -->
-                                    <p id="pass-match-warning" class="hidden text-[10px] text-red-500 font-bold mt-1 ml-1 flex items-center gap-1 animate-pulse">
-                                        <i class="fa-solid fa-circle-xmark"></i> Passwords do not match
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Password Footer Info -->
-                            <div class="flex justify-between items-start">
-                                <p id="reg-caps-warning" class="hidden text-[10px] text-red-500 font-bold mt-1 flex items-center gap-1 animate-pulse">
-                                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Caps Lock is ON
-                                </p>
-                                <p class="text-[10px] text-slate-400 text-right italic mt-1 ml-auto">We recommend a unique password for this site.</p>
-                            </div>
-
-                            <!-- NEW: Security Questions -->
-                            <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase">Security Question</label>
-                                <div class="relative">
-                                    <i class="fa-solid fa-circle-question absolute left-3 top-3.5 text-slate-400 text-xs"></i>
-                                    <select name="entry.337984504" required class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors appearance-none cursor-pointer">
-                                        <option value="" disabled selected>Select a security question</option>
-                                        <option value="What is the middle name of your oldest cousin?">What is the middle name of your oldest cousin?</option>
-                                        <option value="What is the name of your first pet?">What is the name of your first pet?</option>
-                                        <option value="In what city were you born?">In what city were you born?</option>
-                                        <option value="What is your mother's maiden name?">What is your mother's maiden name?</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-4 top-3.5 text-slate-400 text-xs pointer-events-none"></i>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase">Security Answer</label>
-                                <div class="relative">
-                                    <i class="fa-solid fa-key absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                    <input type="text" name="entry.1264702410" required placeholder="Your answer" 
-                                        class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                </div>
-                            </div>
-
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <!-- School -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">School / Institution</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-school absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="text" name="entry.249358016" required placeholder="National High School" 
-                                            class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                    </div>
-                                </div>
-
-                                <!-- Address -->
-                                <div class="space-y-1">
-                                    <label class="text-xs font-bold text-slate-600 uppercase">Current Address</label>
-                                    <div class="relative">
-                                        <i class="fa-solid fa-location-dot absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                        <input type="text" name="entry.112254655" required placeholder="City, Province" 
-                                            class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Source (Dropdown) -->
-                            <div class="space-y-1">
-                                <label class="text-xs font-bold text-slate-600 uppercase">Where did you hear about us?</label>
-                                <div class="relative">
-                                    <i class="fa-solid fa-bullhorn absolute left-3 top-3 text-slate-400 text-xs"></i>
-                                    <select name="entry.2106899850" class="w-full pl-8 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-700 focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors appearance-none cursor-pointer">
-                                        <option value="" disabled selected>Select an option</option>
-                                        <option value="Search Engine (e.g., Google, Bing)">Search Engine</option>
-                                        <option value="Social Media (e.g., Facebook, X, Instagram)">Social Media</option>
-                                        <option value="Friend or Colleague">Friend or Colleague</option>
-                                        <option value="School/Institution Event">School Event</option>
-                                        <option value="Advertisement">Advertisement</option>
-                                        <option value="Other">Other</option>
-                                    </select>
-                                    <i class="fa-solid fa-chevron-down absolute right-4 top-3.5 text-slate-400 text-xs pointer-events-none"></i>
-                                </div>
-                            </div>
-
-                            <!-- Submit Button -->
-                            <button type="submit" id="reg-submit-btn" class="w-full mt-6 bg-deped-blue hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group">
-                                <span>Complete Registration</span>
-                                <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-                            
-                        </form>
-                    </div> <!-- END #reg-content -->
-                    
-                    <!-- Success Overlay (Shown after submit) -->
-                    <!-- CHANGED: No longer absolute overlay. Just hidden block that swaps in. -->
-                    <div id="reg-success" class="hidden h-full flex-col items-center justify-center text-center p-8 animate-fadeIn">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4 text-green-600 text-3xl shadow-sm">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Registration Submitted!</h3>
-                        <p class="text-slate-600 text-sm mb-6 leading-relaxed">
-                            Your account has been successfully registered in our system.<br>
-                            Please wait until your account has been <strong>verified by the admin</strong> before accessing the tools.
-                        </p>
-                        <!-- CHANGED: 'Register Another' to 'Close' -->
-                        <button id="reg-reset-btn" class="bg-slate-100 text-slate-700 font-bold py-2 px-6 rounded-lg hover:bg-slate-200 transition text-sm">
-                            Close
-                        </button>
+                <!-- Tool 1 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-book-open text-deped-blue"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">K-12 Lesson Planner</h4>
                     </div>
-
+                    <p class="text-[10px] text-slate-500 leading-tight">Comprehensive daily lesson log builder for all grade levels.</p>
                 </div>
+
+                <!-- Tool 2 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-shield-halved text-deped-red"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">MATATAG Planner</h4>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">Aligned with the new MATATAG curriculum standards.</p>
+                </div>
+
+                <!-- Tool 3 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-book-journal-whills text-yellow-500"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">Story Generator</h4>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">Create engaging, contextualized stories for young learners.</p>
+                </div>
+
+                <!-- Tool 4 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-table-list text-emerald-600"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">TOS Generator</h4>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">Automated Table of Specifications for valid assessments.</p>
+                </div>
+
+                <!-- Tool 5 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-chalkboard-user text-purple-600"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">Presentation Maker</h4>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">Instant slide outlines and educational content generation.</p>
+                </div>
+
+                <!-- Tool 6 -->
+                <div class="p-3 bg-white rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition">
+                    <div class="flex items-center gap-2 mb-1">
+                        <i class="fa-solid fa-user-tie text-blue-600"></i>
+                        <h4 class="text-slate-800 font-bold text-xs uppercase">PMES with COI</h4>
+                    </div>
+                    <p class="text-[10px] text-slate-500 leading-tight">Teacher performance assessment with PPST-based classroom observation indicators.</p>
+                </div>
+
             </div>
         </div>
 
-        <!-- Login Modal (New) -->
-        <!-- ADDED 'flex' class here to ensure centering works when 'hidden' is removed -->
-        <div id="login-modal" class="fixed inset-0 z-[200] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300 overflow-hidden">
-                
-                <!-- Close Button -->
-                <button id="close-login-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
-
-                <!-- Header -->
-                <div class="bg-deped-blue px-8 py-6 text-center relative overflow-hidden">
-                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                    <div class="w-16 h-16 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm border border-white/20">
-                        <i class="fa-solid fa-right-to-bracket text-yellow-400 text-2xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold text-white">Welcome Back</h3>
-                    <p class="text-blue-200 text-sm">Sign in to access your dashboard</p>
-                </div>
-
-                <!-- Form -->
-                <div class="p-8">
-                    <form id="loginForm" class="space-y-5">
-                        <div id="login-error" class="hidden bg-red-50 text-red-600 px-4 py-3 rounded-lg text-sm flex items-center gap-2 border border-red-100">
-                            <i class="fa-solid fa-circle-exclamation"></i>
-                            <span>Invalid username or password.</span>
-                        </div>
-
-                        <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Username</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="text" id="login-username" required 
-                                    class="w-full pl-10 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors placeholder-slate-400" placeholder="Enter your username">
-                            </div>
-                        </div>
-                        
-                        <!-- Fixed Position: Forgot Password Moved Below Input -->
-                        <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-600 uppercase tracking-wide">Password</label>
-                            
-                            <div class="relative">
-                                <i class="fa-solid fa-lock absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="password" id="login-password" required 
-                                    class="w-full pl-10 pr-10 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-deped-blue focus:ring-1 focus:ring-deped-blue transition-colors placeholder-slate-400" placeholder="••••••••">
-                                <button type="button" id="toggle-login-password" class="absolute right-3 top-3.5 text-slate-400 hover:text-slate-600 focus:outline-none" tabindex="-1">
-                                    <i class="fa-solid fa-eye"></i>
-                                </button>
-                            </div>
-
-                            <div class="flex justify-between items-start mt-1 min-h-[20px]">
-                                <p id="login-caps-warning" class="hidden text-[10px] text-red-500 font-bold flex items-center gap-1 animate-pulse">
-                                    <i class="fa-solid fa-arrow-up-from-bracket"></i> Caps Lock is ON
-                                </p>
-                                <button type="button" id="trigger-forgot-password" class="text-xs text-deped-blue hover:text-blue-700 hover:underline font-bold transition ml-auto">Forgot Password?</button>
-                            </div>
-                        </div>
-
-                        <button type="submit" id="btn-login-submit" class="w-full bg-deped-blue hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 mt-2">
-                            <span>Sign In</span>
-                            <i class="fa-solid fa-arrow-right"></i>
-                        </button>
-                    </form>
-
-                    <div class="mt-6 text-center">
-                        <p class="text-sm text-slate-500">Don't have an account? <button class="trigger-register text-deped-blue font-bold hover:underline">Register here</button></p>
-                    </div>
-                </div>
-            </div>
+        <div class="mt-8 px-6 py-2 bg-slate-100 rounded-full border border-slate-200 inline-block relative z-10">
+            <span class="text-slate-500 text-xs uppercase tracking-widest font-bold" id="wellness-hours-text">Scheduled Maintenance</span>
         </div>
 
-        <!-- NEW: Forgot Password Modal -->
-        <div id="forgot-password-modal" class="fixed inset-0 z-[210] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-            <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300 overflow-hidden">
-                
-                <button id="close-forgot-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
-
-                <div class="bg-slate-50 px-8 py-6 border-b border-slate-100">
-                    <h3 class="text-xl font-bold text-slate-800 flex items-center gap-2">
-                        <i class="fa-solid fa-key text-yellow-500"></i> Password Recovery
-                    </h3>
-                </div>
-
-                <div class="p-8">
-                    <!-- Step 1: Find Account -->
-                    <div id="fp-step-1" class="space-y-4">
-                        <p class="text-sm text-slate-600">Enter your username to search for your account.</p>
-                        <div class="relative">
-                            <i class="fa-solid fa-user absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                            <input type="text" id="fp-username" class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-deped-blue transition-colors" placeholder="Username">
-                        </div>
-                        <p id="fp-error-1" class="hidden text-xs text-red-500 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> User not found.</p>
-                        <button id="fp-btn-next-1" class="w-full bg-deped-blue text-white font-bold py-3 rounded-xl hover:bg-blue-800 transition shadow-md">Next</button>
-                    </div>
-
-                    <!-- Step 2: Security Question -->
-                    <div id="fp-step-2" class="hidden space-y-4">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Security Question</p>
-                        <div class="p-3 bg-blue-50 border border-blue-100 rounded-lg text-blue-900 font-medium text-sm">
-                            <i class="fa-solid fa-circle-question mr-2 text-blue-500"></i>
-                            <span id="fp-question-display">...</span>
-                        </div>
-                        <div class="relative">
-                            <i class="fa-solid fa-unlock-keyhole absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                            <input type="text" id="fp-answer" class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-deped-blue transition-colors" placeholder="Your Answer">
-                        </div>
-                        <p id="fp-error-2" class="hidden text-xs text-red-500 font-bold flex items-center gap-1"><i class="fa-solid fa-circle-xmark"></i> Incorrect answer.</p>
-                        <button id="fp-btn-verify" class="w-full bg-deped-blue text-white font-bold py-3 rounded-xl hover:bg-blue-800 transition shadow-md">Verify</button>
-                    </div>
-
-                    <!-- Step 3: New Password -->
-                    <div id="fp-step-3" class="hidden space-y-4">
-                        <p class="text-sm text-slate-600">Identity verified. Please set a new password.</p>
-                        
-                        <!-- Hidden Form for Google Sheets Submission -->
-                        <iframe name="reset_iframe" id="reset_iframe" style="display:none;"></iframe>
-                        <form id="resetPasswordForm" 
-                              action="https://docs.google.com/forms/d/e/1FAIpQLSfpMCRQrYB7HntsnRMKiGFALMzxLyCRY0kl2wVkruJF7Mw88g/formResponse" 
-                              method="POST" 
-                              target="reset_iframe"
-                              class="space-y-3">
-                            
-                            <!-- Hidden Inputs mapped to Google Form -->
-                            <input type="hidden" name="entry.1931916015" id="fp-form-user">
-                            <input type="hidden" name="entry.1001625426" id="fp-form-question">
-                            
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold text-slate-500 uppercase">New Password</label>
-                                <div class="relative">
-                                    <input type="password" id="fp-new-pass" name="entry.1751531902" required class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue transition-colors" placeholder="New Password">
-                                </div>
-                                <p id="fp-len-indicator" class="text-[10px] text-slate-400 mt-1"><i class="fa-solid fa-circle-info"></i> Min 8 chars</p>
-                            </div>
-                            <div class="space-y-1">
-                                <label class="text-[10px] font-bold text-slate-500 uppercase">Confirm Password</label>
-                                <input type="password" id="fp-confirm-pass" required class="w-full px-4 py-2.5 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-deped-blue transition-colors" placeholder="Confirm Password">
-                                <p id="fp-match-error" class="hidden text-[10px] text-red-500 font-bold mt-1">Passwords do not match</p>
-                            </div>
-
-                            <button type="submit" id="fp-btn-submit" class="w-full bg-green-500 text-white font-bold py-3 rounded-xl hover:bg-green-600 transition shadow-md mt-2">Reset Password</button>
-                        </form>
-                    </div>
-
-                    <!-- Step 4: Success -->
-                    <div id="fp-step-4" class="hidden text-center py-4">
-                        <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-500 text-3xl">
-                            <i class="fa-solid fa-check"></i>
-                        </div>
-                        <h4 class="text-lg font-bold text-slate-800">Request Submitted</h4>
-                        <p class="text-sm text-slate-500 mt-2 mb-6">Your password change request has been sent securely. Please wait for admin approval.</p>
-                        <button id="fp-btn-close" class="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200 transition">Close</button>
-                    </div>
-
-                </div>
+        <!-- NEW: Countdown Timer -->
+        <div id="countdown-container" class="mt-8 relative z-10">
+            <p class="text-slate-400 text-[10px] uppercase tracking-[0.2em] mb-3 font-semibold">Estimated Completion In</p>
+            <div id="wellness-countdown" class="text-3xl md:text-5xl font-mono font-bold text-deped-blue tracking-widest tabular-nums">
+                --d --h --m --s
             </div>
+        </div>
+        
+        <div class="mt-12 w-full max-w-md border-t border-slate-200 pt-8 relative z-10">
+            <p class="text-slate-500 text-sm mb-4">You can still chat with fellow teachers while you wait:</p>
+            <i class="fa-solid fa-arrow-down text-deped-blue animate-bounce"></i>
         </div>
     </div>
 
-    <!-- Unified Community Hub Section (Hidden by Default for Guests) -->
-    <!-- Added 'hidden' class here -->
-    <section id="community" class="hidden py-24 relative border-y border-slate-200 bg-slate-50 transition-colors duration-700">
+    <!-- Unified Community Hub Section (Always Visible) -->
+    <section id="community" class="py-24 relative border-y border-slate-200 bg-slate-50 transition-colors duration-700">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl md:text-4xl font-bold transition-colors duration-700 mb-4 font-sans section-title text-slate-800">Teacher Community Hub</h2>
@@ -956,8 +611,8 @@
                         </button>
                     </div>
 
-                    <!-- Input Area (Authenticated Users Only) -->
-                    <div id="chat-input-area" class="hidden bg-white p-4 z-20 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)] relative border-t border-slate-100">
+                    <!-- Input Area -->
+                    <div class="bg-white p-4 z-20 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)] relative border-t border-slate-100">
                          <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
                          
                          <form id="contactForm" 
@@ -998,18 +653,6 @@
                                  </div>
                              </div>
                          </form>
-                    </div>
-
-                    <!-- Input Area Placeholder (Guest / No Role) -->
-                    <div id="chat-guest-prompt" class="bg-white p-8 z-20 shadow-[0_-10px_40px_-10px_rgba(0,0,0,0.05)] relative border-t border-slate-100 text-center flex flex-col items-center justify-center">
-                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center mb-3 text-deped-blue shadow-sm border border-blue-100">
-                            <i class="fa-solid fa-comments"></i>
-                        </div>
-                        <h4 class="font-bold text-slate-800 mb-1">Join the Conversation</h4>
-                        <p class="text-xs text-slate-500 mb-4 max-w-xs leading-relaxed">Log in to share your thoughts, ideas, and stories with fellow teachers.</p>
-                        <button class="trigger-login-chat px-6 py-2.5 bg-deped-blue text-white rounded-xl font-bold text-xs hover:bg-blue-800 transition shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-                            Log In to Chat
-                        </button>
                     </div>
                 </div>
             </div>
@@ -1080,7 +723,6 @@
                                 Our Mission
                             </a>
                         </li>
-                        <!-- Updated Footer Link to be consistent, though footer usually shows all map -->
                         <li>
                             <a href="#community" class="group flex items-center text-sm text-slate-400 hover:text-white transition-colors duration-300">
                                 <span class="w-1.5 h-1.5 rounded-full bg-slate-700 mr-3 group-hover:bg-blue-500 transition-colors"></span>
@@ -1195,44 +837,6 @@
 
     <!-- Logic Script -->
     <script>
-        // Helper to parse Gviz Date or Strings
-        function parseGvizDate(val) {
-             if (!val) return null;
-             const strVal = String(val).trim();
-             
-             // 1. Gviz Date Object: "Date(2025, 11, 25, 8, 0, 0)"
-             if (strVal.startsWith('Date(')) {
-                 const nums = strVal.match(/\d+/g);
-                 if (nums && nums.length >= 3) {
-                     // Month is 0-indexed in JS Date
-                     const y = parseInt(nums[0]);
-                     const m = parseInt(nums[1]);
-                     const d = parseInt(nums[2]);
-                     const h = nums.length > 3 ? parseInt(nums[3]) : 0;
-                     const min = nums.length > 4 ? parseInt(nums[4]) : 0;
-                     const s = nums.length > 5 ? parseInt(nums[5]) : 0;
-                     return new Date(y, m, d, h, min, s);
-                 }
-             }
-             
-             // 2. Explicit DD/MM/YYYY Handler (Common Issue Fix)
-             // Matches 26/12/2024 or 26-12-2024
-             const dmyMatch = strVal.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
-             if (dmyMatch) {
-                 // new Date(Year, MonthIndex, Day)
-                 // MonthIndex is 0-11, so we subtract 1 from the month string
-                 return new Date(parseInt(dmyMatch[3]), parseInt(dmyMatch[2]) - 1, parseInt(dmyMatch[1]));
-             }
-
-             // 3. Standard String Fallback (ISO, etc.)
-             const tryDate = new Date(strVal);
-             if (!isNaN(tryDate.getTime())) {
-                 return tryDate;
-             }
-             
-             return null;
-        }
-
         // 1. Mobile Menu Toggle
         const btn = document.getElementById('mobile-menu-btn');
         const menu = document.getElementById('mobile-menu');
@@ -1274,9 +878,7 @@
         // Caching Configuration
         const CACHE_CONFIG = {
             STORIES: { KEY: 'ai_school_stories_data_v1', TS: 'ai_school_stories_ts_v1' },
-            TOOLS: { KEY: 'ai_school_tools_data_v1', TS: 'ai_school_tools_ts_v1' }, // Used for Config now
-            APPS: { KEY: 'ai_school_apps_data_v1', TS: 'ai_school_apps_ts_v1' },   // NEW: For Paid Apps
-            USERS: { KEY: 'ai_school_users_data_v1', TS: 'ai_school_users_ts_v1' },
+            TOOLS: { KEY: 'ai_school_tools_data_v1', TS: 'ai_school_tools_ts_v1' },
             TTL: 60000 // 60 Seconds
         };
 
@@ -1357,11 +959,31 @@
         
         // --- DATA HASHING FOR AUTO-REFRESH ---
         let lastStoriesHash = "";
-        let lastConfigHash = "";
-        let lastAppsHash = ""; // Now utilized in fetchApps
+        let lastToolsHash = "";
+
+        // Helper to parse Gviz Date or Strings
+        function parseGvizDate(val) {
+             if (!val) return null;
+             
+             // 1. Gviz Date Object: "Date(2025, 11, 25, 8, 0, 0)"
+             if (typeof val === 'string' && val.startsWith('Date(')) {
+                 const nums = val.match(/\d+/g);
+                 if (nums && nums.length >= 6) {
+                     // Month is 0-indexed in JS Date
+                     return new Date(nums[0], nums[1], nums[2], nums[3], nums[4], nums[5]);
+                 }
+             }
+             
+             // 2. Standard String: "2025-12-25 08:00" or similar
+             const tryDate = new Date(val);
+             if (!isNaN(tryDate.getTime())) {
+                 return tryDate;
+             }
+             
+             return null;
+        }
 
         async function fetchStories(forceRefresh = false) {
-            // ... (Existing implementation preserved) ...
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
             const gid = '1355823203';
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq&gid=${gid}`;
@@ -1372,38 +994,51 @@
                 const cachedData = localStorage.getItem(CACHE_CONFIG.STORIES.KEY);
                 const cachedTs = localStorage.getItem(CACHE_CONFIG.STORIES.TS);
 
+                // 1. Check Cache Validity
                 if (!forceRefresh && cachedData && cachedTs && (now - parseInt(cachedTs) < CACHE_CONFIG.TTL)) {
                     rows = JSON.parse(cachedData);
+                    // console.log("Serving Stories from Cache");
                 } else {
+                    // 2. Fetch from Network
+                    // console.log("Fetching Stories from Network...");
                     const response = await fetch(url);
                     const text = await response.text();
+                    
                     const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
                     if (!jsonMatch || !jsonMatch[1]) throw new Error('Invalid GVIZ response');
+                    
                     const json = JSON.parse(jsonMatch[1]);
                     rows = json.table.rows;
+
+                    // 3. Update Cache
                     localStorage.setItem(CACHE_CONFIG.STORIES.KEY, JSON.stringify(rows));
                     localStorage.setItem(CACHE_CONFIG.STORIES.TS, now.toString());
                 }
 
+                // SMART CHECK: Only proceed if data changed (compared to memory)
                 const currentHash = JSON.stringify(rows);
                 if (currentHash === lastStoriesHash) return; 
                 lastStoriesHash = currentHash;
 
-                // FIX: Early exit if element missing to prevent TypeError
-                const grid = document.getElementById('stories-grid'); 
-                if (!grid) return;
-
                 if(rows && rows.length > 0) {
+                    // Parse data safely
                     allStories = rows.map(row => {
                         if (!row.c) return null;
+                        
+                        // NOTE: Maintenance Logic moved to Sheet1 (fetchTools) as per request
+
                         const nameCell = row.c[1];
                         const name = (nameCell && nameCell.v) ? String(nameCell.v) : 'Anonymous';
+
                         let timestamp = "Recently";
                         let dateGroup = "Unknown Date";
+                        
+                        // Date Parsing (Column A -> Index 0)
                         const dateCell = row.c[0];
                         if (dateCell) {
                              let dateObj = parseGvizDate(dateCell.v);
                              if(!dateObj && dateCell.f) dateObj = parseGvizDate(dateCell.f); 
+
                              if (dateObj) {
                                  timestamp = dateObj.toLocaleTimeString([], {hour: 'numeric', minute:'2-digit'});
                                  const today = new Date();
@@ -1418,6 +1053,8 @@
                                  }
                              }
                         }
+
+                        // Message Finding Logic (Cols 2,3,4,5)
                         let candidates = [];
                         [2, 3, 4, 5].forEach(i => {
                             const cell = row.c[i];
@@ -1429,19 +1066,28 @@
                                 }
                             }
                         });
+
                         if (candidates.length === 0) return null;
                         candidates.sort((a, b) => b.length - a.length);
                         const message = candidates[0];
+
                         return { name, message, timestamp, dateGroup };
                     }).filter(story => story !== null);
                     
                     initSpotlight([...allStories].reverse().slice(0, 5));
+
+                    const grid = document.getElementById('stories-grid');
                     
-                    // const grid = document.getElementById('stories-grid'); // Already got it
+                    // Only maintain scroll if we are not at the very top (loading history)
+                    // For auto-refresh, we usually want to snap to bottom if new messages appear
+                    // or keep position. For simplicity in this "Live Feed", we rebuild.
                     const wasAtBottom = grid.scrollHeight - grid.scrollTop === grid.clientHeight;
+                    
                     grid.innerHTML = ''; 
+                    
                     storiesDisplayed = BATCH_SIZE; 
                     const initialBatch = allStories.slice(Math.max(allStories.length - BATCH_SIZE, 0));
+                    
                     let lastGroup = null;
                     initialBatch.forEach(story => {
                         if (story.dateGroup !== lastGroup) {
@@ -1450,26 +1096,35 @@
                         }
                         grid.appendChild(createChatBubble(story));
                     });
+                    
+                    // Auto-scroll to bottom on fresh load or update
                     setTimeout(() => grid.scrollTop = grid.scrollHeight, 100);
+
                     const loadMoreBtn = document.getElementById('loadMoreBtn');
-                    if (loadMoreBtn && allStories.length > BATCH_SIZE) { // Added check for button too
+                    if (allStories.length > BATCH_SIZE) {
                         loadMoreBtn.classList.remove('hidden');
                     }
+
                 } else {
-                     // document.getElementById('stories-grid').innerHTML = ... // UNSAFE
-                     grid.innerHTML = '<p class="text-center py-10 text-slate-400 text-xs">No stories yet. Be the first to share!</p>'; // SAFE because checked above
+                     document.getElementById('stories-grid').innerHTML = '<p class="text-center py-10 text-slate-400 text-xs">No stories yet. Be the first to share!</p>';
                 }
+
             } catch (err) {
                 console.log('Error', err);
+                // Fallback to cache if network fails, even if expired
+                const expiredCache = localStorage.getItem(CACHE_CONFIG.STORIES.KEY);
+                if (expiredCache && allStories.length === 0) {
+                     // Logic to parse expired cache if array is empty (first load fail)
+                     // Omitted for brevity as the current error handling logic is simple
+                }
+
                 const grid = document.getElementById('stories-grid');
-                // FIX: Check if grid exists
-                if(grid && grid.innerHTML.trim() === "") grid.innerHTML = getStaticStoriesHTML(); 
+                if(grid.innerHTML.trim() === "") grid.innerHTML = getStaticStoriesHTML(); 
             }
         }
 
-        // --- NEW: Fetch System Config (Maintenance/Notifications) from Sheet1 ---
-        // This replaces the old fetchTools for config purposes, but DOES NOT render tools.
-        async function fetchSystemConfig() {
+        // NEW: Fetch Tools + Config from Sheet1
+        async function fetchTools() {
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
             const sheetName = 'Sheet1';
             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}`;
@@ -1477,47 +1132,109 @@
             try {
                 let rows = null;
                 const now = Date.now();
-                const cachedData = localStorage.getItem(CACHE_CONFIG.TOOLS.KEY); // Reuse existing cache key for config
+                const cachedData = localStorage.getItem(CACHE_CONFIG.TOOLS.KEY);
                 const cachedTs = localStorage.getItem(CACHE_CONFIG.TOOLS.TS);
 
+                // 1. Check Cache Validity
                 if (cachedData && cachedTs && (now - parseInt(cachedTs) < CACHE_CONFIG.TTL)) {
                     rows = JSON.parse(cachedData);
+                    // console.log("Serving Tools from Cache");
                 } else {
+                    // 2. Fetch from Network
+                    // console.log("Fetching Tools from Network...");
                     const res = await fetch(url);
                     const text = await res.text();
                     const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
                     const json = JSON.parse(jsonText);
                     rows = json.table.rows;
-                    // MISSING CODE START
+
+                    // 3. Update Cache
                     localStorage.setItem(CACHE_CONFIG.TOOLS.KEY, JSON.stringify(rows));
                     localStorage.setItem(CACHE_CONFIG.TOOLS.TS, now.toString());
                 }
 
+                // SMART CHECK: Only update if data changed
                 const currentHash = JSON.stringify(rows);
-                if (currentHash === lastConfigHash) return;
-                lastConfigHash = currentHash;
+                if (currentHash === lastToolsHash) return;
+                lastToolsHash = currentHash;
 
-                if (!rows) return;
+                const container = document.getElementById('tools-container');
+                container.innerHTML = ''; // Clear loader
+
+                if (!rows || rows.length === 0) {
+                    container.innerHTML = '<div class="col-span-full text-center text-slate-500 py-10"><i class="fa-solid fa-folder-open text-4xl mb-3 opacity-30"></i><p>No tools available right now.</p></div>';
+                    return;
+                }
 
                 // Reset Configs
                 scheduledWellness = null;
                 globalNotification = null;
                 maintenanceText = null;
 
+                // Palette for dynamic cards (DepEd Theme Colors)
+                const styles = [
+                    { border: 'border-l-4 border-l-blue-600', text: 'text-blue-700', bgIcon: 'bg-blue-50', iconColor: 'text-blue-600', stripColor: 'bg-blue-600' },
+                    { border: 'border-l-4 border-l-red-600', text: 'text-red-700', bgIcon: 'bg-red-50', iconColor: 'text-red-600', stripColor: 'bg-red-600' },
+                    { border: 'border-l-4 border-l-yellow-500', text: 'text-yellow-700', bgIcon: 'bg-yellow-50', iconColor: 'text-yellow-600', stripColor: 'bg-yellow-500' },
+                    { border: 'border-l-4 border-l-emerald-600', text: 'text-emerald-700', bgIcon: 'bg-emerald-50', iconColor: 'text-emerald-600', stripColor: 'bg-emerald-600' },
+                ];
+
                 rows.forEach((row, index) => {
+                    // --- 1. TOOL DATA (Cols A, B, C) ---
+                    const name = row.c[0] ? row.c[0].v : null;
+                    const link = row.c[1] ? row.c[1].v : "#";
+                    const details = row.c[2] ? row.c[2].v : "No details provided.";
+                    
+                    if(name) {
+                        const style = styles[index % styles.length];
+                        const categories = "planning content assessment prof-dev"; 
+
+                        const cardHTML = `
+                        <a href="${link}" target="_blank" class="tool-card group relative block h-full reveal active bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 overflow-hidden hover:-translate-y-1">
+                            <div class="p-6 flex flex-col h-full">
+                                <div class="flex justify-between items-start mb-4">
+                                    <div class="w-12 h-12 ${style.bgIcon} rounded-lg flex items-center justify-center ${style.iconColor} text-xl transition-transform group-hover:scale-110">
+                                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                                    </div>
+                                    <span class="px-2 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded">New</span>
+                                </div>
+                                
+                                <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-deped-blue transition-colors">${name}</h3>
+                                
+                                <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">
+                                    ${details}
+                                </p>
+                                
+                                <div class="mt-auto pt-4 border-t border-slate-50">
+                                    <div class="flex items-center text-xs font-bold uppercase tracking-widest ${style.text}">
+                                        Open Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Bottom Color Strip -->
+                            <div class="h-1 w-full ${style.stripColor}"></div> 
+                        </a>
+                        `;
+                        container.insertAdjacentHTML('beforeend', cardHTML);
+                    }
+
                     // --- 2. NOTIFICATIONS (Cols D, E) ---
+                    // D: Detail/Title, E: Message
                     if (row.c[3]?.v && row.c[4]?.v) {
                         globalNotification = {
                             title: String(row.c[3].v),
                             message: String(row.c[4].v)
                         };
                     }
+
                     // --- 3. MAINTENANCE CONFIG (Cols F, G, H, I) ---
+                    // F: Start, G: End, H: Details(Title), I: Message(Body)
                     if (row.c[5] && row.c[6]) {
                         const start = parseGvizDate(row.c[5].v);
                         const end = parseGvizDate(row.c[6].v);
                         if(start && end) {
                             scheduledWellness = { start, end };
+                            // Check for custom Text
                             if(row.c[7]?.v || row.c[8]?.v) {
                                 maintenanceText = {
                                     title: row.c[7]?.v || "System Maintenance Underway",
@@ -1528,280 +1245,29 @@
                     }
                 });
                 
+                // After processing all rows, check configurations
                 checkWellnessTime();
                 showNotification();
 
             } catch (err) {
-                console.error('Error fetching config:', err);
+                console.error('Error fetching tools:', err);
+                if (document.getElementById('tools-container').innerHTML.trim() === "") {
+                    document.getElementById('tools-container').innerHTML = `
+                        <div class="col-span-full text-center text-red-400 py-10">
+                            <i class="fa-solid fa-triangle-exclamation text-3xl mb-2"></i>
+                            <p class="text-sm">Unable to load tools. Please refresh.</p>
+                        </div>`;
+                }
+            } finally {
+                // HIDE LOADER
+                const loader = document.getElementById('initial-loader');
+                if(loader) {
+                    loader.classList.add('opacity-0');
+                    setTimeout(() => loader.remove(), 700);
+                }
             }
         }
 
-        // --- NEW: Fetch Apps based on Role ---
-        async function fetchApps() {
-            const container = document.getElementById('tools-container');
-            const toolsTitle = document.getElementById('tools-title');
-            const toolsSubtitle = document.getElementById('tools-subtitle');
-            const session = localStorage.getItem('ai_school_session');
-            
-            // 1. SECURITY CHECK: If no user session, show Lock Screen
-            if (!session) {
-                const currentHash = "locked-state";
-                if (currentHash === lastAppsHash) return; // Prevent re-render if already locked
-                lastAppsHash = currentHash;
-
-                if(toolsTitle) toolsTitle.innerText = "Tools for Education";
-                if(toolsSubtitle) {
-                    toolsSubtitle.innerText = "Powered by Gemini";
-                    toolsSubtitle.className = "text-deped-red font-bold text-sm tracking-widest uppercase mb-2 block";
-                }
-                
-                container.innerHTML = `
-                    <div class="col-span-full flex flex-col items-center justify-center py-16 px-4 text-center animate-fadeIn">
-                        <div class="w-20 h-20 bg-slate-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
-                            <i class="fa-solid fa-lock text-4xl text-slate-400"></i>
-                        </div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-2">Member Access Only</h3>
-                        <p class="text-slate-500 max-w-md mb-8">
-                            These curriculum-aligned AI tools are exclusive to registered members. 
-                            Please log in or create an account to verify your role.
-                        </p>
-                        <div class="flex gap-4">
-                            <button onclick="document.getElementById('trigger-login').click()" class="px-6 py-3 bg-deped-blue text-white rounded-xl font-bold hover:bg-blue-800 transition shadow-lg">
-                                Log In
-                            </button>
-                            <button onclick="document.querySelector('.trigger-register').click()" class="px-6 py-3 bg-white border-2 border-slate-200 text-slate-600 rounded-xl font-bold hover:border-deped-blue hover:text-deped-blue transition">
-                                Register
-                            </button>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            // Parse User Role
-            const user = JSON.parse(session);
-            const role = user.role ? user.role.trim().toLowerCase() : 'new user';
-
-            // 2. NEW USER CHECK: Show Processing Message
-            if (role === 'new user') {
-                const currentHash = "new-user-state";
-                if (currentHash === lastAppsHash) return; // Prevent re-render
-                lastAppsHash = currentHash;
-
-                if(toolsTitle) toolsTitle.innerText = "Tools for Education";
-                container.innerHTML = `
-                    <div class="col-span-full flex flex-col items-center justify-center py-20 px-4 text-center animate-fadeIn">
-                        <div class="w-24 h-24 bg-yellow-50 rounded-full flex items-center justify-center mb-6 border border-yellow-100 shadow-sm relative">
-                            <i class="fa-solid fa-user-clock text-4xl text-yellow-500"></i>
-                            <div class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center border border-slate-100 shadow-sm">
-                                <i class="fa-solid fa-hourglass-half text-slate-400 text-xs animate-spin-slow"></i>
-                            </div>
-                        </div>
-                        <h3 class="text-2xl font-bold text-slate-800 mb-3">Account Being Processed</h3>
-                        <p class="text-slate-500 max-w-md mb-8 leading-relaxed">
-                            Thank you for registering, <strong>${user.username}</strong>!<br>
-                            Your account is currently under review by our administrators. Access to tools will be granted once approved.
-                        </p>
-                        <div class="p-4 bg-blue-50 border border-blue-100 rounded-xl max-w-sm mx-auto text-left flex gap-4">
-                            <i class="fa-solid fa-circle-info text-blue-500 mt-1"></i>
-                            <div>
-                                <p class="text-xs font-bold text-blue-800 uppercase mb-1">What to do now?</p>
-                                <p class="text-xs text-blue-600">You can explore the Community Hub or check back later. This usually takes 24-48 hours.</p>
-                            </div>
-                        </div>
-                    </div>
-                `;
-                return;
-            }
-
-            // 3. DETERMINE SHEET SOURCE & UI STYLE BASED ON ROLE
-            let sheetName = '';
-            let isPremium = false;
-            let isLocal = false; // Flag for Local User
-
-            if (role === 'paid user' || role === 'admin') {
-                sheetName = 'PAID USERS';
-                isPremium = true;
-                // Update Header for Premium
-                if(toolsTitle) toolsTitle.innerText = "Premium Workspace";
-                if(toolsSubtitle) {
-                    toolsSubtitle.innerHTML = '<i class="fa-solid fa-crown mr-1"></i> Exclusive Access';
-                    toolsSubtitle.className = "text-yellow-600 font-bold text-sm tracking-widest uppercase mb-2 block";
-                }
-            } else if (role === 'local user') {
-                sheetName = 'Sheet1';
-                isPremium = false;
-                isLocal = true; // Set flag
-                // Update Header for Local
-                if(toolsTitle) toolsTitle.innerText = "Standard Workspace";
-                if(toolsSubtitle) {
-                    toolsSubtitle.innerText = "Basic Tools Access";
-                    toolsSubtitle.className = "text-blue-600 font-bold text-sm tracking-widest uppercase mb-2 block";
-                }
-            } else {
-                // Fallback for undefined roles
-                container.innerHTML = `<div class="col-span-full text-center text-slate-500 py-10"><p>Access restricted for role: ${user.role}</p></div>`;
-                return;
-            }
-
-            // 4. FETCH DATA
-            const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
-            // Added headers=1 to skip the header row
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(sheetName)}`;
-
-            try {
-                let rows = null;
-                const now = Date.now();
-                const cacheKey = CACHE_CONFIG.APPS.KEY + '_' + role;
-                const cachedData = localStorage.getItem(cacheKey);
-                const cachedTs = localStorage.getItem(CACHE_CONFIG.APPS.TS);
-
-                if (cachedData && cachedTs && (now - parseInt(cachedTs) < CACHE_CONFIG.TTL)) {
-                    rows = JSON.parse(cachedData);
-                } else {
-                    const res = await fetch(url);
-                    const text = await res.text();
-                    const jsonText = text.substring(text.indexOf("(") + 1, text.lastIndexOf(")"));
-                    const json = JSON.parse(jsonText);
-                    rows = json.table.rows;
-                    localStorage.setItem(cacheKey, JSON.stringify(rows));
-                    localStorage.setItem(CACHE_CONFIG.APPS.TS, now.toString());
-                }
-
-                // NEW: Smart Hashing to prevent flicker
-                const dataSignature = JSON.stringify(rows) + role;
-                if (dataSignature === lastAppsHash) return;
-                lastAppsHash = dataSignature;
-
-                container.innerHTML = '';
-
-                // NEW: Upgrade Banner for Local Users
-                if (isLocal) {
-                    container.insertAdjacentHTML('beforeend', `
-                        <div class="col-span-full bg-gradient-to-r from-yellow-50 to-amber-50 border border-yellow-200 rounded-xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm mb-4 relative overflow-hidden group reveal active">
-                            <!-- Background Decor -->
-                            <div class="absolute top-0 right-0 -mr-4 -mt-4 w-24 h-24 bg-yellow-200 rounded-full opacity-20 blur-xl"></div>
-                            
-                            <div class="flex items-center gap-4 relative z-10">
-                                <div class="w-12 h-12 bg-yellow-100 text-yellow-600 rounded-full flex items-center justify-center flex-shrink-0 shadow-sm">
-                                    <i class="fa-solid fa-crown text-xl"></i>
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-slate-800 text-lg">Upgrade to Premium</h3>
-                                    <p class="text-sm text-slate-600">Unlock exclusive AI models, unlimited generation, and priority support.</p>
-                                </div>
-                            </div>
-                            
-                            <a href="https://docs.google.com/forms" target="_blank" class="relative z-10 px-6 py-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 text-xs font-bold uppercase tracking-widest rounded-full transition shadow-md hover:shadow-lg flex items-center gap-2 transform hover:-translate-y-0.5">
-                                Get Premium <i class="fa-solid fa-arrow-right"></i>
-                            </a>
-                        </div>
-                    `);
-                }
-
-                if (!rows || rows.length === 0) {
-                    container.insertAdjacentHTML('beforeend', '<div class="col-span-full text-center text-slate-500 py-10"><p>No tools available for your tier yet.</p></div>');
-                    return;
-                }
-
-                // Standard Styles for Local Users
-                const standardStyles = [
-                    { border: 'border-l-4 border-l-blue-600', text: 'text-blue-700', bgIcon: 'bg-blue-50', iconColor: 'text-blue-600', stripColor: 'bg-blue-600' },
-                    { border: 'border-l-4 border-l-red-600', text: 'text-red-700', bgIcon: 'bg-red-50', iconColor: 'text-red-600', stripColor: 'bg-red-600' },
-                    { border: 'border-l-4 border-l-yellow-500', text: 'text-yellow-700', bgIcon: 'bg-yellow-50', iconColor: 'text-yellow-600', stripColor: 'bg-yellow-500' },
-                    { border: 'border-l-4 border-l-emerald-600', text: 'text-emerald-700', bgIcon: 'bg-emerald-50', iconColor: 'text-emerald-600', stripColor: 'bg-emerald-600' },
-                ];
-
-                rows.forEach((row, index) => {
-                    // SHEET MAPPING:
-                    // Col A [0]: Name
-                    // Col B [1]: Link
-                    // Col C [2]: Description
-                    const name = row.c[0] ? row.c[0].v : null;
-                    
-                    // SKIP HEADER: Extra safety check to ignore header text if GVIZ includes it
-                    if (!name || name === "Name of app" || name === "Name") return;
-
-                    const link = row.c[1] ? row.c[1].v : "#";
-                    const details = row.c[2] ? row.c[2].v : "No details provided.";
-                    
-                    if(name) {
-                        
-                        let cardHTML = '';
-
-                        if (isPremium) {
-                            // --- PREMIUM CARD DESIGN ---
-                            cardHTML = `
-                            <a href="${link}" target="_blank" class="tool-card group relative block h-full reveal active bg-white rounded-xl shadow-lg hover:shadow-yellow-500/20 transition-all duration-300 border border-yellow-200 overflow-hidden hover:-translate-y-1 ring-1 ring-yellow-100">
-                                <!-- Premium Background Effect -->
-                                <div class="absolute top-0 right-0 -mr-8 -mt-8 w-32 h-32 bg-gradient-to-br from-yellow-100 to-transparent rounded-full opacity-50 transition-transform group-hover:scale-150 duration-700"></div>
-                                
-                                <div class="p-6 flex flex-col h-full relative z-10">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center text-white text-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3">
-                                            <i class="fa-solid fa-crown"></i>
-                                        </div>
-                                        <span class="px-2 py-1 bg-yellow-50 text-yellow-700 border border-yellow-200 text-[10px] font-bold uppercase tracking-wider rounded-md shadow-sm flex items-center gap-1">
-                                            <i class="fa-solid fa-star text-yellow-500 text-[8px]"></i> Premium
-                                        </span>
-                                    </div>
-                                    
-                                    <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-yellow-600 transition-colors">${name}</h3>
-                                    
-                                    <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">
-                                        ${details}
-                                    </p>
-                                    
-                                    <div class="mt-auto pt-4 border-t border-yellow-100">
-                                        <div class="flex items-center text-xs font-bold uppercase tracking-widest text-yellow-700 group-hover:text-yellow-800">
-                                            Launch Pro App <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="h-1.5 w-full bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600"></div> 
-                            </a>
-                            `;
-                        } else {
-                            // --- LOCAL / STANDARD CARD DESIGN ---
-                            const style = standardStyles[index % standardStyles.length];
-                            cardHTML = `
-                            <a href="${link}" target="_blank" class="tool-card group relative block h-full reveal active bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-200 overflow-hidden hover:-translate-y-1">
-                                <div class="p-6 flex flex-col h-full">
-                                    <div class="flex justify-between items-start mb-4">
-                                        <div class="w-12 h-12 ${style.bgIcon} rounded-lg flex items-center justify-center ${style.iconColor} text-xl transition-transform group-hover:scale-110">
-                                            <i class="fa-solid fa-wand-magic-sparkles"></i>
-                                        </div>
-                                        <span class="px-2 py-1 bg-slate-100 text-slate-500 text-[10px] font-bold uppercase tracking-wider rounded">Basic</span>
-                                    </div>
-                                    
-                                    <h3 class="text-lg font-bold text-slate-900 mb-2 group-hover:text-deped-blue transition-colors">${name}</h3>
-                                    
-                                    <p class="text-slate-500 text-sm leading-relaxed mb-6 flex-grow">
-                                        ${details}
-                                    </p>
-                                    
-                                    <div class="mt-auto pt-4 border-t border-slate-50">
-                                        <div class="flex items-center text-xs font-bold uppercase tracking-widest ${style.text}">
-                                            Open Tool <i class="fa-solid fa-arrow-right ml-2 transition-transform group-hover:translate-x-1"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="h-1 w-full ${style.stripColor}"></div> 
-                            </a>
-                            `;
-                        }
-
-                        container.insertAdjacentHTML('beforeend', cardHTML);
-                    }
-                });
-
-            } catch (err) {
-                console.error('Error fetching apps:', err);
-                container.innerHTML = `<div class="col-span-full text-center text-red-400 py-10"><p>Unable to load your tools. Please check your connection.</p></div>`;
-            }
-        }
-
-        // ... (Show Notification Function Preserved) ...
         function showNotification() {
             if(!globalNotification) return;
 
@@ -1812,9 +1278,12 @@
             const ackBtn = document.getElementById('ack-announcement');
 
             if(modal && titleEl && msgEl) {
+                // IMPROVED CHECK: Use Title + Message as unique ID
+                // This ensures if you change ONLY the title, it still reappears.
                 const notificationId = globalNotification.title + "||" + globalNotification.message;
                 const lastSeenId = localStorage.getItem('last_seen_announcement_id');
                 
+                // Fallback for older version compatibility (check message content only if ID not present)
                 if (!lastSeenId && localStorage.getItem('last_seen_announcement') === globalNotification.message) return;
                 
                 if (lastSeenId === notificationId) return;
@@ -1835,7 +1304,9 @@
                     modal.firstElementChild.classList.add('scale-95');
                     setTimeout(() => {
                         modal.classList.add('hidden');
+                        // Save the new unique ID
                         localStorage.setItem('last_seen_announcement_id', notificationId);
+                        // Clean up old key if exists
                         localStorage.removeItem('last_seen_announcement');
                     }, 300);
                 };
@@ -1844,22 +1315,25 @@
                 ackBtn.onclick = closeModal;
             }
         }
-        
-        // ... (Load More Stories, Date Badge, Spotlight, Chat Bubble functions preserved) ...
+
         function loadMoreStories() {
             const grid = document.getElementById('stories-grid');
-            if (!grid) return; // Added Safety Check
-
             const loadMoreBtn = document.getElementById('loadMoreBtn');
+            
             const currentCount = document.querySelectorAll('.group.reveal').length;
             const remaining = allStories.length - currentCount;
+            
             if (remaining <= 0) return;
+
             const nextBatchSize = Math.min(BATCH_SIZE, remaining);
             const startIndex = allStories.length - currentCount - nextBatchSize;
             const endIndex = allStories.length - currentCount;
+            
             const olderBatch = allStories.slice(startIndex, endIndex);
+            
             const fragment = document.createDocumentFragment();
             let lastGroupInBatch = null;
+            
             olderBatch.forEach((story, index) => {
                 if (story.dateGroup !== lastGroupInBatch) {
                     fragment.appendChild(createDateBadge(story.dateGroup));
@@ -1867,35 +1341,38 @@
                 }
                 fragment.appendChild(createChatBubble(story));
             });
+
             const firstExistingElement = grid.firstElementChild;
             if (firstExistingElement && firstExistingElement.classList.contains('date-badge')) {
                 if (firstExistingElement.innerText === lastGroupInBatch) {
                     grid.removeChild(firstExistingElement);
                 }
             }
+
             grid.insertBefore(fragment, grid.firstChild);
+            
             if (startIndex <= 0) {
-                if(loadMoreBtn) {
-                    loadMoreBtn.innerText = "No older messages";
-                    loadMoreBtn.disabled = true;
-                    loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
-                }
+                loadMoreBtn.innerText = "No older messages";
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         }
+
         function createDateBadge(text) {
             const div = document.createElement('div');
             div.className = 'date-badge';
             div.innerText = text;
             return div;
         }
+
         function initSpotlight(stories) {
             if (!stories || stories.length === 0) return;
             const indicatorsContainer = document.getElementById('spotlight-indicators');
-            if(!indicatorsContainer) return; // Safety check
-
             indicatorsContainer.innerHTML = '';
+            
+            // Create Dots
             stories.forEach((_, index) => {
-                const dot = document.createElement('button');
+                const dot = document.createElement('button'); // Changed to button for accessibility
                 dot.className = `h-2 rounded-full transition-all duration-300 ${index === 0 ? 'bg-deped-blue w-6' : 'bg-slate-200 w-2 hover:bg-slate-300'}`;
                 dot.onclick = () => {
                     if(spotlightInterval) clearInterval(spotlightInterval);
@@ -1904,58 +1381,69 @@
                 };
                 indicatorsContainer.appendChild(dot);
             });
+
+            // Initial Render
             updateSpotlightHTML(stories[0]);
+            
+            // Setup Navigation Buttons
             const prevBtn = document.getElementById('prev-spotlight');
             const nextBtn = document.getElementById('next-spotlight');
+            
             if(prevBtn) prevBtn.onclick = () => {
                 if(spotlightInterval) clearInterval(spotlightInterval);
                 currentSpotlightIndex = (currentSpotlightIndex - 1 + stories.length) % stories.length;
                 transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
             };
+            
             if(nextBtn) nextBtn.onclick = () => {
                 if(spotlightInterval) clearInterval(spotlightInterval);
                 currentSpotlightIndex = (currentSpotlightIndex + 1) % stories.length;
                 transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
             };
+
+            // Auto Rotation
             if (stories.length > 1) {
                 if (spotlightInterval) clearInterval(spotlightInterval);
                 spotlightInterval = setInterval(() => {
                     currentSpotlightIndex = (currentSpotlightIndex + 1) % stories.length;
                     transitionSpotlight(stories[currentSpotlightIndex], currentSpotlightIndex);
-                }, 8000);
+                }, 8000); // Slower for reading (8s)
             }
         }
+
         function transitionSpotlight(story, index) {
             const container = document.getElementById('spotlight-content');
-            if(!container) return; // Safety check
             container.classList.remove('opacity-100');
             container.classList.add('opacity-0');
             setTimeout(() => {
                 updateSpotlightHTML(story);
+                
+                // Update dots
                 const dots = document.getElementById('spotlight-indicators').children;
-                if(dots) {
-                    for(let i=0; i<dots.length; i++) {
-                        if (i === index) {
-                            dots[i].classList.remove('bg-slate-200', 'w-2', 'hover:bg-slate-300');
-                            dots[i].classList.add('bg-deped-blue', 'w-6');
-                        } else {
-                            dots[i].classList.remove('bg-deped-blue', 'w-6');
-                            dots[i].classList.add('bg-slate-200', 'w-2', 'hover:bg-slate-300');
-                        }
+                for(let i=0; i<dots.length; i++) {
+                     if (i === index) {
+                        dots[i].classList.remove('bg-slate-200', 'w-2', 'hover:bg-slate-300');
+                        dots[i].classList.add('bg-deped-blue', 'w-6');
+                    } else {
+                        dots[i].classList.remove('bg-deped-blue', 'w-6');
+                        dots[i].classList.add('bg-slate-200', 'w-2', 'hover:bg-slate-300');
                     }
                 }
+
                 container.classList.remove('opacity-0');
                 container.classList.add('opacity-100');
-            }, 300);
+            }, 300); // Faster transition
         }
+
         function updateSpotlightHTML(story) {
             const container = document.getElementById('spotlight-content');
-            if(!container) return; // Safety check
-
+            // SaaS Style Content: Stars removed for authenticity, replaced with Quote Icon
             container.innerHTML = `
                 <div class="flex flex-col items-center text-center">
                     <i class="fa-solid fa-quote-left text-4xl text-blue-100 mb-6 animate-pulse"></i>
+                    
                     <p class="text-xl md:text-3xl text-slate-800 font-medium leading-relaxed tracking-tight mb-8">"${story.message}"</p>
+                    
                     <div class="flex items-center gap-3 mt-2">
                         <div class="w-10 h-10 rounded-full bg-slate-100 text-deped-blue flex items-center justify-center font-bold text-sm shadow-inner border border-slate-200">
                             ${story.name.charAt(0)}
@@ -1973,6 +1461,7 @@
                 </div>
             `;
         }
+
         function createChatBubble(story) {
             const bubble = document.createElement('div');
             bubble.className = 'flex flex-col group reveal active';
@@ -1990,6 +1479,7 @@
             `;
             return bubble;
         }
+
         function getStaticStoriesHTML() {
             return `
                 <div class="flex flex-col group reveal active">
@@ -2007,15 +1497,27 @@
             `;
         }
         
-        // --- Wellness Mode Logic (Fixed) ---
+        // 6. WELLNESS MODE LOGIC (Remote Config Sheet1)
         function toggleWellnessMode(forceState) {
             const body = document.body;
             const subtitle = document.getElementById('nav-subtitle');
+            const communityTitle = document.querySelector('.section-title');
+            const communityDesc = document.querySelector('.section-desc');
+            const chatContainer = document.getElementById('chat-container');
+            const statusIndicator = document.getElementById('wellness-status');
+            
+            // Dynamic Text Elements
             const maintTitle = document.getElementById('maintenance-title');
             const maintMsg = document.getElementById('maintenance-message');
+
             const isNowWellness = typeof forceState !== 'undefined' ? forceState : !body.classList.contains('wellness-active');
+
             if (isNowWellness) {
                 body.classList.add('wellness-active');
+                // if(subtitle) subtitle.innerText = "Maintenance Mode 🛠️";
+                // if(statusIndicator) statusIndicator.innerHTML = '<i class="fa-solid fa-screwdriver-wrench mr-2 text-yellow-300"></i>Maintenance Mode Active';
+                
+                // Set Custom Text if available
                 if(maintenanceText && maintTitle && maintMsg) {
                     maintTitle.innerText = maintenanceText.title;
                     maintMsg.innerText = maintenanceText.message;
@@ -2023,27 +1525,68 @@
                     if(maintTitle) maintTitle.innerText = "System Maintenance Underway";
                     if(maintMsg) maintMsg.innerHTML = "We are currently performing scheduled upgrades to enhance platform performance and reliability.<br>Thank you for your patience as we prepare a better experience for you.";
                 }
+
+                /* REMOVED DARK MODE OVERRIDES FOR COMMUNITY SECTION
+                if(communityTitle) {
+                    communityTitle.classList.remove('text-slate-800');
+                    communityTitle.classList.add('text-blue-200', 'text-glow');
+                }
+                if(communityDesc) {
+                    communityDesc.classList.remove('text-slate-600');
+                    communityDesc.classList.add('text-blue-400');
+                }
+                if(chatContainer) {
+                    chatContainer.classList.remove('bg-white', 'ring-slate-100', 'shadow-xl');
+                    chatContainer.classList.add('bg-slate-800/30', 'ring-blue-900/30', 'shadow-[0_0_30px_rgba(30,58,138,0.2)]', 'border-blue-900/50');
+                }
+                */
             } else {
                 body.classList.remove('wellness-active');
                 if(subtitle) subtitle.innerText = "Official Beta";
+                
+                /* RESET STYLES NO LONGER NEEDED AS THEY DON'T CHANGE
+                if(communityTitle) {
+                    communityTitle.classList.add('text-slate-800');
+                    communityTitle.classList.remove('text-blue-200', 'text-glow');
+                }
+                if(communityDesc) {
+                    communityDesc.classList.add('text-slate-600');
+                    communityDesc.classList.remove('text-blue-400');
+                }
+                if(chatContainer) {
+                    chatContainer.classList.add('bg-white', 'ring-slate-100', 'shadow-xl');
+                    chatContainer.classList.remove('bg-slate-800/30', 'ring-blue-900/30', 'shadow-[0_0_30px_rgba(30,58,138,0.2)]', 'border-blue-900/50');
+                }
+                */
             }
         }
 
         function updateCountdown(endTime) {
             const now = new Date();
             const diff = endTime - now;
+
             if (diff <= 0) {
+                // Time is up!
                 if (countdownInterval) clearInterval(countdownInterval);
                 const timerEl = document.getElementById('wellness-countdown');
                 if (timerEl) timerEl.innerText = "00d 00h 00m 00s";
+                
+                // Exit wellness mode immediately
                 toggleWellnessMode(false);
                 return;
             }
+
             const days = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-            const display = (days < 10 ? "0" + days : days) + "d " + (hours < 10 ? "0" + hours : hours) + "h " + (minutes < 10 ? "0" + minutes : minutes) + "m " + (seconds < 10 ? "0" + seconds : seconds) + "s";
+
+            const display = 
+                (days < 10 ? "0" + days : days) + "d " +
+                (hours < 10 ? "0" + hours : hours) + "h " + 
+                (minutes < 10 ? "0" + minutes : minutes) + "m " + 
+                (seconds < 10 ? "0" + seconds : seconds) + "s";
+            
             const timerEl = document.getElementById('wellness-countdown');
             if (timerEl) timerEl.innerText = display;
         }
@@ -2051,16 +1594,23 @@
         function checkWellnessTime() {
             const now = new Date();
             const timeText = document.getElementById('wellness-hours-text');
+            
+            // Only Check Remote Schedule from Google Sheet (Col E & F)
             if (scheduledWellness) {
+                // Formatting for display
                 const startStr = scheduledWellness.start.toLocaleString([], {year: 'numeric', month:'short', day:'numeric', hour: 'numeric', minute:'2-digit'});
                 const endStr = scheduledWellness.end.toLocaleString([], {year: 'numeric', month:'short', day:'numeric', hour: 'numeric', minute:'2-digit'});
+                
                 if (now >= scheduledWellness.start && now <= scheduledWellness.end) {
+                    // Force ON
                     if (!document.body.classList.contains('wellness-active')) {
                         toggleWellnessMode(true);
                     }
                     if(timeText) timeText.innerText = `Scheduled Break: ${startStr} - ${endStr}`;
+
+                    // Start Countdown if not running
                     if (!countdownInterval) {
-                        updateCountdown(scheduledWellness.end); 
+                        updateCountdown(scheduledWellness.end); // Initial update
                         countdownInterval = setInterval(() => {
                             updateCountdown(scheduledWellness.end);
                         }, 1000);
@@ -2068,9 +1618,12 @@
                     return;
                 }
             }
+
+            // Default: Always OFF if no schedule matches
             if (document.body.classList.contains('wellness-active')) {
                 toggleWellnessMode(false);
             }
+            // Clear interval if we are not in wellness mode
             if (countdownInterval) {
                 clearInterval(countdownInterval);
                 countdownInterval = null;
@@ -2079,75 +1632,33 @@
 
         // Initialize (Wait for DOM)
         document.addEventListener('DOMContentLoaded', () => {
-             // Safety timeout to remove loader
+             // Safety timeout to remove loader if fetch hangs too long
              setTimeout(() => {
                  const loader = document.getElementById('initial-loader');
                  if(loader && !loader.classList.contains('opacity-0')) {
                      loader.classList.add('opacity-0');
                      setTimeout(() => loader.remove(), 700);
                  }
-             }, 5000); 
+             }, 5000); // 5s fallback
 
              fetchStories();
-             fetchSystemConfig(); // Only for maintenance/notifications now
-             fetchApps(); // NEW: Checks auth then fetches paid tools
+             fetchTools(); // Call new function
              
-             // --- OPTIMIZED AUTO REFRESH LOGIC ---
-             
-             // 1. HIGH PRIORITY LOOP (Every 6 seconds)
-             // Handles Authentication, Access Roles, and System Status (Maintenance)
-             // Kept fast so users get approved/verified quickly without reloading.
+             // --- AUTO REFRESH LOGIC ---
+             // Polling logic: Checks every 5 seconds, but fetchStories()/fetchTools() will only hit network if cache expired (60s)
              setInterval(() => {
-                 fetchUsers();       // Checks for role updates (e.g. New User -> Local User)
-                 fetchSystemConfig(); // Checks for urgent maintenance mode
-             }, 6000);
-
-             // 2. LOW PRIORITY LOOP (Every 30 seconds)
-             // Handles Community Chat and Tool List updates.
-             // Reduces API load and saves user battery/data.
-             setInterval(() => {
-                 fetchStories();     // Refresh chat messages
-                 fetchApps();        // Check for new tool additions
-             }, 30000);
-
-             // 3. EVENT-DRIVEN REFRESH (Smart Sync)
-             // Immediately check for status updates when user returns to the tab
-             // This ensures "instant" feel without constant polling
-             window.addEventListener('focus', () => {
-                 // Small delay to ensure network is active after sleep/tab switch
-                 setTimeout(fetchUsers, 500); 
-             });
-             
-             // 4. MANUAL SYNC BUTTON LOGIC
-             const manualSyncBtn = document.getElementById('manual-sync-btn');
-             if(manualSyncBtn) {
-                 manualSyncBtn.addEventListener('click', async (e) => {
-                     e.stopPropagation(); // Prevent dropdown from closing
-                     const icon = manualSyncBtn.querySelector('i');
-                     
-                     // Visual Feedback
-                     icon.classList.add('fa-spin');
-                     manualSyncBtn.classList.add('text-deped-blue');
-                     manualSyncBtn.classList.remove('text-slate-300');
-                     
-                     await fetchUsers();
-                     
-                     // Completion Feedback
-                     setTimeout(() => {
-                         icon.classList.remove('fa-spin');
-                         manualSyncBtn.classList.remove('text-deped-blue');
-                         manualSyncBtn.classList.add('text-slate-300');
-                     }, 1000);
-                 });
-             }
+                 fetchStories();
+                 fetchTools();
+             }, 5000);
 
              // Contact Form Logic
              const contactForm = document.getElementById('contactForm');
              if(contactForm) {
                  const btn = contactForm.querySelector('button[type="submit"]');
-                 checkCooldown(btn); 
+                 checkCooldown(btn); // Check on load
 
                  contactForm.addEventListener('submit', (e) => {
+                     // ... (Form submission logic same as before)
                      const messageInput = document.getElementById('message');
                      const nameInput = document.getElementById('name');
                      const errorMessage = document.getElementById('errorMessage');
@@ -2168,11 +1679,15 @@
 
                      const name = nameInput.value;
                      const message = messageInput.value;
+                     
+                     // Invalidate Cache on Submit so user sees their message immediately
                      localStorage.removeItem(CACHE_CONFIG.STORIES.TS);
+
                      const targetTime = Date.now() + COOLDOWN_MS;
                      localStorage.setItem(STORAGE_KEY, targetTime);
                      startTimer(btn, targetTime);
                      
+                     // FIXED: Reset input value, character count, and height
                      setTimeout(() => { 
                          messageInput.value = ''; 
                          document.getElementById('char-count').innerText = '0/300';
@@ -2184,6 +1699,7 @@
                      const dateGroup = "Today";
                      const newStory = { name: name, message: message, timestamp: timeString, dateGroup: dateGroup };
                      
+                     // Optimistic UI update
                      allStories.push(newStory);
                      initSpotlight([...allStories].reverse().slice(0, 5));
                      const grid = document.getElementById('stories-grid');
@@ -2192,6 +1708,8 @@
                          grid.appendChild(createChatBubble(newStory));
                          grid.scrollTop = grid.scrollHeight;
                      }
+                     
+                     // Trigger a network fetch shortly after to sync
                      setTimeout(() => fetchStories(true), 2000);
                  });
              }
@@ -2206,11 +1724,14 @@
              const supportToggle = document.getElementById('support-toggle');
              const supportContent = document.getElementById('support-content');
              const supportIcon = document.getElementById('support-icon');
+
              if(supportToggle && supportContent && supportIcon) {
                  supportToggle.addEventListener('click', () => {
                      const isHidden = supportContent.classList.contains('hidden');
+                     
                      if (isHidden) {
                          supportContent.classList.remove('hidden');
+                         // Slight delay to allow display:block to apply before animation could be added if using max-height transition
                          supportIcon.classList.remove('fa-chevron-down');
                          supportIcon.classList.add('fa-chevron-up');
                      } else {
@@ -2225,9 +1746,11 @@
              const supportImg = document.getElementById('support-img');
              const modal = document.getElementById('image-modal');
              const modalImg = document.getElementById('modal-img');
+
              if(supportImg && modal && modalImg) {
                  supportImg.addEventListener('click', () => {
                      modal.classList.remove('hidden');
+                     // Small delay to allow display:flex to apply before opacity transition
                      setTimeout(() => {
                         modal.classList.remove('opacity-0');
                         modalImg.classList.remove('scale-95');
@@ -2235,6 +1758,7 @@
                      }, 10);
                      modalImg.src = supportImg.src;
                  });
+
                  modal.addEventListener('click', () => {
                      modal.classList.add('opacity-0');
                      modalImg.classList.remove('scale-100');
@@ -2249,6 +1773,7 @@
              const creditsOverlay = document.getElementById('credits-overlay');
              const closeCredits = document.getElementById('close-credits');
              const creditsCard = document.getElementById('credits-card');
+
              if(closeCredits && creditsOverlay && creditsCard) {
                  const hideCredits = () => {
                      creditsCard.classList.remove('animate-zoom-in');
@@ -2258,813 +1783,13 @@
                          creditsOverlay.classList.add('hidden');
                      }, 300);
                  };
+
                  closeCredits.addEventListener('click', hideCredits);
                  creditsOverlay.addEventListener('click', (e) => {
                      if(e.target === creditsOverlay) hideCredits();
                  });
              }
-
-             // --- AUTHENTICATION LOGIC ---
-             const loginModal = document.getElementById('login-modal');
-             const loginForm = document.getElementById('loginForm');
-             const loginBtnTrigger = document.getElementById('trigger-login');
-             const mobileLoginBtn = document.getElementById('mobile-login-btn');
-             const closeLoginBtn = document.getElementById('close-login-modal');
-             // NEW: Forgot Password Elements
-             const forgotPassBtn = document.getElementById('trigger-forgot-password');
-             const forgotModal = document.getElementById('forgot-password-modal');
-             const closeForgotBtn = document.getElementById('close-forgot-modal');
-             
-             // Steps
-             const fpStep1 = document.getElementById('fp-step-1');
-             const fpStep2 = document.getElementById('fp-step-2');
-             const fpStep3 = document.getElementById('fp-step-3');
-             const fpStep4 = document.getElementById('fp-step-4');
-             
-             // Inputs & Buttons
-             const fpUsername = document.getElementById('fp-username');
-             const fpBtnNext1 = document.getElementById('fp-btn-next-1');
-             const fpError1 = document.getElementById('fp-error-1');
-             
-             const fpQuestionDisplay = document.getElementById('fp-question-display');
-             const fpAnswer = document.getElementById('fp-answer');
-             const fpBtnVerify = document.getElementById('fp-btn-verify');
-             const fpError2 = document.getElementById('fp-error-2');
-             
-             const resetForm = document.getElementById('resetPasswordForm');
-             const fpNewPass = document.getElementById('fp-new-pass');
-             const fpConfirmPass = document.getElementById('fp-confirm-pass');
-             const fpMatchError = document.getElementById('fp-match-error');
-             const fpLenInd = document.getElementById('fp-len-indicator');
-             const fpBtnClose = document.getElementById('fp-btn-close');
-
-             // Temporary User Store for Reset Flow
-             let resetTargetUser = null;
-
-             // --- Forgot Password Logic ---
-             if (forgotPassBtn) {
-                 forgotPassBtn.addEventListener('click', () => {
-                     toggleLoginModal(false);
-                     openForgotModal();
-                 });
-             }
-
-             function openForgotModal() {
-                 if(!forgotModal) return;
-                 // Reset State
-                 resetTargetUser = null;
-                 fpUsername.value = '';
-                 fpAnswer.value = '';
-                 fpNewPass.value = '';
-                 fpConfirmPass.value = '';
-                 
-                 fpStep1.classList.remove('hidden');
-                 fpStep2.classList.add('hidden');
-                 fpStep3.classList.add('hidden');
-                 fpStep4.classList.add('hidden');
-                 
-                 fpError1.classList.add('hidden');
-                 fpError2.classList.add('hidden');
-
-                 forgotModal.classList.remove('hidden');
-                 setTimeout(() => {
-                     forgotModal.classList.remove('opacity-0');
-                     forgotModal.firstElementChild.classList.remove('scale-95');
-                     forgotModal.firstElementChild.classList.add('scale-100');
-                 }, 10);
-             }
-
-             function closeForgotModal() {
-                 if(!forgotModal) return;
-                 forgotModal.classList.add('opacity-0');
-                 forgotModal.firstElementChild.classList.remove('scale-100');
-                 forgotModal.firstElementChild.classList.add('scale-95');
-                 setTimeout(() => {
-                     forgotModal.classList.add('hidden');
-                 }, 300);
-             }
-
-             if(closeForgotBtn) closeForgotBtn.addEventListener('click', closeForgotModal);
-             if(fpBtnClose) fpBtnClose.addEventListener('click', closeForgotModal);
-
-             // Step 1: Check Username
-             if(fpBtnNext1) {
-                 fpBtnNext1.addEventListener('click', async () => {
-                     const username = fpUsername.value.trim();
-                     if(!username) return;
-
-                     fpBtnNext1.disabled = true;
-                     fpBtnNext1.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Searching...';
-                     fpError1.classList.add('hidden');
-
-                     // FORCE FRESH FETCH to ensure we find "ADMIN" or any new user immediately
-                     let users = await fetchUsers(); 
-
-                     const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
-
-                     if(user) {
-                         if (user.question && user.answer) {
-                             // User Found AND has security info
-                             resetTargetUser = user;
-                             fpError1.classList.add('hidden');
-                             
-                             // Prepare Step 2
-                             fpQuestionDisplay.innerText = user.question;
-                             fpStep1.classList.add('hidden');
-                             fpStep2.classList.remove('hidden');
-                             fpStep2.classList.add('animate-fadeIn');
-                         } else {
-                             // User Found BUT missing security info
-                             fpError1.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Security questions not set up for this account.';
-                             fpError1.classList.remove('hidden');
-                             fpStep1.classList.add('animate-shake');
-                             setTimeout(() => fpStep1.classList.remove('animate-shake'), 500);
-                         }
-                     } else {
-                         // User Not Found
-                         fpError1.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> User not found.';
-                         fpError1.classList.remove('hidden');
-                         fpStep1.classList.add('animate-shake');
-                         setTimeout(() => fpStep1.classList.remove('animate-shake'), 500);
-                     }
-
-                     fpBtnNext1.disabled = false;
-                     fpBtnNext1.innerText = 'Next';
-                 });
-             }
-
-             // Step 2: Verify Answer
-             if(fpBtnVerify) {
-                 fpBtnVerify.addEventListener('click', () => {
-                     const ans = fpAnswer.value.trim();
-                     if(!ans) return;
-
-                     if(resetTargetUser && resetTargetUser.answer.toLowerCase() === ans.toLowerCase()) {
-                         fpError2.classList.add('hidden');
-                         
-                         // Prepare Step 3 (Hidden inputs for Form)
-                         document.getElementById('fp-form-user').value = resetTargetUser.username;
-                         document.getElementById('fp-form-question').value = resetTargetUser.question;
-
-                         fpStep2.classList.add('hidden');
-                         fpStep3.classList.remove('hidden');
-                         fpStep3.classList.add('animate-fadeIn');
-                     } else {
-                         fpError2.classList.remove('hidden');
-                         fpStep2.classList.add('animate-shake');
-                         setTimeout(() => fpStep2.classList.remove('animate-shake'), 500);
-                     }
-                 });
-             }
-
-             // Step 3: Validate & Submit
-             if(fpNewPass && fpConfirmPass) {
-                 const validateReset = () => {
-                     const p1 = fpNewPass.value;
-                     const p2 = fpConfirmPass.value;
-                     
-                     // Length
-                     if(p1.length >= 8) {
-                         fpLenInd.classList.remove('text-slate-400', 'text-red-500');
-                         fpLenInd.classList.add('text-green-500');
-                     } else {
-                         fpLenInd.classList.remove('text-green-500');
-                         fpLenInd.classList.add(p1.length > 0 ? 'text-red-500' : 'text-slate-400');
-                     }
-
-                     // Match
-                     if(p2 && p1 !== p2) {
-                         fpMatchError.classList.remove('hidden');
-                     } else {
-                         fpMatchError.classList.add('hidden');
-                     }
-                 };
-                 fpNewPass.addEventListener('input', validateReset);
-                 fpConfirmPass.addEventListener('input', validateReset);
-             }
-
-             if(resetForm) {
-                 resetForm.addEventListener('submit', (e) => {
-                     const p1 = fpNewPass.value;
-                     const p2 = fpConfirmPass.value;
-
-                     if(p1.length < 8 || p1 !== p2) {
-                         e.preventDefault();
-                         fpStep3.classList.add('animate-shake');
-                         setTimeout(() => fpStep3.classList.remove('animate-shake'), 500);
-                         return;
-                     }
-
-                     // Allow submission to iframe, then show success
-                     const submitBtn = document.getElementById('fp-btn-submit');
-                     submitBtn.disabled = true;
-                     submitBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Resetting...';
-
-                     setTimeout(() => {
-                         fpStep3.classList.add('hidden');
-                         fpStep4.classList.remove('hidden');
-                         fpStep4.classList.add('animate-fadeIn');
-                         
-                         submitBtn.disabled = false;
-                         submitBtn.innerText = "Reset Password";
-                         resetForm.reset();
-                     }, 2000);
-                 });
-             }
-
-             const logoutBtn = document.getElementById('btn-logout');
-             const mobileLogoutBtn = document.getElementById('mobile-logout-btn');
-             const errorMsg = document.getElementById('login-error');
-
-             const authGuest = document.getElementById('auth-guest');
-             const authUser = document.getElementById('auth-user');
-             const mobileAuthGuest = document.getElementById('mobile-auth-guest');
-             const mobileAuthUser = document.getElementById('mobile-auth-user');
-
-             function toggleLoginModal(show) {
-                 if(!loginModal) return;
-                 if(show) {
-                     fetchUsers(); 
-                     loginModal.classList.remove('hidden');
-                     setTimeout(() => {
-                         loginModal.classList.remove('opacity-0');
-                         if(loginModal.firstElementChild) {
-                             loginModal.firstElementChild.classList.remove('scale-95');
-                             loginModal.firstElementChild.classList.add('scale-100');
-                         }
-                         document.getElementById('login-username').focus();
-                     }, 10);
-                     const mm = document.getElementById('mobile-menu');
-                     if(mm) mm.classList.add('hidden');
-                 } else {
-                     loginModal.classList.add('opacity-0');
-                     if(loginModal.firstElementChild) {
-                         loginModal.firstElementChild.classList.remove('scale-100');
-                         loginModal.firstElementChild.classList.add('scale-95');
-                     }
-                     setTimeout(() => {
-                         loginModal.classList.add('hidden');
-                         if(loginForm) loginForm.reset();
-                         if(errorMsg) errorMsg.classList.add('hidden');
-                     }, 300);
-                 }
-             }
-
-             if(loginBtnTrigger) loginBtnTrigger.addEventListener('click', () => toggleLoginModal(true));
-             if(mobileLoginBtn) mobileLoginBtn.addEventListener('click', () => toggleLoginModal(true));
-             if(closeLoginBtn) closeLoginBtn.addEventListener('click', () => toggleLoginModal(false));
-             
-             // NEW: Listener for Chat Login Button
-             const chatLoginBtns = document.querySelectorAll('.trigger-login-chat');
-             chatLoginBtns.forEach(btn => {
-                 btn.addEventListener('click', () => toggleLoginModal(true));
-             });
-             
-             if(loginModal) loginModal.addEventListener('click', (e) => {
-                 if(e.target === loginModal) toggleLoginModal(false);
-             });
-
-             function updateAuthUI(forceUser = null) {
-                 let user = forceUser;
-                 // If no forced user provided (standard load), try to get from storage
-                 if (!user) {
-                     const session = localStorage.getItem('ai_school_session');
-                     user = session ? JSON.parse(session) : null;
-                 }
-
-                 // Refresh tools based on auth state (Reads from Storage, which should be updated by now)
-                 fetchApps();
-                 
-                 // Auto-fill Community Chat Name
-                 const chatNameInput = document.getElementById('name');
-                 
-                 // Chat Visibility Logic
-                 const chatInputArea = document.getElementById('chat-input-area');
-                 const chatGuestPrompt = document.getElementById('chat-guest-prompt');
-
-                 // NEW: Section & Nav Visibility Logic
-                 const communitySection = document.getElementById('community');
-                 const navCommunityDesktop = document.getElementById('nav-community-desktop');
-                 const navCommunityMobile = document.getElementById('nav-community-mobile');
-
-                 if (user) {
-                     // SHOW Community Section & Nav
-                     if(communitySection) communitySection.classList.remove('hidden');
-                     if(navCommunityDesktop) navCommunityDesktop.classList.remove('hidden', 'md:hidden');
-                     if(navCommunityDesktop) navCommunityDesktop.classList.add('flex'); // Ensure flex is restored
-                     if(navCommunityMobile) navCommunityMobile.classList.remove('hidden');
-
-                     // SHOW Chat Input
-                     if(chatInputArea) chatInputArea.classList.remove('hidden');
-                     if(chatGuestPrompt) chatGuestPrompt.classList.add('hidden');
-
-                     // Auto-fill and lock name field for consistency
-                     if(chatNameInput) {
-                         chatNameInput.value = user.username;
-                         chatNameInput.setAttribute('readonly', 'true');
-                         chatNameInput.classList.add('text-deped-blue', 'cursor-not-allowed');
-                     }
-
-                     if(authGuest) authGuest.classList.add('hidden');
-                     if(authUser) authUser.classList.remove('hidden');
-                     if(mobileAuthGuest) mobileAuthGuest.classList.add('hidden');
-                     if(mobileAuthUser) mobileAuthUser.classList.remove('hidden');
-
-                     const initial = user.username.charAt(0).toUpperCase();
-                     document.getElementById('user-avatar').innerText = initial;
-                     document.getElementById('mobile-user-avatar').innerText = initial;
-                     
-                     document.getElementById('user-name-display').innerText = user.username;
-                     document.getElementById('user-dropdown-name').innerText = user.username;
-                     document.getElementById('mobile-user-name').innerText = user.username;
-                     
-                     // --- NEW: DISPLAY LOGIC (Role on Button, Date in Menu) ---
-                     let roleLabel = user.role || 'New User'; // Default to actual string first
-                     let menuValidity = 'Standard Access';
-                     
-                     // FIX: Added .trim() here to prevent whitespace from causing "New User" fallback
-                     const roleLower = user.role ? user.role.trim().toLowerCase() : '';
-                     
-                     if (roleLower === 'admin') {
-                         roleLabel = 'Administrator';
-                         menuValidity = 'System Access';
-                     } else if (roleLower === 'local user' || roleLower.includes('local')) {
-                         // MOVED UP: Check for Local User BEFORE Paid User to prevent overrides
-                         roleLabel = 'Local User';
-                         menuValidity = 'Standard Access';
-                     } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
-                         roleLabel = 'Premium Member';
-                         if (user.expiration) {
-                             // Format Date
-                             try {
-                                 const expDate = new Date(user.expiration);
-                                 menuValidity = `Valid until ${expDate.toLocaleDateString()}`;
-                             } catch(e) {
-                                 menuValidity = 'Active Membership';
-                             }
-                         } else {
-                             menuValidity = 'Active Membership';
-                         }
-                     } else {
-                         // Fallback for unmapped roles (e.g. "Teacher", "Staff")
-                         roleLabel = user.role && user.role.length > 1 ? user.role : 'New User';
-                         menuValidity = 'Pending Verification';
-                     }
-
-                     // Button shows simple Role
-                     const roleDisplayBtn = document.getElementById('user-role-display');
-                     if(roleDisplayBtn) roleDisplayBtn.innerText = roleLabel;
-                     
-                     const mobileRoleDisplay = document.getElementById('mobile-user-role');
-                     if(mobileRoleDisplay) mobileRoleDisplay.innerText = roleLabel;
-                     
-                     // Dropdown shows specific validity details
-                     const dropValEl = document.getElementById('user-dropdown-validity');
-                     if(dropValEl) dropValEl.innerText = menuValidity;
-
-                     const adminLink = document.getElementById('admin-panel-link');
-                     if(user.role && user.role.toLowerCase() === 'admin') {
-                         if(adminLink) adminLink.classList.remove('hidden');
-                     } else {
-                         if(adminLink) adminLink.classList.add('hidden');
-                     }
-
-                 } else {
-                     // HIDE Community Section & Nav
-                     if(communitySection) communitySection.classList.add('hidden');
-                     if(navCommunityDesktop) navCommunityDesktop.classList.add('hidden');
-                     if(navCommunityDesktop) navCommunityDesktop.classList.remove('flex');
-                     if(navCommunityMobile) navCommunityMobile.classList.add('hidden');
-
-                     // HIDE Chat Input (Show Guest Prompt - though section is hidden now)
-                     if(chatInputArea) chatInputArea.classList.add('hidden');
-                     if(chatGuestPrompt) chatGuestPrompt.classList.remove('hidden');
-
-                     // Reset name field for guests
-                     if(chatNameInput) {
-                         chatNameInput.value = '';
-                         chatNameInput.removeAttribute('readonly');
-                         chatNameInput.classList.remove('text-deped-blue', 'cursor-not-allowed');
-                     }
-
-                     if(authGuest) authGuest.classList.remove('hidden');
-                     if(authUser) authUser.classList.add('hidden');
-                     if(mobileAuthGuest) mobileAuthGuest.classList.remove('hidden');
-                     if(mobileAuthUser) mobileAuthUser.classList.add('hidden');
-                 }
-             }
-
-             if(loginForm) {
-                 loginForm.addEventListener('submit', async (e) => {
-                     e.preventDefault();
-                     const btn = document.getElementById('btn-login-submit');
-                     const usernameInput = document.getElementById('login-username').value.trim();
-                     const passwordInput = document.getElementById('login-password').value.trim();
-                     
-                     const originalBtnText = btn.innerHTML;
-                     btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...';
-                     btn.disabled = true;
-                     btn.classList.add('opacity-75');
-
-                     let users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                     if(users.length === 0) {
-                         users = await fetchUsers();
-                     }
-
-                     const validUser = users.find(u => u.username === usernameInput && u.password === passwordInput);
-
-                     setTimeout(() => {
-                         if(validUser) {
-                             // SAVE SESSION (Now includes expiration)
-                             localStorage.setItem('ai_school_session', JSON.stringify({
-                                 username: validUser.username,
-                                 role: validUser.role,
-                                 expiration: validUser.expiration, // Saved for display
-                                 loginTime: Date.now()
-                             }));
-                             
-                             updateAuthUI();
-                             toggleLoginModal(false);
-                         } else {
-                             errorMsg.classList.remove('hidden');
-                             const modalContent = loginModal.firstElementChild;
-                             modalContent.classList.add('animate-shake'); 
-                             setTimeout(() => modalContent.classList.remove('animate-shake'), 500);
-                         }
-
-                         btn.innerHTML = originalBtnText;
-                         btn.disabled = false;
-                         btn.classList.remove('opacity-75');
-                     }, 800); 
-                 });
-             }
-
-             // Updated Logout Logic (Removed blocked confirm dialog)
-             function handleLogout() {
-                 // Immediate logout to avoid browser blocking 'confirm()'
-                 localStorage.removeItem('ai_school_session');
-                 localStorage.removeItem(CACHE_CONFIG.APPS.KEY); // Clear apps cache on logout
-                 updateAuthUI();
-                 const mm = document.getElementById('mobile-menu');
-                 if(mm) mm.classList.add('hidden');
-             }
-
-             if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
-             if(mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
-
-             // --- NEW: User Profile Dropdown Toggle Logic (Click-based) ---
-             const userMenuBtn = document.getElementById('user-menu-btn');
-             const userDropdown = document.getElementById('user-dropdown');
-             const userMenuIcon = document.getElementById('user-menu-icon');
-
-             if (userMenuBtn && userDropdown) {
-                 userMenuBtn.addEventListener('click', (e) => {
-                     e.stopPropagation(); // Prevent click from bubbling to document
-                     const isOpen = !userDropdown.classList.contains('opacity-0');
-                     
-                     if (isOpen) {
-                         // Close
-                         userDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                         userDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                         if(userMenuIcon) userMenuIcon.classList.remove('rotate-180');
-                     } else {
-                         // Open
-                         userDropdown.classList.remove('opacity-0', 'scale-95', 'pointer-events-none');
-                         userDropdown.classList.add('opacity-100', 'scale-100', 'pointer-events-auto');
-                         if(userMenuIcon) userMenuIcon.classList.add('rotate-180');
-                     }
-                 });
-
-                 // Close on click outside
-                 document.addEventListener('click', (e) => {
-                     if (!userMenuBtn.contains(e.target) && !userDropdown.contains(e.target)) {
-                         userDropdown.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
-                         userDropdown.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
-                         if(userMenuIcon) userMenuIcon.classList.remove('rotate-180');
-                     }
-                 });
-             }
-
-             updateAuthUI();
-             fetchUsers();
-
-             // --- Registration Modal Handling ---
-             const regModal = document.getElementById('register-modal');
-             const regTriggers = document.querySelectorAll('.trigger-register');
-             const regClose = document.getElementById('close-register-modal');
-             const mobileMenu = document.getElementById('mobile-menu');
-             // NEW: Content container
-             const regContent = document.getElementById('reg-content');
-
-             function openRegModal() {
-                 if(!regModal) return;
-                 toggleLoginModal(false); // Close login if open
-                 
-                 // Ensure success message is hidden and form is shown when opening
-                 if(regSuccess) {
-                     regSuccess.classList.add('hidden');
-                     regSuccess.classList.remove('flex');
-                 }
-                 if(regContent) regContent.classList.remove('hidden');
-
-                 regModal.classList.remove('hidden');
-                 if(mobileMenu && !mobileMenu.classList.contains('hidden')) {
-                     mobileMenu.classList.add('hidden');
-                 }
-                 setTimeout(() => {
-                     regModal.classList.remove('opacity-0');
-                     if(regModal.firstElementChild) {
-                         regModal.firstElementChild.classList.remove('scale-95');
-                         regModal.firstElementChild.classList.add('scale-100');
-                     }
-                 }, 10);
-             }
-
-             function closeRegModal() {
-                 if(!regModal) return;
-                 regModal.classList.add('opacity-0');
-                 if(regModal.firstElementChild) {
-                     regModal.firstElementChild.classList.remove('scale-100');
-                     regModal.firstElementChild.classList.add('scale-95');
-                 }
-                 setTimeout(() => {
-                     regModal.classList.add('hidden');
-                     // Reset form and success state after closing animation
-                     if(regForm) regForm.reset();
-                     if(regSuccess) {
-                         regSuccess.classList.add('hidden');
-                         regSuccess.classList.remove('flex');
-                     }
-                     if(regContent) regContent.classList.remove('hidden');
-                 }, 300);
-             }
-
-             regTriggers.forEach(btn => {
-                 btn.addEventListener('click', (e) => {
-                     e.preventDefault();
-                     openRegModal();
-                 });
-             });
-
-             if(regClose) regClose.addEventListener('click', closeRegModal);
-             
-             if(regModal) {
-                regModal.addEventListener('click', (e) => {
-                    if(e.target === regModal) closeRegModal();
-                });
-             }
-
-             // --- NEW: Password Features (Eye Toggle & Caps Lock) ---
-             function setupPasswordFeatures(inputId, toggleId, warningId) {
-                 const input = document.getElementById(inputId);
-                 const toggleBtn = document.getElementById(toggleId);
-                 const warning = document.getElementById(warningId);
-
-                 if (!input || !toggleBtn) return;
-
-                 // 1. Toggle Password Visibility (Hold to View)
-                 const showPassword = () => {
-                     input.setAttribute('type', 'text');
-                     const icon = toggleBtn.querySelector('i');
-                     if(icon) {
-                        icon.classList.remove('fa-eye');
-                        icon.classList.add('fa-eye-slash');
-                     }
-                 };
-
-                 const hidePassword = () => {
-                     input.setAttribute('type', 'password');
-                     const icon = toggleBtn.querySelector('i');
-                     if(icon) {
-                        icon.classList.remove('fa-eye-slash');
-                        icon.classList.add('fa-eye');
-                     }
-                 };
-
-                 // Desktop (Mouse)
-                 toggleBtn.addEventListener('mousedown', (e) => {
-                     e.preventDefault(); // Prevent focus loss on input
-                     showPassword();
-                 });
-                 toggleBtn.addEventListener('mouseup', hidePassword);
-                 toggleBtn.addEventListener('mouseleave', hidePassword);
-
-                 // Mobile (Touch)
-                 toggleBtn.addEventListener('touchstart', (e) => {
-                     e.preventDefault(); // Prevent scrolling/emulated mouse events
-                     showPassword();
-                 });
-                 toggleBtn.addEventListener('touchend', hidePassword);
-                 toggleBtn.addEventListener('touchcancel', hidePassword);
-
-                 // 2. Caps Lock Detection
-                 if(warning) {
-                     const checkCapsLock = (e) => {
-                         if (e.getModifierState && e.getModifierState('CapsLock')) {
-                             warning.classList.remove('hidden');
-                         } else {
-                             warning.classList.add('hidden');
-                         }
-                     };
-
-                     input.addEventListener('keyup', checkCapsLock);
-                     input.addEventListener('keydown', checkCapsLock);
-                     input.addEventListener('click', checkCapsLock);
-                     input.addEventListener('focus', checkCapsLock);
-                     input.addEventListener('blur', () => warning.classList.add('hidden'));
-                 }
-             }
-
-             // Initialize for Login and Register
-             setupPasswordFeatures('login-password', 'toggle-login-password', 'login-caps-warning');
-             setupPasswordFeatures('reg-password', 'toggle-reg-password', 'reg-caps-warning');
-             setupPasswordFeatures('reg-confirm-password', 'toggle-reg-confirm-password', 'reg-caps-warning');
-
-             // --- NEW: Real-time Password Validation (Length & Match) ---
-             function setupPasswordValidation(passId, confirmId, matchWarningId, lengthIndicatorId) {
-                 const passInput = document.getElementById(passId);
-                 const confirmInput = document.getElementById(confirmId);
-                 const matchWarning = document.getElementById(matchWarningId);
-                 const lengthIndicator = document.getElementById(lengthIndicatorId);
-
-                 if(!passInput) return;
-
-                 const checkValidation = () => {
-                     const val1 = passInput.value;
-                     const val2 = confirmInput ? confirmInput.value : '';
-
-                     // Length Check
-                     if (lengthIndicator) {
-                         if (val1.length > 0 && val1.length < 8) {
-                             lengthIndicator.classList.remove('text-slate-400', 'text-green-600');
-                             lengthIndicator.classList.add('text-red-500');
-                             lengthIndicator.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Too short (min. 8)';
-                         } else if (val1.length >= 8) {
-                             lengthIndicator.classList.remove('text-slate-400', 'text-red-500');
-                             lengthIndicator.classList.add('text-green-600');
-                             lengthIndicator.innerHTML = '<i class="fa-solid fa-circle-check"></i> Good length';
-                         } else {
-                             // Empty
-                             lengthIndicator.classList.remove('text-red-500', 'text-green-600');
-                             lengthIndicator.classList.add('text-slate-400');
-                             lengthIndicator.innerHTML = '<i class="fa-solid fa-circle-info"></i> Min. 8 characters';
-                         }
-                     }
-
-                     // Match Check
-                     if(confirmInput && matchWarning) {
-                         if (val2 && val1 !== val2) {
-                             matchWarning.classList.remove('hidden');
-                             confirmInput.classList.add('border-red-500', 'text-red-600', 'focus:border-red-500', 'focus:ring-red-200');
-                             confirmInput.classList.remove('border-slate-200', 'focus:border-deped-blue', 'focus:ring-deped-blue');
-                         } else {
-                             matchWarning.classList.add('hidden');
-                             confirmInput.classList.remove('border-red-500', 'text-red-600', 'focus:border-red-500', 'focus:ring-red-200');
-                             confirmInput.classList.add('border-slate-200', 'focus:border-deped-blue', 'focus:ring-deped-blue');
-                         }
-                     }
-                 };
-
-                 passInput.addEventListener('input', checkValidation);
-                 if(confirmInput) confirmInput.addEventListener('input', checkValidation);
-             }
-
-             // Replaces previous setupPasswordMatching call
-             setupPasswordValidation('reg-password', 'reg-confirm-password', 'pass-match-warning', 'pass-length-indicator');
-
-             // --- Form Submission Logic (Updated with Verification) ---
-             const regForm = document.getElementById('registrationForm');
-             const regSuccess = document.getElementById('reg-success');
-             const regReset = document.getElementById('reg-reset-btn');
-             const regBtn = document.getElementById('reg-submit-btn');
-             const regError = document.getElementById('reg-error');
-             const regErrorMsg = document.getElementById('reg-error-msg');
-
-             if(regForm && regSuccess && regBtn) {
-                 regForm.addEventListener('submit', async (e) => {
-                     e.preventDefault(); // Stop submission to check username first
-                     
-                     // Hide previous errors
-                     if(regError) regError.classList.add('hidden');
-
-                     const usernameInput = regForm.querySelector('input[name="entry.1514621509"]');
-                     const username = usernameInput ? usernameInput.value.trim() : '';
-                     
-                     // 0a. CHECK PASSWORDS (Length & Match)
-                     const passVal = document.getElementById('reg-password').value;
-                     const confirmVal = document.getElementById('reg-confirm-password').value;
-
-                     if (passVal.length < 8) {
-                         if(regError && regErrorMsg) {
-                             regErrorMsg.innerText = "Password must be at least 8 characters.";
-                             regError.classList.remove('hidden');
-                         }
-                         regForm.classList.add('animate-shake');
-                         setTimeout(() => regForm.classList.remove('animate-shake'), 500);
-                         return;
-                     }
-
-                     if (passVal !== confirmVal) {
-                         if(regError && regErrorMsg) {
-                             regErrorMsg.innerText = "Passwords do not match.";
-                             regError.classList.remove('hidden');
-                         }
-                         regForm.classList.add('animate-shake');
-                         setTimeout(() => regForm.classList.remove('animate-shake'), 500);
-                         return;
-                     }
-
-                     if(!username) return;
-
-                     // 0b. RESTRICTED USERNAME CHECK
-                     // Blocks usernames containing 'admin', 'administrator', 'root', etc.
-                     const restrictedKeywords = ['admin', 'administrator', 'root', 'system', 'support', 'superuser'];
-                     const lowerUser = username.toLowerCase();
-                     const foundRestricted = restrictedKeywords.find(keyword => lowerUser.includes(keyword));
-
-                     if (foundRestricted) {
-                         if(regError && regErrorMsg) {
-                             regErrorMsg.innerText = `Username cannot contain reserved word: '${foundRestricted}'`;
-                             regError.classList.remove('hidden');
-                         }
-                         
-                         // Shake Animation
-                         regForm.classList.add('animate-shake');
-                         setTimeout(() => regForm.classList.remove('animate-shake'), 500);
-                         
-                         // Focus back on username
-                         if(usernameInput) usernameInput.focus();
-                         return;
-                     }
-
-                     // Set Loading State
-                     regBtn.disabled = true;
-                     const originalText = regBtn.innerHTML;
-                     regBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Verifying...';
-                     regBtn.classList.add('opacity-75', 'cursor-wait');
-
-                     // 1. Fetch current users to check uniqueness
-                     let users = [];
-                     try {
-                         users = await fetchUsers();
-                     } catch(err) {
-                         // Fallback to cache if network fails, though risk of stale data
-                         users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                     }
-
-                     const exists = users.some(u => u.username.toLowerCase() === username.toLowerCase());
-
-                     if (exists) {
-                         // STOP: Username taken
-                         if(regError && regErrorMsg) {
-                             regErrorMsg.innerText = `The username '${username}' is already taken.`;
-                             regError.classList.remove('hidden');
-                         }
-                         
-                         // Reset Button
-                         regBtn.innerHTML = originalText;
-                         regBtn.disabled = false;
-                         regBtn.classList.remove('opacity-75', 'cursor-wait');
-                         
-                         // Shake Animation
-                         regForm.classList.add('animate-shake');
-                         setTimeout(() => regForm.classList.remove('animate-shake'), 500);
-                         
-                         // Focus back on username
-                         if(usernameInput) usernameInput.focus();
-                         return;
-                     }
-
-                     // 2. SUCCESS: Proceed with Submission
-                     regBtn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Registering...';
-                     
-                     // Actually submit to the iframe now
-                     regForm.submit();
-
-                     setTimeout(() => {
-                         // SWAP VIEWS
-                         if(regContent) regContent.classList.add('hidden');
-                         
-                         regSuccess.classList.remove('hidden');
-                         regSuccess.classList.add('flex'); 
-                         
-                         regBtn.innerHTML = originalText;
-                         regBtn.disabled = false;
-                         regBtn.classList.remove('opacity-75', 'cursor-wait');
-                         
-                         regForm.reset();
-                     }, 1500); 
-                 });
-
-                 if(regReset) {
-                     regReset.addEventListener('click', () => {
-                         // CHANGED: Instead of just hiding success, close the whole modal
-                         closeRegModal();
-                     });
-                 }
-             }
-
-        }); // Close DOMContentLoaded
+        });
 
         /* --- BASIC SECURITY DETERRENTS --- */
         document.addEventListener('contextmenu', (e) => {
@@ -3072,12 +1797,14 @@
         });
 
         document.addEventListener('keydown', (e) => {
+            // Secret Credits: Ctrl + Shift + F10
             if(e.ctrlKey && e.shiftKey && e.key === 'F10') {
                 e.preventDefault();
                 const overlay = document.getElementById('credits-overlay');
                 const card = document.getElementById('credits-card');
                 if(overlay && card) {
                     overlay.classList.remove('hidden');
+                    // Add animation class after removing hidden to trigger CSS transition/animation
                     setTimeout(() => {
                         card.classList.remove('opacity-0', 'scale-95');
                         card.classList.add('opacity-100', 'scale-100', 'animate-zoom-in');
@@ -3107,129 +1834,7 @@
                 return false;
             }
         });
-        
-        // --- FETCH USERS FUNCTION (Global Helper - UPDATED to return expiration) ---
-        async function fetchUsers() {
-             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
-             const sheetName = 'USERS';
-             // ADDED: Timestamp to prevent GVIZ caching
-             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}`;
-
-             try {
-                 const response = await fetch(url);
-                 const text = await response.text();
-                 const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
-                 if (jsonMatch && jsonMatch[1]) {
-                     const json = JSON.parse(jsonMatch[1]);
-                     const rows = json.table.rows;
-                     
-                     // Map columns: 
-                     // B (Index 1) = Username
-                     // C (Index 2) = Password
-                     // D (Index 3) = Role
-                     // G (Index 6) = Security Question
-                     // H (Index 7) = Security Answer
-                     // J (Index 9) = Expiration Date
-                     const users = rows.map(row => {
-                         if(!row.c || !row.c[1]) return null;
-                         
-                         let role = row.c[3] ? String(row.c[3].v).trim() : 'User';
-                         const username = String(row.c[1].v).trim();
-                         let expirationStr = null;
-
-                         // --- EXPIRATION CHECK ---
-                         if (role.toLowerCase() === 'paid user' && row.c[9]) {
-                             let expDate = parseGvizDate(row.c[9].v);
-                             if (!expDate && row.c[9].f) expDate = parseGvizDate(row.c[9].f);
-                             
-                             if (expDate) {
-                                 expirationStr = expDate.toISOString();
-                                 const now = new Date();
-                                 now.setHours(0,0,0,0);
-                                 
-                                 if (expDate < now) {
-                                     role = 'Local User';
-                                     console.log(`User ${username} expired on ${expDate.toDateString()}. Downgrading.`);
-                                 }
-                             }
-                         }
-
-                         return {
-                             username: username,
-                             password: row.c[2] ? String(row.c[2].v).trim() : "", 
-                             role: role,
-                             question: row.c[6] ? String(row.c[6].v).trim() : null,
-                             answer: row.c[7] ? String(row.c[7].v).trim() : null,
-                             expiration: expirationStr
-                         };
-                     }).filter(u => u !== null && u.username !== "");
-
-                     localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(users));
-
-                     // --- SYNC ACTIVE SESSION ---
-                     const session = localStorage.getItem('ai_school_session');
-                     if (session) {
-                         const currentSession = JSON.parse(session);
-                         const updatedUser = users.find(u => u.username.toLowerCase() === currentSession.username.toLowerCase());
-                         
-                         if (!updatedUser) {
-                             console.warn('Session invalid: User not found in database.');
-                             localStorage.removeItem('ai_school_session');
-                             localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
-                             if (typeof updateAuthUI === 'function') updateAuthUI();
-                         } else if (updatedUser.role !== currentSession.role || updatedUser.expiration !== currentSession.expiration) {
-                             console.log(`User sync: Status update detected for ${updatedUser.username}`);
-                             
-                             currentSession.role = updatedUser.role;
-                             currentSession.expiration = updatedUser.expiration; // Sync Expiration too
-                             localStorage.setItem('ai_school_session', JSON.stringify(currentSession));
-                             
-                             // PASS UPDATED SESSION DIRECTLY to avoid any read/write race conditions
-                             if (typeof updateAuthUI === 'function') updateAuthUI(currentSession);
-                         }
-                     }
-
-                     return users;
-                 }
-             } catch (err) {
-                 console.error('Failed to fetch users:', err);
-                 return [];
-             }
-        }
-
-        // --- NEW: Focus Trap for Login Modal ---
-        document.addEventListener('keydown', (e) => {
-            const modal = document.getElementById('login-modal');
-            
-            // Only trap focus if modal exists and is NOT hidden
-            if (!modal || modal.classList.contains('hidden') || e.key !== 'Tab') return;
-
-            // Get focusable elements within the modal
-            const focusableElements = modal.querySelectorAll(
-                'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            );
-            
-            if (focusableElements.length === 0) return;
-
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-
-            // Shift + Tab (Backward)
-            if (e.shiftKey) {
-                if (document.activeElement === firstElement) {
-                    e.preventDefault();
-                    lastElement.focus();
-                }
-            } 
-            // Tab (Forward)
-            else {
-                if (document.activeElement === lastElement) {
-                    e.preventDefault();
-                    firstElement.focus();
-                }
-            }
-        });
-
     </script>
 </body>
 </html>
+
