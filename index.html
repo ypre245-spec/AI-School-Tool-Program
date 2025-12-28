@@ -48,6 +48,7 @@
                         'breathe': 'breathe 4s ease-in-out infinite',
                         'spin-slow': 'spin 8s linear infinite',
                         'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
+                        'wiggle': 'wiggle 2s ease-in-out infinite',
                     },
                     keyframes: {
                         float: {
@@ -62,6 +63,10 @@
                             '0%, 100%': { transform: 'translateX(0)' },
                             '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-4px)' },
                             '20%, 40%, 60%, 80%': { transform: 'translateX(4px)' },
+                        },
+                        wiggle: {
+                            '0%, 100%': { transform: 'rotate(-3deg)' },
+                            '50%': { transform: 'rotate(3deg)' },
                         }
                     }
                 }
@@ -285,8 +290,8 @@
                     <div id="auth-user" class="hidden flex items-center gap-3 relative">
                         <!-- Notification Holder (New) -->
                         <button id="nav-notification-btn" class="hidden w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white relative transition shadow-sm border border-white/10 group">
-                            <i class="fa-solid fa-envelope text-sm group-hover:animate-shake"></i>
-                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                            <i class="fa-solid fa-envelope text-sm group-hover:animate-wiggle"></i>
+                            <span id="nav-notif-badge" class="absolute -top-1 -right-1 flex h-3 w-3">
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                               <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500 border-2 border-deped-blue"></span>
                             </span>
@@ -364,7 +369,7 @@
                              <div class="flex items-center gap-3">
                                 <div class="w-5 text-center"><i class="fa-solid fa-envelope text-yellow-400"></i></div>
                                 <span class="flex-grow font-bold text-yellow-100">Personal Message</span>
-                                <span class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">1</span>
+                                <span id="mob-notif-badge" class="bg-red-500 text-white text-[10px] font-bold px-2 py-0.5 rounded-full animate-pulse">1</span>
                              </div>
                          </button>
 
@@ -894,12 +899,12 @@
 
     <!-- NEW: SUBSCRIPTION / VERIFICATION MODAL -->
     <div id="subscription-modal" class="fixed inset-0 z-[200] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300 overflow-hidden">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md relative transform scale-95 transition-all duration-300 overflow-hidden flex flex-col max-h-[90vh]">
             
             <button id="close-subscription-modal" class="absolute top-4 right-4 text-slate-400 hover:text-slate-800 transition z-10"><i class="fa-solid fa-xmark text-xl"></i></button>
 
             <!-- Header -->
-            <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 px-8 py-6 text-center relative overflow-hidden">
+            <div class="bg-gradient-to-r from-yellow-400 to-yellow-500 px-8 py-6 text-center relative overflow-hidden flex-shrink-0">
                 <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                 <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-3 backdrop-blur-sm border border-white/30 text-white text-3xl shadow-sm">
                     <i class="fa-solid fa-crown"></i>
@@ -908,12 +913,25 @@
                 <p class="text-yellow-50 text-sm font-medium">Verify your account for full access</p>
             </div>
 
-            <div class="p-8">
+            <div class="p-8 overflow-y-auto custom-scroll">
                 <!-- Content -->
                 <div id="sub-content">
-                    <p class="text-sm text-slate-600 mb-6 leading-relaxed text-center">
+                    <p class="text-sm text-slate-600 mb-4 leading-relaxed text-center">
                         Submit a verification request to upgrade your account.
                     </p>
+
+                    <!-- NEW: Pricing Banner -->
+                    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 mb-6 text-center shadow-sm relative overflow-hidden">
+                        <div class="absolute top-0 right-0 w-16 h-16 bg-yellow-400 opacity-10 rounded-full -mr-8 -mt-8"></div>
+                        <div class="flex items-center justify-center gap-2 mb-1">
+                            <span class="bg-yellow-400 text-blue-900 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider shadow-sm">Best Value</span>
+                        </div>
+                        <p class="text-3xl font-bold text-slate-800">₱100.00</p>
+                        <p class="text-xs font-bold text-blue-600 uppercase tracking-widest mt-1">For 1 Year Access</p>
+                        <p class="text-[10px] text-slate-500 mt-2 leading-tight px-4 max-w-xs mx-auto border-t border-blue-100 pt-2">
+                            Enjoy full access to premium AI tools for 12 months. That's less than ₱9 per month!
+                        </p>
+                    </div>
 
                     <iframe name="subscription_iframe" id="subscription_iframe" style="display:none;"></iframe>
                     
@@ -945,22 +963,12 @@
                             </div>
                         </div>
 
-                        <!-- Contact Number -->
-                        <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Contact Number</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-phone absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="text" id="sub-contact" name="entry.587013090" required placeholder="09XX XXX XXXX"
-                                    class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-yellow-500 transition-colors">
-                            </div>
-                        </div>
-
                         <!-- Amount -->
                         <div class="space-y-1">
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Amount Paid</label>
                             <div class="relative">
                                 <i class="fa-solid fa-peso-sign absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="number" id="sub-amount" name="entry.629546664" required placeholder="Amount"
+                                <input type="number" id="sub-amount" name="entry.629546664" required placeholder="100" value="100"
                                     class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-yellow-500 transition-colors">
                             </div>
                         </div>
@@ -976,17 +984,24 @@
                             <p class="text-[10px] text-slate-400 mt-1 italic">Optional.</p>
                         </div>
 
-                        <div class="grid grid-cols-2 gap-3 mt-4">
-                            <!-- Direct Submit -->
-                            <button type="submit" id="btn-sub-submit" class="bg-yellow-100 hover:bg-yellow-200 text-yellow-800 font-bold py-3 rounded-xl transition shadow-sm text-xs flex flex-col items-center justify-center gap-1">
-                                <i class="fa-solid fa-paper-plane text-sm"></i>
-                                <span>Try Direct Submit</span>
+                        <!-- UPDATED BUTTON LAYOUT -->
+                        <div class="mt-6 space-y-4 pt-2">
+                            <!-- Direct Submit (Primary) -->
+                            <button type="submit" id="btn-sub-submit" class="w-full bg-deped-blue hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group ring-1 ring-blue-700/20">
+                                <span>Submit Payment Verification</span>
+                                <i class="fa-solid fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
                             </button>
 
-                            <!-- Fallback Link (Facebook) -->
-                            <a id="backup-form-link" href="https://www.facebook.com/y2k2009/" target="_blank" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition shadow-lg text-xs flex flex-col items-center justify-center gap-1 text-center">
-                                <i class="fa-brands fa-facebook-messenger text-sm"></i>
-                                <span>Contact Admin</span>
+                            <div class="relative flex py-1 items-center">
+                                <div class="flex-grow border-t border-slate-200"></div>
+                                <span class="flex-shrink-0 mx-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Or</span>
+                                <div class="flex-grow border-t border-slate-200"></div>
+                            </div>
+
+                            <!-- Fallback Link (Secondary) -->
+                            <a id="backup-form-link" href="https://www.facebook.com/y2k2009/" target="_blank" class="w-full bg-white border-2 border-slate-100 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs group">
+                                <i class="fa-brands fa-facebook-messenger text-lg group-hover:scale-110 transition-transform"></i>
+                                <span>Contact Admin for Help</span>
                             </a>
                         </div>
                     </form>
@@ -1023,6 +1038,12 @@
                         <button onclick="switchAdminTab('dashboard')" id="tab-btn-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">
                             <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
                         </button>
+                        <button onclick="switchAdminTab('payments')" id="tab-btn-payments" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-receipt w-5 text-center"></i> Payments
+                            </div>
+                            <span id="payment-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse">0</span>
+                        </button>
                         <button onclick="switchAdminTab('communications')" id="tab-btn-communications" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
                             <i class="fa-solid fa-bullhorn w-5 text-center"></i> Communications
                         </button>
@@ -1052,41 +1073,59 @@
                     <h2 class="text-xl font-bold text-slate-800 mb-6">System Overview</h2>
                     
                     <!-- Analytics Cards -->
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+                        <!-- Total Users Card -->
+                        <div onclick="filterAdminUsers('all')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-blue-300 hover:-translate-y-1 transition-all duration-200 group active:scale-95">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Users</p>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider group-hover:text-blue-500 transition-colors">Total Users</p>
                                     <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-total">0</h3>
                                 </div>
-                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center"><i class="fa-solid fa-users"></i></div>
+                                <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors"><i class="fa-solid fa-users"></i></div>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+
+                        <!-- Pending Card -->
+                        <div onclick="filterAdminUsers('pending')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-yellow-300 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-yellow-400 active:scale-95">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Pending</p>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider group-hover:text-yellow-600 transition-colors">Pending</p>
                                     <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-pending">0</h3>
                                 </div>
-                                <div class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center"><i class="fa-solid fa-clock"></i></div>
+                                <div class="w-8 h-8 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center group-hover:bg-yellow-500 group-hover:text-white transition-colors"><i class="fa-solid fa-clock"></i></div>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+
+                        <!-- Premium Card -->
+                        <div onclick="filterAdminUsers('premium')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-purple-300 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-purple-500 active:scale-95">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Premium</p>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider group-hover:text-purple-600 transition-colors">Premium</p>
                                     <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-premium">0</h3>
                                 </div>
-                                <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center"><i class="fa-solid fa-crown"></i></div>
+                                <div class="w-8 h-8 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition-colors"><i class="fa-solid fa-crown"></i></div>
                             </div>
                         </div>
-                        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+
+                        <!-- Basic Card -->
+                        <div onclick="filterAdminUsers('basic')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-green-300 hover:-translate-y-1 transition-all duration-200 group active:scale-95">
                             <div class="flex justify-between items-start">
                                 <div>
-                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Basic</p>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider group-hover:text-green-600 transition-colors">Basic</p>
                                     <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-basic">0</h3>
                                 </div>
-                                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center"><i class="fa-solid fa-user-shield"></i></div>
+                                <div class="w-8 h-8 rounded-lg bg-green-50 text-green-600 flex items-center justify-center group-hover:bg-green-600 group-hover:text-white transition-colors"><i class="fa-solid fa-user-shield"></i></div>
+                            </div>
+                        </div>
+
+                        <!-- Expired Card (New) -->
+                        <div onclick="filterAdminUsers('expired')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-red-300 hover:-translate-y-1 transition-all duration-200 group border-l-4 border-l-red-500 active:scale-95">
+                            <div class="flex justify-between items-start">
+                                <div>
+                                    <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider group-hover:text-red-600 transition-colors">Expired / Due Soon</p>
+                                    <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-expired">0</h3>
+                                </div>
+                                <div class="w-8 h-8 rounded-lg bg-red-50 text-red-600 flex items-center justify-center group-hover:bg-red-600 group-hover:text-white transition-colors"><i class="fa-solid fa-calendar-xmark"></i></div>
                             </div>
                         </div>
                     </div>
@@ -1102,7 +1141,7 @@
                                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
                                     <input type="text" id="admin-search" placeholder="Search users..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition">
                                 </div>
-                                <button onclick="fetchUsers()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Refresh List">
+                                <button onclick="refreshAdminData()" id="btn-admin-refresh" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Force Refresh Data">
                                     <i class="fa-solid fa-rotate"></i>
                                 </button>
                             </div>
@@ -1120,6 +1159,35 @@
                                 </thead>
                                 <tbody id="admin-user-list" class="divide-y divide-slate-100 bg-white">
                                     <!-- Populated by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB: PAYMENTS (NEW) -->
+                <div id="admin-tab-payments" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8 hidden">
+                    <div class="flex justify-between items-center mb-6">
+                        <h2 class="text-xl font-bold text-slate-800">Payment Verification</h2>
+                        <button onclick="loadAdminPayments()" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                            <i class="fa-solid fa-rotate"></i> Refresh
+                        </button>
+                    </div>
+
+                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col min-h-[400px]">
+                        <div class="flex-grow overflow-x-auto custom-scroll">
+                            <table class="w-full text-left text-xs">
+                                <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider">
+                                    <tr>
+                                        <th class="px-6 py-4">Date & Time</th>
+                                        <th class="px-6 py-4">User Identity</th>
+                                        <th class="px-6 py-4">Payment Details</th>
+                                        <th class="px-6 py-4">Amount</th>
+                                        <th class="px-6 py-4 text-right">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="admin-payment-list" class="divide-y divide-slate-100 bg-white">
+                                    <tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">Loading requests...</td></tr>
                                 </tbody>
                             </table>
                         </div>
@@ -1263,10 +1331,43 @@
                     </select>
                 </div>
 
+                <!-- NEW: Premium Duration Options -->
+                <div id="premium-options" class="hidden space-y-2 bg-yellow-50 p-3 rounded-lg border border-yellow-200 mt-2 transition-all">
+                    <p class="text-[10px] font-bold text-yellow-800 uppercase flex items-center gap-1">
+                        <i class="fa-solid fa-clock"></i> Select Subscription Duration
+                    </p>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="setPremiumDuration(3, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">3 Months</button>
+                        <button type="button" onclick="setPremiumDuration(6, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">6 Months</button>
+                        <button type="button" onclick="setPremiumDuration(9, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">9 Months</button>
+                        <button type="button" onclick="setPremiumDuration(12, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">1 Year</button>
+                    </div>
+                    <input type="hidden" id="edit-start-date">
+                    <input type="hidden" id="edit-expiration-date">
+                    <div id="date-preview" class="hidden mt-2 pt-2 border-t border-yellow-200 text-[10px] text-yellow-800 font-mono">
+                        <p>Start: <span id="preview-start" class="font-bold"></span></p>
+                        <p>Expires: <span id="preview-end" class="font-bold"></span></p>
+                    </div>
+                </div>
+
                 <div>
                     <label class="text-xs font-bold text-slate-500 uppercase">Personal Message</label>
                     <textarea id="edit-message" rows="3" class="w-full mt-1 p-2 bg-white border border-slate-300 rounded-lg text-sm focus:border-blue-500 focus:outline-none" placeholder="Enter message for this user..."></textarea>
-                    <p class="text-[10px] text-slate-400 mt-1">The user will see this message next time they log in.</p>
+                    
+                    <div class="mt-2 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <p class="text-[10px] text-slate-400">Quick Insert:</p>
+                            <p id="insert-status" class="text-[10px] font-bold h-4 transition-colors duration-300"></p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button type="button" onclick="insertThankYouMessage()" class="flex-1 text-[10px] font-bold text-green-600 hover:text-green-700 bg-green-50 hover:bg-green-100 border border-green-200 px-2 py-2 rounded-lg transition flex items-center justify-center gap-1 shadow-sm hover:shadow-md">
+                                <i class="fa-solid fa-hand-holding-heart"></i> Thank You
+                            </button>
+                            <button type="button" onclick="insertExpirationMessage()" class="flex-1 text-[10px] font-bold text-pink-600 hover:text-pink-700 bg-pink-50 hover:bg-pink-100 border border-pink-200 px-2 py-2 rounded-lg transition flex items-center justify-center gap-1 shadow-sm hover:shadow-md">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Expiration Notice
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="flex gap-3 justify-end pt-4 border-t border-slate-100 mt-2">
@@ -1572,6 +1673,41 @@
 
     <!-- Logic Script -->
     <script>
+        // --- SYSTEM CONFIGURATION ---
+        // Adjust these numbers to match your Google Sheet Columns (0 = A, 1 = B, 2 = C, etc.)
+        const SHEET_COLUMNS = {
+            USERNAME: 1,      // Column B (Default: Username)
+            PASSWORD: 2,      // Column C (Default: Password)
+            ROLE: 3,          // Column D (Default: Role)
+            MESSAGE: 4,       // Column E (Default: Personal Message)
+            FULLNAME: 0,      // Column F (New: Full Name)
+            SEC_QUESTION: 6,  // Column G (Security Question)
+            SEC_ANSWER: 7,    // Column H (Security Answer)
+            START_DATE: 8,    // Column I (Start/Approval Date)
+            EXPIRATION: 9,    // Column J (Expiration Date)
+            MSG_TIMESTAMP: 10 // Column K (Message Timestamp)
+        };
+
+        // --- GLOBAL STATE TRACKER ---
+        let currentAdminFilterType = 'all';
+
+        // --- HELPER: Filter Logic ---
+        function getFilteredUsers(users, type) {
+             if (!users) return [];
+             if (type === 'all') return users;
+             if (type === 'pending') return users.filter(u => u.role.toLowerCase() === 'new user');
+             if (type === 'premium') return users.filter(u => u.role.toLowerCase().includes('paid'));
+             if (type === 'basic') return users.filter(u => u.role.toLowerCase().includes('basic') || u.role.toLowerCase().includes('local'));
+             if (type === 'expired') {
+                 const now = new Date();
+                 const nextWeek = new Date();
+                 nextWeek.setDate(now.getDate() + 7); // Look ahead 7 days
+                 
+                 return users.filter(u => u.expiration && new Date(u.expiration) < nextWeek);
+             }
+             return users;
+        }
+
         // Force dismiss loader on error to prevent hanging
         window.addEventListener('error', () => {
              const loader = document.getElementById('initial-loader');
@@ -1860,6 +1996,13 @@
                         return { name, message, timestamp, dateGroup };
                     }).filter(story => story !== null);
                     
+                    // --- PERFORMANCE OPTIMIZATION ---
+                    // Suggestion Implemented: Cap at latest 300 messages to prevent memory lag
+                    if (allStories.length > 300) {
+                        allStories = allStories.slice(-300);
+                    }
+                    // --------------------------------
+
                     initSpotlight([...allStories].reverse().slice(0, 5));
                     
                     const wasAtBottom = grid.scrollHeight - grid.scrollTop === grid.clientHeight;
@@ -2209,27 +2352,62 @@
             titleEl.innerText = notifData.title;
             msgEl.innerText = notifData.message;
             
-            // Visual distinction for personal messages (SaaS Style)
-            if (isPersonal) {
-                 titleEl.innerText = "Admin Message"; // Clean title
+            // 1. Check for Expiration / Gratitude Message
+            if (notifData.type === 'expiration') {
+                 titleEl.innerText = notifData.title || "Membership Notice";
+                 subtitleEl.innerText = "System Notification";
+                 
+                 // Gratitude Theme (Pink/Heart)
+                 iconEl.className = "fa-solid fa-heart-pulse";
+                 iconBg.className = "w-8 h-8 rounded-lg bg-pink-100 text-pink-500 flex items-center justify-center text-sm shadow-md ring-2 ring-pink-100";
+                 
+                 timestampEl.innerText = "Important Update";
+                 
+                 statusEl.innerText = notifData.statusText || "Notice";
+                 statusEl.className = "text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100";
+                 
+                 ackBtn.innerText = "I Understand";
+                 ackBtn.className = "bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+            }
+            // 2. Personal Admin Message
+            else if (isPersonal) {
+                 titleEl.innerText = "Admin Message"; 
                  subtitleEl.innerText = "Personal Notification";
                  
-                 // Update Icon
                  iconEl.className = "fa-solid fa-paper-plane";
                  iconBg.className = "w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-blue-100";
                  
-                 // Retrieve Timestamp with Real-Time formatting
-                 const storedTs = localStorage.getItem('personal_msg_ts');
-                 const displayTime = storedTs ? timeAgo(storedTs) : 'Just now';
-                 timestampEl.innerText = `Delivered ${displayTime}`;
+                 const serverTs = notifData.timestamp;
+                 const localTs = localStorage.getItem('personal_msg_ts');
                  
-                 statusEl.innerText = "Priority";
+                 const formatFull = (dateStr) => {
+                     const date = new Date(dateStr);
+                     return date.toLocaleString('en-US', { 
+                         month: 'long', 
+                         day: 'numeric', 
+                         year: 'numeric', 
+                         hour: 'numeric', 
+                         minute: '2-digit' 
+                     });
+                 };
+
+                 if (serverTs) {
+                     timestampEl.innerText = `Delivered: ${formatFull(serverTs)}`;
+                 } else if (localTs) {
+                     timestampEl.innerText = `Delivered: ${formatFull(localTs)}`;
+                 } else {
+                     timestampEl.innerText = 'Just now';
+                 }
+                 
+                 statusEl.innerText = "Personal";
                  statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
                  
                  ackBtn.innerText = "Mark as Read";
                  ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
 
-            } else {
+            } 
+            // 3. Standard Global Announcement
+            else {
                  titleEl.innerText = "System Update";
                  subtitleEl.innerText = "Global Announcement";
                  
@@ -2237,7 +2415,6 @@
                  iconBg.className = "w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-orange-500/10";
                  
                  timestampEl.innerText = "Broadcast Message";
-                 
                  statusEl.innerText = "Public";
                  statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
 
@@ -2252,11 +2429,13 @@
                 modal.firstElementChild.classList.add('scale-100');
             }, 100);
 
-            // Update timestamp periodically while modal is open
             const liveUpdate = setInterval(() => {
-                if (isPersonal && !modal.classList.contains('hidden')) {
-                     const storedTs = localStorage.getItem('personal_msg_ts');
-                     if(storedTs) timestampEl.innerText = `Delivered ${timeAgo(storedTs)}`;
+                if (isPersonal && !modal.classList.contains('hidden') && !notifData.timestamp) {
+                     const localTs = localStorage.getItem('personal_msg_ts');
+                     if(localTs) {
+                         const date = new Date(localTs);
+                         timestampEl.innerText = `Delivered: ${date.toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}`;
+                     }
                 } else {
                     clearInterval(liveUpdate);
                 }
@@ -2269,8 +2448,10 @@
                 modal.firstElementChild.classList.add('scale-95');
                 setTimeout(() => {
                     modal.classList.add('hidden');
-                    // Logic to handle "seen" state
-                    if(!isPersonal) { 
+                    // Mark as seen based on type
+                    if (notifData.type === 'expiration') {
+                        localStorage.setItem('last_seen_expiration_warning', new Date().toDateString());
+                    } else if(!isPersonal) { 
                          const notificationId = notifData.title + "||" + notifData.message;
                          localStorage.setItem('last_seen_announcement_id', notificationId);
                          localStorage.removeItem('last_seen_announcement');
@@ -2278,6 +2459,8 @@
                          const notificationId = notifData.title + "||" + notifData.message;
                          localStorage.setItem('last_seen_personal_id', notificationId);
                     }
+                    // Force refresh notification UI immediately to hide badge
+                    if(window.showNotification) window.showNotification();
                 }, 300);
             };
 
@@ -2291,57 +2474,126 @@
 
             const navBtn = document.getElementById('nav-notification-btn');
             const mobBtn = document.getElementById('mobile-notification-btn');
+            // Notification Badge Elements
+            const navBadge = document.getElementById('nav-notif-badge');
+            const mobBadge = document.getElementById('mob-notif-badge');
 
-            // 1. Check for Personal Message (Column E of USERS sheet)
             const session = localStorage.getItem('ai_school_session');
+            let expirationNotif = null; 
+
             if (session) {
                 try {
                     const currentUser = JSON.parse(session);
                     const allUsers = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
                     const freshUser = allUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
                     
+                    // 1. Personal Message Check
                     if (freshUser && freshUser.message) {
                         currentPersonalMessage = { 
                             title: `Message from the Admin`, 
-                            message: freshUser.message 
+                            message: freshUser.message,
+                            timestamp: freshUser.messageTimestamp 
                         };
                         isPersonal = true;
                         
-                        // Show Holder Buttons
                         if(navBtn) navBtn.classList.remove('hidden');
                         if(mobBtn) mobBtn.classList.remove('hidden');
+
+                        // --- NEW: Check Read Status to Toggle Badge ---
+                        const notificationId = currentPersonalMessage.title + "||" + currentPersonalMessage.message;
+                        const lastSeenId = localStorage.getItem('last_seen_personal_id');
+                        const isRead = lastSeenId === notificationId;
+
+                        if (isRead) {
+                            if(navBadge) navBadge.classList.add('hidden');
+                            if(mobBadge) mobBadge.classList.add('hidden');
+                        } else {
+                            if(navBadge) navBadge.classList.remove('hidden');
+                            if(mobBadge) mobBadge.classList.remove('hidden');
+                        }
+                        // ----------------------------------------------
+
                     } else {
                         currentPersonalMessage = null;
                         if(navBtn) navBtn.classList.add('hidden');
                         if(mobBtn) mobBtn.classList.add('hidden');
                     }
+
+                    // 2. Expiration Logic Check
+                    if (currentUser.expiration) {
+                        const expDate = new Date(currentUser.expiration);
+                        const now = new Date();
+                        // Normalize to midnight for accurate day calculation
+                        expDate.setHours(0,0,0,0);
+                        now.setHours(0,0,0,0);
+                        
+                        const diffTime = expDate - now;
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        // Check if we showed this today already
+                        const lastSeenExp = localStorage.getItem('last_seen_expiration_warning');
+                        const todayStr = new Date().toDateString();
+
+                        if (lastSeenExp !== todayStr) {
+                            if (diffTime < 0) {
+                                // EXPIRED
+                                expirationNotif = {
+                                    type: 'expiration',
+                                    title: "Membership Expired",
+                                    message: "Thank you for your support! Your premium account has expired. Please renew your subscription to continue accessing exclusive tools.",
+                                    statusText: "Expired"
+                                };
+                            } else if (diffDays <= 5) {
+                                // EXPIRING SOON (5 days or less)
+                                expirationNotif = {
+                                    type: 'expiration',
+                                    title: "Subscription Ending Soon",
+                                    message: `Thank you for being a valued member! Your premium access expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`,
+                                    statusText: `${diffDays} Days Left`
+                                };
+                            }
+                        }
+                    }
+
                 } catch(e) { console.error(e); }
             } else {
                 if(navBtn) navBtn.classList.add('hidden');
                 if(mobBtn) mobBtn.classList.add('hidden');
             }
 
-            // 2. Decide what to Auto-Popup
+            // Priority Logic: Personal > Expiration > Global
             if (currentPersonalMessage) {
                 activeNotif = currentPersonalMessage;
                 const notificationId = activeNotif.title + "||" + activeNotif.message;
                 const lastSeenId = localStorage.getItem('last_seen_personal_id');
                 
-                // If already seen, don't auto popup, but Holder remains visible
-                if (lastSeenId === notificationId) return; 
-            } else if (globalNotification) {
+                // If personal msg seen, clear activeNotif to allow next priority
+                if (lastSeenId === notificationId) {
+                    activeNotif = null;
+                    isPersonal = false;
+                }
+            } 
+            
+            // Fallback to Expiration if no personal message
+            if (!activeNotif && expirationNotif) {
+                activeNotif = expirationNotif;
+                isPersonal = false; 
+            }
+
+            // Fallback to Global if neither of above
+            if (!activeNotif && globalNotification) {
                 activeNotif = globalNotification;
                 const notificationId = activeNotif.title + "||" + activeNotif.message;
                 const lastSeenId = localStorage.getItem('last_seen_announcement_id');
                 
                 if (lastSeenId === notificationId) return;
                 if (localStorage.getItem('last_seen_announcement') === activeNotif.message) return;
-            } else {
-                return;
             }
 
-            // Open Modal
-            openAnnouncementModal(activeNotif, isPersonal);
+            // Show Result
+            if (activeNotif) {
+                openAnnouncementModal(activeNotif, isPersonal);
+            }
         }
         
         function loadMoreStories() {
@@ -2460,23 +2712,68 @@
                 </div>
             `;
         }
+
         function createChatBubble(story) {
+            // 1. Lookup User Role from Cache
+            const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+            const matchedUser = users.find(u => u.username.toLowerCase() === story.name.toLowerCase());
+            const role = matchedUser ? matchedUser.role.toLowerCase() : 'guest';
+
+            // 2. Define Styles based on Role
+            let badgeHTML = '';
+            let nameClass = 'text-slate-700';
+            let avatarBg = 'bg-slate-200';
+            let avatarText = 'text-slate-500';
+            let iconHTML = '';
+
+            if (role === 'admin') {
+                // Modified: No text badge, just the shield icon
+                badgeHTML = ''; 
+                nameClass = 'text-slate-900';
+                avatarBg = 'bg-slate-800';
+                avatarText = 'text-white';
+                iconHTML = '<i class="fa-solid fa-shield-halved text-xs text-blue-400 ml-1" title="Administrator"></i>';
+            } 
+            else if (role.includes('paid')) {
+                // Modified: Removed text badge, kept only icon as requested
+                badgeHTML = '';
+                nameClass = 'text-amber-700';
+                avatarBg = 'bg-gradient-to-br from-yellow-400 to-amber-500';
+                avatarText = 'text-white';
+                iconHTML = '<i class="fa-solid fa-crown text-xs text-yellow-500 ml-1" title="Premium Member"></i>';
+            } 
+            else if (role.includes('basic') || role.includes('local')) {
+                // Modified: No badge, only blue styling for name/avatar
+                badgeHTML = ''; 
+                nameClass = 'text-blue-700';
+                avatarBg = 'bg-blue-100';
+                avatarText = 'text-blue-600';
+                iconHTML = ''; 
+            }
+
             const bubble = document.createElement('div');
             bubble.className = 'flex flex-col group reveal active';
             bubble.innerHTML = `
                 <div class="flex items-start gap-2 mb-1 ml-1">
-                    <div class="w-8 h-8 rounded-full bg-slate-200 flex-shrink-0 flex items-center justify-center text-[10px] font-bold text-slate-500 shadow-sm mt-1">${story.name.charAt(0)}</div>
+                    <div class="w-8 h-8 rounded-full ${avatarBg} flex-shrink-0 flex items-center justify-center text-[10px] font-bold ${avatarText} shadow-sm mt-1 border border-white ring-1 ring-slate-50">
+                        ${story.name.charAt(0).toUpperCase()}
+                    </div>
                     <div class="flex flex-col">
-                        <span class="text-xs text-slate-700 font-bold ${document.body.classList.contains('wellness-active') ? 'text-deped-blue' : ''}">${story.name}</span>
+                        <div class="flex items-center flex-wrap">
+                            <span class="text-xs font-bold ${nameClass}">${story.name}</span>
+                            ${iconHTML}
+                            ${badgeHTML}
+                        </div>
                         <span class="text-[10px] text-slate-400">${story.timestamp}</span>
                     </div>
                 </div>
-                <div class="bg-white chat-bubble-bg border border-slate-100 p-4 rounded-2xl rounded-tl-sm text-sm text-slate-600 shadow-sm max-w-[85%] leading-relaxed">
+                <div class="bg-white chat-bubble-bg border border-slate-100 p-4 rounded-2xl rounded-tl-sm text-sm text-slate-600 shadow-sm max-w-[85%] leading-relaxed relative hover:shadow-md transition-shadow">
                     ${story.message}
                 </div>
             `;
             return bubble;
         }
+
         function getStaticStoriesHTML() {
             return `
                 <div class="flex flex-col group reveal active">
@@ -2578,27 +2875,62 @@
                      const rows = json.table?.rows || [];
                      
                      const users = rows.map(row => {
-                         if(!row.c || !row.c[1]) return null;
+                         // Strict Safety Check: Ensure row and cell exist
+                         if(!row || !row.c) return null;
                          
-                         let role = row.c[3] ? String(row.c[3].v).trim() : 'User';
+                         const userCell = row.c[SHEET_COLUMNS.USERNAME];
+                         if(!userCell || userCell.v === null || userCell.v === undefined) return null;
+
+                         const username = String(userCell.v).trim();
+                         
+                         // Filter out empty strings or accidental "null" text
+                         if (username === "" || username.toLowerCase() === "null" || username.toLowerCase() === "undefined") {
+                             return null;
+                         }
+                         
+                         // Get Role
+                         let role = row.c[SHEET_COLUMNS.ROLE] ? String(row.c[SHEET_COLUMNS.ROLE].v).trim() : '';
+                         
+                         // Normalize Role: Empty or "User" -> "New User" (Pending)
+                         if (!role || role.toLowerCase() === 'user') {
+                             role = 'New User';
+                         }
                          if (role.toLowerCase() === 'local user') role = 'Basic User';
 
-                         const username = String(row.c[1].v).trim();
-                         // NEW: Get Individual Notification from Column E (Index 4)
-                         const personalMsg = (row.c[4] && row.c[4].v) ? String(row.c[4].v).trim() : null;
+                         // Get Personal Message
+                         const personalMsg = (row.c[SHEET_COLUMNS.MESSAGE] && row.c[SHEET_COLUMNS.MESSAGE].v) ? String(row.c[SHEET_COLUMNS.MESSAGE].v).trim() : null;
+                         
+                         // Get Full Name (New)
+                         const fullName = (row.c[SHEET_COLUMNS.FULLNAME] && row.c[SHEET_COLUMNS.FULLNAME].v) ? String(row.c[SHEET_COLUMNS.FULLNAME].v).trim() : '';
+
+                         // Get Message Timestamp
+                         let msgTs = null;
+                         if (row.c[SHEET_COLUMNS.MSG_TIMESTAMP]) { 
+                             msgTs = parseGvizDate(row.c[SHEET_COLUMNS.MSG_TIMESTAMP].v) || (row.c[SHEET_COLUMNS.MSG_TIMESTAMP].f ? parseGvizDate(row.c[SHEET_COLUMNS.MSG_TIMESTAMP].f) : null);
+                             if (msgTs) msgTs = msgTs.toISOString();
+                         }
                          
                          let expirationStr = null;
+                         let startDateStr = null;
 
-                         if (role.toLowerCase() === 'paid user' && row.c[9]) {
-                             let expDate = parseGvizDate(row.c[9].v);
-                             if (!expDate && row.c[9].f) expDate = parseGvizDate(row.c[9].f);
+                         // Get Subscription Dates
+                         if (row.c[SHEET_COLUMNS.START_DATE]) {
+                             let sDate = parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].v) || (row.c[SHEET_COLUMNS.START_DATE].f ? parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].f) : null);
+                             if(sDate) startDateStr = sDate.toISOString();
+                         }
+
+                         // Handle Expiration logic for Paid Users
+                         if (row.c[SHEET_COLUMNS.EXPIRATION]) {
+                             let expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].v);
+                             if (!expDate && row.c[SHEET_COLUMNS.EXPIRATION].f) expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].f);
                              
                              if (expDate) {
                                  expirationStr = expDate.toISOString();
                                  const now = new Date();
                                  now.setHours(0,0,0,0);
                                  
-                                 if (expDate < now) {
+                                 // Auto-downgrade logic (Visual only until sheet update)
+                                 if (role.toLowerCase() === 'paid user' && expDate < now) {
                                      role = 'Basic User';
                                      console.log(`User ${username} expired on ${expDate.toDateString()}. Downgrading.`);
                                  }
@@ -2607,16 +2939,33 @@
 
                          return {
                              username: username,
-                             password: row.c[2] ? String(row.c[2].v).trim() : "", 
+                             password: row.c[SHEET_COLUMNS.PASSWORD] ? String(row.c[SHEET_COLUMNS.PASSWORD].v).trim() : "", 
                              role: role,
-                             message: personalMsg, // Store message
-                             question: row.c[6] ? String(row.c[6].v).trim() : null,
-                             answer: row.c[7] ? String(row.c[7].v).trim() : null,
+                             fullname: fullName, // Add to object
+                             message: personalMsg, 
+                             messageTimestamp: msgTs, 
+                             question: row.c[SHEET_COLUMNS.SEC_QUESTION] ? String(row.c[SHEET_COLUMNS.SEC_QUESTION].v).trim() : null,
+                             answer: row.c[SHEET_COLUMNS.SEC_ANSWER] ? String(row.c[SHEET_COLUMNS.SEC_ANSWER].v).trim() : null,
+                             start: startDateStr,
                              expiration: expirationStr
                          };
-                     }).filter(u => u !== null && u.username !== "");
+                     }).filter(u => u !== null); // Filter out the nulls we returned above
 
                      localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(users));
+
+                     // --- NEW: Force Chat Re-render on User Update ---
+                     // This fixes the issue where roles reset to "normal" because the chat loaded 
+                     // before the user list was ready.
+                     const currentUserHash = JSON.stringify(users.map(u => ({u: u.username, r: u.role}))); 
+                     const lastUserHash = localStorage.getItem('ai_school_users_hash_v1');
+                     
+                     if (currentUserHash !== lastUserHash) {
+                         localStorage.setItem('ai_school_users_hash_v1', currentUserHash);
+                         // Invalidate stories hash to ensure render method proceeds
+                         if(typeof lastStoriesHash !== 'undefined') lastStoriesHash = ""; 
+                         if(typeof fetchStories === 'function') fetchStories(false);
+                     }
+                     // ------------------------------------------------
 
                      const session = localStorage.getItem('ai_school_session');
                      if (session) {
@@ -2651,6 +3000,23 @@
                          }
                      }
                      
+                     // --- NEW: Live Update Admin Dashboard if it is Open ---
+                     const adminModal = document.getElementById('admin-modal');
+                     if (adminModal && !adminModal.classList.contains('hidden')) {
+                         
+                         // Use window-attached function to ensure scope access
+                         if(window.updateAdminStats) window.updateAdminStats(users);
+                         
+                         // Only re-render list if search is empty to avoid interrupting typing
+                         const searchInput = document.getElementById('admin-search');
+                         if (searchInput && searchInput.value === '') {
+                             // CRITICAL FIX: Respect the current active filter
+                             const filteredUsers = getFilteredUsers(users, currentAdminFilterType);
+                             if(window.renderAdminUserList) window.renderAdminUserList(filteredUsers);
+                         }
+                     }
+                     // -----------------------------------------------------
+
                      showNotification();
                      return users;
                  }
@@ -3425,7 +3791,6 @@
              // NEW: Dynamic Backup Link Generator
              // const backupLink = document.getElementById('backup-form-link'); // Not needed for dynamic updates anymore
              const subRefInput = document.getElementById('sub-ref');
-             const subContactInput = document.getElementById('sub-contact');
              // const subAmountInput = document.getElementById('sub-amount');
              
              // Input Formatting Logic
@@ -3434,21 +3799,6 @@
                      // 4 digit gap for Reference Number (e.g., 1234 5678 9012)
                      let val = e.target.value.replace(/\D/g, '');
                      val = val.replace(/(.{4})/g, '$1 ').trim();
-                     e.target.value = val;
-                 });
-             }
-
-             if (subContactInput) {
-                 subContactInput.addEventListener('input', (e) => {
-                     // 11 digits max, 4-3-4 gap (e.g., 0917 123 4567)
-                     let val = e.target.value.replace(/\D/g, '');
-                     if (val.length > 11) val = val.substring(0, 11);
-                     
-                     if (val.length > 7) {
-                         val = val.substring(0, 4) + ' ' + val.substring(4, 7) + ' ' + val.substring(7);
-                     } else if (val.length > 4) {
-                         val = val.substring(0, 4) + ' ' + val.substring(4);
-                     }
                      e.target.value = val;
                  });
              }
@@ -3494,13 +3844,19 @@
              const adminSearch = document.getElementById('admin-search');
              const adminLoader = document.getElementById('admin-loader');
              
+             // Global State for Tab Tracking
+             let currentAdminTab = 'dashboard';
+
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyewT-y3Rm1NbxQyOC_cYfGdvPRly2qI3ictD25jqLRuOOzCmzeIrRZTsRnt4MoJ5OM4Q/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9EZEgXb2Hbitoz8L69Tiko8qGH31nwsTw8V0Rk4Ug5kV372qS1iBfdTeDKu-fvWdoOQ/exec"; 
              
              // Tab Logic
              window.switchAdminTab = function(tabName) {
+                 currentAdminTab = tabName; // Update active tab state
+
                  // Update Buttons
                  document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
+                     // Check if button ID matches current tab
                      if (btn.id === `tab-btn-${tabName}`) {
                          btn.classList.remove('text-slate-400', 'hover:bg-white/5');
                          btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
@@ -3522,6 +3878,54 @@
                  // Load Specific Data if needed
                  if (tabName === 'content') loadAdminTools();
                  if (tabName === 'communications') loadAdminComm();
+                 if (tabName === 'payments') {
+                     loadAdminPayments();
+                     // Also refresh the badge when entering the tab
+                     checkPaymentNotifications(); 
+                 }
+             };
+
+             // NEW: Filter Logic for Stat Cards
+             window.filterAdminUsers = function(type) {
+                 currentAdminFilterType = type; // Update Global State
+                 
+                 const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                 const filtered = getFilteredUsers(users, type);
+                 
+                 // Clear search input to avoid confusion (we are showing a category subset)
+                 if(adminSearch) adminSearch.value = '';
+                 
+                 // Render the filtered list directly
+                 if(window.renderAdminUserList) window.renderAdminUserList(filtered);
+             };
+
+             // NEW: Manual Refresh Function
+             window.refreshAdminData = async function() {
+                 const btn = document.getElementById('btn-admin-refresh');
+                 const icon = btn.querySelector('i');
+                 
+                 if(btn) btn.disabled = true;
+                 if(icon) icon.classList.add('fa-spin');
+                 
+                 // Clear cache to force Gviz fetch
+                 localStorage.removeItem(CACHE_CONFIG.USERS.KEY);
+                 localStorage.removeItem(CACHE_CONFIG.USERS.TS);
+                 
+                 try {
+                     const users = await fetchUsers(); 
+                     // Explicitly update just in case
+                     if(window.updateAdminStats) window.updateAdminStats(users);
+                     
+                     // Apply current filter on manual refresh too
+                     const filtered = getFilteredUsers(users, currentAdminFilterType);
+                     if(window.renderAdminUserList) window.renderAdminUserList(filtered);
+                     
+                 } catch(e) {
+                     console.error(e);
+                 } finally {
+                     if(btn) btn.disabled = false;
+                     if(icon) icon.classList.remove('fa-spin');
+                 }
              };
 
              function openAdminDashboard() {
@@ -3530,10 +3934,20 @@
                  // Reset to Dashboard Tab
                  switchAdminTab('dashboard');
 
-                 // Update Dashboard Data
-                 const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                 updateAdminStats(users);
-                 renderAdminUserList(users);
+                 // Update Dashboard Data immediately from cache
+                 let users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                 if(window.updateAdminStats) window.updateAdminStats(users);
+                 
+                 // Reset filter to 'all' on open, or keep previous? Usually reset is better UX on open
+                 currentAdminFilterType = 'all';
+                 if(window.renderAdminUserList) window.renderAdminUserList(users);
+
+                 // Trigger a fresh fetch in background to ensure numbers are real-time
+                 // This handles the "13 vs 1" issue if cache was stale
+                 refreshAdminData();
+                 
+                 // NEW: Check for pending payments to show badge
+                 checkPaymentNotifications();
 
                  // Show Modal
                  adminModal.classList.remove('hidden');
@@ -3546,11 +3960,22 @@
                  }, 10);
              }
 
-             function updateAdminStats(users) {
+             // Attached to window for Global Access
+             window.updateAdminStats = function(users) {
+                 // Ensure users is valid array
+                 if (!Array.isArray(users)) users = [];
+
                  const total = users.length;
                  const pending = users.filter(u => u.role.toLowerCase() === 'new user').length;
                  const premium = users.filter(u => u.role.toLowerCase().includes('paid')).length;
                  const basic = users.filter(u => u.role.toLowerCase().includes('basic') || u.role.toLowerCase().includes('local')).length;
+                 
+                 // Calculate Expired OR Expiring Soon (Next 7 Days)
+                 const now = new Date();
+                 const nextWeek = new Date();
+                 nextWeek.setDate(now.getDate() + 7);
+                 
+                 const expired = users.filter(u => u.expiration && new Date(u.expiration) < nextWeek).length;
 
                  const setStat = (id, val) => {
                      const el = document.getElementById(id);
@@ -3561,14 +3986,29 @@
                  setStat('stat-pending', pending);
                  setStat('stat-basic', basic);
                  setStat('stat-premium', premium);
+                 setStat('stat-expired', expired);
              }
 
-             function renderAdminUserList(users, filter = '') {
+             // Attached to window for Global Access
+             window.renderAdminUserList = function(users, filter = '') {
                  const listBody = document.getElementById('admin-user-list');
+                 // Update Header
+                 const tableHead = document.querySelector('#admin-user-list').previousElementSibling;
+                 if(tableHead) {
+                     tableHead.innerHTML = `
+                        <tr>
+                            <th class="px-6 py-3 border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">User Info</th>
+                            <th class="px-6 py-3 border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">Role</th>
+                            <th class="px-6 py-3 border-b border-slate-200 bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wider">Subscription Period</th>
+                            <th class="px-6 py-3 border-b border-slate-200 bg-slate-50 text-right text-xs font-bold text-slate-500 uppercase tracking-wider">Actions</th>
+                        </tr>
+                     `;
+                 }
+
                  if(!listBody) return;
                  listBody.innerHTML = '';
                  
-                 const filtered = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
+                 const filtered = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()) || u.fullname.toLowerCase().includes(filter.toLowerCase()));
                  
                  if(filtered.length === 0) {
                       listBody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">No users found matching "${filter}"</td></tr>`;
@@ -3577,46 +4017,322 @@
 
                  filtered.forEach(u => {
                      const tr = document.createElement('tr');
-                     tr.className = 'hover:bg-slate-50 transition group cursor-default';
+                     tr.className = 'hover:bg-slate-50 transition group cursor-default border-b border-slate-50 last:border-b-0';
                      
                      let roleColor = 'bg-slate-100 text-slate-500';
                      let statusDot = 'bg-slate-400';
+                     let subDetails = '';
                      const r = u.role.toLowerCase();
 
-                     if(r === 'admin') { roleColor = 'bg-slate-800 text-white'; statusDot = 'bg-green-500'; }
-                     else if(r.includes('paid')) { roleColor = 'bg-purple-100 text-purple-700'; statusDot = 'bg-green-500'; }
-                     else if(r.includes('basic') || r.includes('local')) { roleColor = 'bg-green-100 text-green-700'; statusDot = 'bg-green-500'; }
-                     else { roleColor = 'bg-yellow-100 text-yellow-700'; statusDot = 'bg-yellow-500 animate-pulse'; }
+                     if(r === 'admin') { 
+                         roleColor = 'bg-slate-800 text-white'; 
+                         statusDot = 'bg-green-500'; 
+                         subDetails = '<span class="text-slate-400 text-[10px]">System Administrator</span>';
+                     }
+                     else if(r.includes('paid')) { 
+                         roleColor = 'bg-purple-100 text-purple-700'; 
+                         statusDot = 'bg-green-500';
+                         
+                         // Date Formatting
+                         const start = u.start ? new Date(u.start).toLocaleDateString() : 'N/A';
+                         const end = u.expiration ? new Date(u.expiration).toLocaleDateString() : 'N/A';
+                         
+                         subDetails = `
+                            <div class="flex flex-col gap-1 text-[10px]">
+                                <span class="text-slate-500 flex items-center gap-1"><i class="fa-solid fa-calendar-check text-green-500"></i> Approved: <span class="font-semibold text-slate-700">${start}</span></span>
+                                <span class="text-slate-500 flex items-center gap-1"><i class="fa-solid fa-flag-checkered text-red-400"></i> Expires: <span class="font-semibold text-slate-700">${end}</span></span>
+                            </div>
+                         `;
+                     }
+                     else if(r.includes('basic') || r.includes('local')) { 
+                         roleColor = 'bg-green-100 text-green-700'; 
+                         statusDot = 'bg-green-500';
+                         subDetails = '<span class="text-slate-400 text-[10px]">Standard Access</span>';
+                     }
+                     else { 
+                         roleColor = 'bg-yellow-100 text-yellow-700'; 
+                         statusDot = 'bg-yellow-500 animate-pulse'; 
+                         subDetails = '<span class="text-yellow-600 text-[10px] font-bold">Pending Approval</span>';
+                     }
+
+                     // Safe escape for username in onclick
+                     const safeUsername = u.username.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                     const displayName = u.fullname || '<span class="italic text-slate-400">No Name</span>';
 
                      tr.innerHTML = `
-                         <td class="px-6 py-3 font-medium text-slate-700 flex items-center gap-3">
-                             <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-slate-300 shadow-sm">${u.username.charAt(0).toUpperCase()}</div>
-                             ${u.username}
-                         </td>
-                         <td class="px-6 py-3">
-                             <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-transparent ${roleColor}">${u.role}</span>
-                         </td>
-                         <td class="px-6 py-3">
-                             <div class="flex items-center gap-1.5">
-                                 <span class="w-1.5 h-1.5 rounded-full ${statusDot}"></span>
-                                 <span class="text-slate-500 text-[10px] font-medium">${r === 'new user' ? 'Pending' : 'Verified'}</span>
+                         <td class="px-6 py-4 font-medium text-slate-700 align-top">
+                             <div class="flex items-center gap-3">
+                                 <div class="w-9 h-9 rounded-full bg-slate-100 flex-shrink-0 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-slate-200 shadow-sm">${u.username.charAt(0).toUpperCase()}</div>
+                                 <div>
+                                     <span class="block text-sm font-bold text-slate-800" title="${u.username}">${u.username}</span>
+                                     <span class="block text-[11px] text-slate-500 mt-0.5">${displayName}</span>
+                                     <div class="flex items-center gap-1.5 mt-1.5">
+                                         <span class="w-1.5 h-1.5 rounded-full ${statusDot}"></span>
+                                         <span class="text-slate-400 text-[10px] font-medium uppercase tracking-wide">${r === 'new user' ? 'Pending' : 'Verified'}</span>
+                                     </div>
+                                 </div>
                              </div>
                          </td>
-                         <td class="px-6 py-3 text-right">
-                             <button onclick="openEditModal('${u.username}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition text-xs font-bold shadow-sm">
-                                <i class="fa-solid fa-pen-to-square"></i> Edit
-                             </button>
+                         <td class="px-6 py-4 align-top">
+                             <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-transparent ${roleColor}">${u.role}</span>
+                         </td>
+                         <td class="px-6 py-4 align-top">
+                             ${subDetails}
+                         </td>
+                         <td class="px-6 py-4 text-right whitespace-nowrap align-top">
+                             <div class="flex justify-end gap-2 items-center">
+                                 <button onclick="openEditModal('${safeUsername}', 'dashboard')" class="text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors text-xs font-bold shadow-sm flex items-center gap-1 border border-blue-200">
+                                    <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                                 </button>
+                             </div>
                          </td>
                      `;
                      listBody.appendChild(tr);
                  });
              }
 
+             // NEW: Fetch Payment Data (Moved inside DOMContentLoaded)
+             window.loadAdminPayments = async function() {
+                const listBody = document.getElementById('admin-payment-list');
+                if(!listBody) return;
+                
+                listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Fetching payment records...</td></tr>';
+
+                const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
+                const sheetName = 'Form Responses 4'; // Target Sheet
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
+
+                try {
+                    const response = await fetch(url);
+                    const text = await response.text();
+                    const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+                    
+                    if (jsonMatch && jsonMatch[1]) {
+                        const json = JSON.parse(jsonMatch[1]);
+                        const rows = json.table?.rows || [];
+                        
+                        // Get cached users to resolve Full Names
+                        const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+
+                        if (rows.length === 0) {
+                            listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No payment requests found.</td></tr>';
+                            return;
+                        }
+
+                        listBody.innerHTML = '';
+                        let displayedCount = 0;
+                        
+                        // Iterate in reverse to show newest first
+                        [...rows].reverse().forEach(row => {
+                            if (!row.c) return;
+
+                            // Expected Columns based on Form:
+                            // A(0): Timestamp, B(1): Username, C(2): Contact, D(3): Payment Details (Ref), G(6): Amount
+                            
+                            const tsCell = row.c[0];
+                            const userCell = row.c[1];
+                            const refCell = row.c[3]; // Column D (Payment Detail)
+                            const amtCell = row.c[6]; // Column G (Amount)
+
+                            if (!userCell || !userCell.v) return;
+
+                            // Parse Data
+                            const username = String(userCell.v).trim();
+                            const timestamp = tsCell ? (tsCell.f || parseGvizDate(tsCell.v)?.toLocaleString() || 'Unknown Date') : 'Unknown';
+                            const refNo = refCell ? String(refCell.v) : '---';
+                            const amount = amtCell ? String(amtCell.v) : '---';
+
+                            // Find User & Filter
+                            const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                            
+                            // --- FILTER LOGIC: Hide Active Paid Users & Admins ---
+                            if (userMatch) {
+                                const role = userMatch.role.toLowerCase();
+                                const now = new Date();
+                                
+                                // 1. Never show Admins in payment list
+                                if (role === 'admin') return;
+
+                                // 2. Paid Users: Only show if EXPIRED (Renewal)
+                                if (role.includes('paid')) {
+                                    if (userMatch.expiration) {
+                                        const expDate = new Date(userMatch.expiration);
+                                        // If expiration is in the future (Active), skip this row
+                                        if (expDate > now) return; 
+                                    } else {
+                                        // Paid user with no expiration date set = Indefinite/Active -> Skip
+                                        return;
+                                    }
+                                }
+                            }
+                            // -----------------------------------------------------
+                            displayedCount++;
+
+                            const fullName = userMatch && userMatch.fullname ? userMatch.fullname : '<span class="text-slate-400 italic">Unknown Name</span>';
+                            
+                            // Safe Escape
+                            const safeUser = username.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                            const tr = document.createElement('tr');
+                            tr.className = 'hover:bg-slate-50 transition border-b border-slate-50 last:border-b-0';
+                            tr.innerHTML = `
+                                <td class="px-6 py-4 font-mono text-slate-500 text-[10px] whitespace-nowrap">
+                                    ${timestamp}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-8 h-8 rounded-full bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs border border-blue-100">
+                                            ${username.charAt(0).toUpperCase()}
+                                        </div>
+                                        <div>
+                                            <p class="font-bold text-slate-800 text-xs">${fullName}</p>
+                                            <p class="text-[10px] text-slate-500">@${username}</p>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <div class="flex flex-col">
+                                        <span class="text-[10px] font-bold text-slate-600 uppercase tracking-wider">Ref No.</span>
+                                        <span class="font-mono text-xs text-blue-600 bg-blue-50 px-2 py-0.5 rounded w-fit border border-blue-100">${refNo}</span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 font-bold text-emerald-600">
+                                    ₱${amount}
+                                </td>
+                                <td class="px-6 py-4 text-right">
+                                    <button onclick="openEditModal('${safeUser}', 'payment')" class="text-xs bg-slate-800 hover:bg-slate-900 text-white px-3 py-2 rounded-lg font-bold shadow-sm transition flex items-center gap-2 ml-auto">
+                                        <i class="fa-solid fa-user-check"></i> Process
+                                    </button>
+                                </td>
+                            `;
+                            listBody.appendChild(tr);
+                        });
+                        
+                        // Update badge from here as well since we have the precise count
+                        const badge = document.getElementById('payment-badge');
+                        if (badge) {
+                            badge.innerText = displayedCount;
+                            if (displayedCount > 0) badge.classList.remove('hidden');
+                            else badge.classList.add('hidden');
+                        }
+
+                    } else {
+                        listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-400">Failed to parse data.</td></tr>';
+                    }
+                } catch (err) {
+                    console.error(err);
+                    listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-red-400">Connection failed. Unable to fetch sheet.</td></tr>';
+                }
+             };
+
+             // NEW: Check for Payment Notifications (Badge Logic)
+             window.checkPaymentNotifications = async function() {
+                 const badge = document.getElementById('payment-badge');
+                 if (!badge) return;
+
+                 const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
+                 const sheetName = 'Form Responses 4';
+                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
+
+                 try {
+                     const response = await fetch(url);
+                     const text = await response.text();
+                     const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
+                     
+                     if (jsonMatch && jsonMatch[1]) {
+                         const json = JSON.parse(jsonMatch[1]);
+                         const rows = json.table?.rows || [];
+                         const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                         let count = 0;
+
+                         rows.forEach(row => {
+                             if (!row.c || !row.c[1]) return;
+                             const username = String(row.c[1].v).trim();
+                             const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+
+                             // Apply same filter logic as table
+                             if (userMatch) {
+                                 const role = userMatch.role.toLowerCase();
+                                 const now = new Date();
+                                 if (role === 'admin') return;
+                                 if (role.includes('paid')) {
+                                     if (userMatch.expiration) {
+                                         const expDate = new Date(userMatch.expiration);
+                                         if (expDate > now) return; 
+                                     } else {
+                                         return;
+                                     }
+                                 }
+                             }
+                             count++;
+                         });
+
+                         badge.innerText = count;
+                         if (count > 0) badge.classList.remove('hidden');
+                         else badge.classList.add('hidden');
+                     }
+                 } catch (err) {
+                     console.error("Failed to check payments for badge", err);
+                 }
+             };
+
              // --- EDIT MODAL LOGIC ---
              const editModal = document.getElementById('admin-edit-modal');
              const editForm = document.getElementById('admin-edit-form');
+             const roleSelect = document.getElementById('edit-role');
+             const premiumOptions = document.getElementById('premium-options');
              
-             window.openEditModal = function(username) {
+             // Role Change Listener
+             if(roleSelect) {
+                 roleSelect.addEventListener('change', (e) => {
+                     if(e.target.value === 'Paid User') {
+                         premiumOptions.classList.remove('hidden');
+                     } else {
+                         premiumOptions.classList.add('hidden');
+                         // Clear dates if switching away from Paid User
+                         document.getElementById('edit-start-date').value = '';
+                         document.getElementById('edit-expiration-date').value = '';
+                         document.getElementById('date-preview').classList.add('hidden');
+                         document.querySelectorAll('.duration-btn').forEach(btn => {
+                             btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
+                             btn.classList.add('bg-white', 'text-yellow-700', 'border-yellow-300');
+                         });
+                     }
+                 });
+             }
+
+             // Duration Button Logic
+             window.setPremiumDuration = function(months, btnElement) {
+                 // 1. Reset Styles
+                 document.querySelectorAll('.duration-btn').forEach(btn => {
+                     btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
+                     btn.classList.add('bg-white', 'text-yellow-700', 'border-yellow-300');
+                 });
+                 
+                 // 2. Active Style
+                 btnElement.classList.remove('bg-white', 'text-yellow-700', 'border-yellow-300');
+                 btnElement.classList.add('bg-yellow-500', 'text-white', 'border-yellow-600');
+
+                 // 3. Calculate Dates
+                 const now = new Date();
+                 const expiry = new Date(now);
+                 expiry.setMonth(now.getMonth() + months);
+
+                 // Format for display and storage
+                 const startStr = now.toISOString();
+                 const endStr = expiry.toISOString();
+                 
+                 const displayOpt = { year: 'numeric', month: 'short', day: 'numeric' };
+
+                 document.getElementById('edit-start-date').value = startStr;
+                 document.getElementById('edit-expiration-date').value = endStr;
+                 
+                 document.getElementById('preview-start').innerText = now.toLocaleDateString('en-US', displayOpt);
+                 document.getElementById('preview-end').innerText = expiry.toLocaleDateString('en-US', displayOpt);
+                 document.getElementById('date-preview').classList.remove('hidden');
+             };
+             
+             window.openEditModal = function(username, source = 'dashboard') {
                  if(!editModal) return;
                  const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
                  const user = users.find(u => u.username === username);
@@ -3626,19 +4342,97 @@
                  document.getElementById('edit-username-display').value = user.username;
                  document.getElementById('edit-message').value = user.message || '';
                  
-                 // Map role to dropdown
-                 const r = user.role.toLowerCase();
+                 // Reset Date Inputs
+                 document.getElementById('edit-start-date').value = '';
+                 document.getElementById('edit-expiration-date').value = '';
+                 document.getElementById('date-preview').classList.add('hidden');
+                 document.querySelectorAll('.duration-btn').forEach(btn => {
+                     btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
+                     btn.classList.add('bg-white', 'text-yellow-700', 'border-yellow-300');
+                 });
+                 
                  const roleSelect = document.getElementById('edit-role');
-                 if(r.includes('paid')) roleSelect.value = "Paid User";
-                 else if(r.includes('admin')) roleSelect.value = "Admin";
-                 else if(r.includes('basic') || r.includes('local')) roleSelect.value = "Basic User";
-                 else roleSelect.value = "New User";
+                 const options = roleSelect.options;
+
+                 // Reset all options visibility/state first
+                 for(let i=0; i<options.length; i++) {
+                     options[i].hidden = false;
+                     options[i].disabled = false;
+                 }
+
+                 if (source === 'payment') {
+                     // Payment Mode: Lock to Paid User
+                     for(let i=0; i<options.length; i++) {
+                         if(options[i].value !== 'Paid User') {
+                             options[i].hidden = true;
+                             options[i].disabled = true;
+                         }
+                     }
+                     roleSelect.value = "Paid User";
+                     premiumOptions.classList.remove('hidden');
+                 } else {
+                     // Dashboard Mode: Allow all, map current role
+                     const r = user.role.toLowerCase();
+                     
+                     if(r.includes('paid')) {
+                         roleSelect.value = "Paid User";
+                         premiumOptions.classList.remove('hidden');
+                     }
+                     else if(r.includes('admin')) {
+                         roleSelect.value = "Admin";
+                         premiumOptions.classList.add('hidden');
+                     }
+                     else if(r.includes('basic') || r.includes('local')) {
+                         roleSelect.value = "Basic User";
+                         premiumOptions.classList.add('hidden');
+                     }
+                     else {
+                         roleSelect.value = "New User";
+                         premiumOptions.classList.add('hidden');
+                     }
+                 }
 
                  editModal.classList.remove('hidden');
              };
 
+             // NEW: Helper to auto-fill messages
+             window.insertThankYouMessage = function() {
+                 const msgField = document.getElementById('edit-message');
+                 const status = document.getElementById('insert-status');
+                 if(msgField) {
+                     msgField.value = "🌟 THANK YOU: We truly appreciate your support for the Digital AI Vision for Education program. Your Premium access is now active.";
+                     // Visual Feedback
+                     msgField.classList.add('ring-2', 'ring-green-300', 'border-green-300');
+                     setTimeout(() => msgField.classList.remove('ring-2', 'ring-green-300', 'border-green-300'), 500);
+                     
+                     if(status) {
+                         status.innerText = "Set: Thank You Message";
+                         status.className = "text-[10px] font-bold h-4 transition-colors duration-300 text-green-600";
+                     }
+                 }
+             };
+
+             window.insertExpirationMessage = function() {
+                 const msgField = document.getElementById('edit-message');
+                 const status = document.getElementById('insert-status');
+                 if(msgField) {
+                     msgField.value = "⚠️ ACCOUNT NOTICE: Your premium account is nearing expiration or has expired. Please renew to maintain access to exclusive tools.";
+                     // Visual Feedback
+                     msgField.classList.add('ring-2', 'ring-pink-300', 'border-pink-300');
+                     setTimeout(() => msgField.classList.remove('ring-2', 'ring-pink-300', 'border-pink-300'), 500);
+                     
+                     if(status) {
+                         status.innerText = "Set: Expiration Notice";
+                         status.className = "text-[10px] font-bold h-4 transition-colors duration-300 text-pink-600";
+                     }
+                 }
+             };
+
              window.closeEditModal = function() {
                  if(editModal) editModal.classList.add('hidden');
+                 // Reset status
+                 const status = document.getElementById('insert-status');
+                 if(status) status.innerText = "";
              };
 
              if(editForm) {
@@ -3660,6 +4454,8 @@
                      const username = document.getElementById('edit-username-hidden').value;
                      const role = document.getElementById('edit-role').value;
                      const message = document.getElementById('edit-message').value;
+                     const startDate = document.getElementById('edit-start-date').value;
+                     const expirationDate = document.getElementById('edit-expiration-date').value;
 
                      // Show Loader
                      if(adminLoader) adminLoader.classList.remove('hidden');
@@ -3676,17 +4472,40 @@
                                  action: 'updateUser',
                                  username: username,
                                  role: role,
-                                 message: message
+                                 message: message,
+                                 startDate: startDate,         // Send Start Date
+                                 expirationDate: expirationDate // Send Expiration Date
                              })
                          });
 
                          // Since 'no-cors' returns opaque response, we simulate success after a delay
-                         setTimeout(async () => {
-                             await fetchUsers(); // Refresh data from sheet
-                             openAdminDashboard(); // Re-render dashboard
-                             if(adminLoader) adminLoader.classList.add('hidden');
-                             alert(`Successfully updated user: ${username}`);
-                         }, 2000);
+                     setTimeout(async () => {
+                         const users = await fetchUsers(); // Refresh data from sheet
+                         
+                         // Update Global Counters/Badges regardless of tab
+                         if(window.updateAdminStats) window.updateAdminStats(users);
+                         if(window.checkPaymentNotifications) window.checkPaymentNotifications();
+
+                         // Smart Refresh based on Active Tab
+                         if (currentAdminTab === 'payments') {
+                             if(window.loadAdminPayments) window.loadAdminPayments();
+                         } else if (currentAdminTab === 'dashboard') {
+                             // Maintain current filter or search state
+                             const searchVal = document.getElementById('admin-search')?.value || '';
+                             if (searchVal) {
+                                 if(window.renderAdminUserList) window.renderAdminUserList(users, searchVal);
+                             } else {
+                                 // Re-apply the active filter (e.g., 'pending')
+                                 if(window.filterAdminUsers) window.filterAdminUsers(currentAdminFilterType);
+                             }
+                         } else if (currentAdminTab === 'content') {
+                             // No user data specific refresh needed for content usually, but good practice
+                             // loadAdminTools(); 
+                         }
+
+                         if(adminLoader) adminLoader.classList.add('hidden');
+                         alert(`Successfully updated user: ${username}`);
+                     }, 2000);
 
                      } catch(err) {
                          console.error(err);
@@ -3934,6 +4753,17 @@
                      const usernameInput = regForm.querySelector('input[name="entry.1514621509"]');
                      const username = usernameInput ? usernameInput.value.trim() : '';
                      
+                     // NEW: Prevent spaces in username
+                     if (/\s/.test(username)) {
+                         if(regError && regErrorMsg) {
+                             regErrorMsg.innerText = "Username cannot contain spaces.";
+                             regError.classList.remove('hidden');
+                         }
+                         regForm.classList.add('animate-shake');
+                         setTimeout(() => regForm.classList.remove('animate-shake'), 500);
+                         return;
+                     }
+
                      const passVal = document.getElementById('reg-password').value;
                      const confirmVal = document.getElementById('reg-confirm-password').value;
 
@@ -4044,387 +4874,6 @@
              }
 
         }); // Close DOMContentLoaded
-
-        // --- ADMIN DASHBOARD LOGIC (ENHANCED) ---
-        const adminModal = document.getElementById('admin-modal');
-        const adminLink = document.getElementById('admin-panel-link');
-        const closeAdminBtn = document.getElementById('close-admin-modal');
-        const adminSearch = document.getElementById('admin-search');
-        const adminLoader = document.getElementById('admin-loader');
-        
-        // *** IMPORTANT: PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-        const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyewT-y3Rm1NbxQyOC_cYfGdvPRly2qI3ictD25jqLRuOOzCmzeIrRZTsRnt4MoJ5OM4Q/exec"; 
-        
-        // Tab Logic
-        window.switchAdminTab = function(tabName) {
-            // Update Buttons
-            document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
-                if (btn.id === `tab-btn-${tabName}`) {
-                    btn.classList.remove('text-slate-400', 'hover:bg-white/5');
-                    btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
-                } else {
-                    btn.classList.add('text-slate-400', 'hover:bg-white/5');
-                    btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
-                }
-            });
-
-            // Update Content
-            document.querySelectorAll('.admin-tab-content').forEach(content => {
-                if (content.id === `admin-tab-${tabName}`) {
-                    content.classList.remove('hidden');
-                } else {
-                    content.classList.add('hidden');
-                }
-            });
-
-            // Load Specific Data if needed
-            if (tabName === 'content') loadAdminTools();
-            if (tabName === 'communications') loadAdminComm();
-        };
-
-        function openAdminDashboard() {
-            if(!adminModal) return;
-            
-            // Reset to Dashboard Tab
-            switchAdminTab('dashboard');
-
-            // Update Dashboard Data
-            const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-            updateAdminStats(users);
-            renderAdminUserList(users);
-
-            // Show Modal
-            adminModal.classList.remove('hidden');
-            setTimeout(() => {
-                adminModal.classList.remove('opacity-0');
-                if(adminModal.firstElementChild) {
-                    adminModal.firstElementChild.classList.remove('scale-95');
-                    adminModal.firstElementChild.classList.add('scale-100');
-                }
-            }, 10);
-        }
-
-        function updateAdminStats(users) {
-            const total = users.length;
-            const pending = users.filter(u => u.role.toLowerCase() === 'new user').length;
-            const premium = users.filter(u => u.role.toLowerCase().includes('paid')).length;
-            const basic = users.filter(u => u.role.toLowerCase().includes('basic') || u.role.toLowerCase().includes('local')).length;
-
-            const setStat = (id, val) => {
-                const el = document.getElementById(id);
-                if(el) el.innerText = val;
-            };
-
-            setStat('stat-total', total);
-            setStat('stat-pending', pending);
-            setStat('stat-basic', basic);
-            setStat('stat-premium', premium);
-        }
-
-        function renderAdminUserList(users, filter = '') {
-            const listBody = document.getElementById('admin-user-list');
-            if(!listBody) return;
-            listBody.innerHTML = '';
-            
-            const filtered = users.filter(u => u.username.toLowerCase().includes(filter.toLowerCase()));
-            
-            if(filtered.length === 0) {
-                 listBody.innerHTML = `<tr><td colspan="4" class="px-6 py-8 text-center text-slate-400">No users found matching "${filter}"</td></tr>`;
-                 return;
-            }
-
-            filtered.forEach(u => {
-                const tr = document.createElement('tr');
-                tr.className = 'hover:bg-slate-50 transition group cursor-default';
-                
-                let roleColor = 'bg-slate-100 text-slate-500';
-                let statusDot = 'bg-slate-400';
-                const r = u.role.toLowerCase();
-
-                if(r === 'admin') { roleColor = 'bg-slate-800 text-white'; statusDot = 'bg-green-500'; }
-                else if(r.includes('paid')) { roleColor = 'bg-purple-100 text-purple-700'; statusDot = 'bg-green-500'; }
-                else if(r.includes('basic') || r.includes('local')) { roleColor = 'bg-green-100 text-green-700'; statusDot = 'bg-green-500'; }
-                else { roleColor = 'bg-yellow-100 text-yellow-700'; statusDot = 'bg-yellow-500 animate-pulse'; }
-
-                tr.innerHTML = `
-                    <td class="px-6 py-3 font-medium text-slate-700 flex items-center gap-3">
-                        <div class="w-8 h-8 rounded-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-slate-300 shadow-sm">${u.username.charAt(0).toUpperCase()}</div>
-                        ${u.username}
-                    </td>
-                    <td class="px-6 py-3">
-                        <span class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-transparent ${roleColor}">${u.role}</span>
-                    </td>
-                    <td class="px-6 py-3">
-                        <div class="flex items-center gap-1.5">
-                            <span class="w-1.5 h-1.5 rounded-full ${statusDot}"></span>
-                            <span class="text-slate-500 text-[10px] font-medium">${r === 'new user' ? 'Pending' : 'Verified'}</span>
-                        </div>
-                    </td>
-                    <td class="px-6 py-3 text-right">
-                        <button onclick="openEditModal('${u.username}')" class="text-blue-500 hover:text-blue-700 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition text-xs font-bold shadow-sm">
-                           <i class="fa-solid fa-pen-to-square"></i> Edit
-                        </button>
-                    </td>
-                `;
-                listBody.appendChild(tr);
-            });
-        }
-
-        // --- EDIT MODAL LOGIC ---
-        const editModal = document.getElementById('admin-edit-modal');
-        const editForm = document.getElementById('admin-edit-form');
-        
-        window.openEditModal = function(username) {
-            if(!editModal) return;
-            const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-            const user = users.find(u => u.username === username);
-            if(!user) return;
-
-            document.getElementById('edit-username-hidden').value = user.username;
-            document.getElementById('edit-username-display').value = user.username;
-            document.getElementById('edit-message').value = user.message || '';
-            
-            // Map role to dropdown
-            const r = user.role.toLowerCase();
-            const roleSelect = document.getElementById('edit-role');
-            if(r.includes('paid')) roleSelect.value = "Paid User";
-            else if(r.includes('admin')) roleSelect.value = "Admin";
-            else if(r.includes('basic') || r.includes('local')) roleSelect.value = "Basic User";
-            else roleSelect.value = "New User";
-
-            editModal.classList.remove('hidden');
-        };
-
-        window.closeEditModal = function() {
-            if(editModal) editModal.classList.add('hidden');
-        };
-
-        if(editForm) {
-            editForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                if(!GOOGLE_SCRIPT_URL) {
-                    alert("Configuration Error: Please paste your Google Script Web App URL into the 'GOOGLE_SCRIPT_URL' variable in the index.html code.");
-                    return;
-                }
-
-                const username = document.getElementById('edit-username-hidden').value;
-                const role = document.getElementById('edit-role').value;
-                const message = document.getElementById('edit-message').value;
-
-                // Show Loader
-                if(adminLoader) adminLoader.classList.remove('hidden');
-                window.closeEditModal();
-
-                try {
-                    const response = await fetch(GOOGLE_SCRIPT_URL, {
-                        method: 'POST',
-                        mode: 'no-cors',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            action: 'updateUser',
-                            username: username,
-                            role: role,
-                            message: message
-                        })
-                    });
-
-                    // Since 'no-cors' returns opaque response, we simulate success
-                    setTimeout(async () => {
-                        await fetchUsers(); // Refresh data from sheet
-                        openAdminDashboard(); // Re-render dashboard
-                        if(adminLoader) adminLoader.classList.add('hidden');
-                        alert(`Successfully updated user: ${username}`);
-                    }, 2000);
-
-                } catch(err) {
-                    console.error(err);
-                    if(adminLoader) adminLoader.classList.add('hidden');
-                    alert("Failed to connect to the server.");
-                }
-            });
-        }
-
-        // COMMUNICATION TAB LOGIC
-        function loadAdminComm() {
-            const container = document.getElementById('admin-global-preview');
-            if(!container) return;
-
-            if (globalNotification) {
-                container.innerHTML = `
-                   <div class="text-left bg-white p-4 rounded-lg border-l-4 border-orange-500 shadow-sm">
-                       <h4 class="font-bold text-slate-800 text-sm mb-1">${globalNotification.title}</h4>
-                       <p class="text-xs text-slate-600 leading-relaxed">${globalNotification.message}</p>
-                   </div>
-                   <p class="text-[10px] text-green-600 font-bold mt-3"><i class="fa-solid fa-circle-check"></i> Currently Active</p>
-                `;
-            } else {
-                container.innerHTML = `
-                   <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100">
-                       <i class="fa-solid fa-bullhorn text-slate-400"></i>
-                   </div>
-                   <h4 class="font-bold text-slate-400 text-sm">No Active Announcement</h4>
-                   <p class="text-xs text-slate-400 mt-1">Columns D and E in Sheet1 are empty.</p>
-                `;
-            }
-        }
-
-        // CONTENT TAB LOGIC
-        async function loadAdminTools() {
-            const basicList = document.getElementById('list-basic-tools');
-            const premList = document.getElementById('list-premium-tools');
-            if(!basicList || !premList) return;
-
-            // Show Loading
-            basicList.innerHTML = '<div class="p-4 text-center text-slate-400 text-xs"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Fetching...</div>';
-            premList.innerHTML = '<div class="p-4 text-center text-slate-400 text-xs"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Fetching...</div>';
-
-            const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
-            
-            // Fetch both sheets
-            const fetchSheet = async (name) => {
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(name)}`;
-                const res = await fetch(url);
-                const text = await res.text();
-                const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
-                return jsonMatch ? JSON.parse(jsonMatch[1]).table.rows : [];
-            };
-
-            try {
-                const [basicData, premData] = await Promise.all([fetchSheet('Sheet1'), fetchSheet('PAID USERS')]);
-                
-                const renderList = (data, container, countId) => {
-                    container.innerHTML = '';
-                    let count = 0;
-                    data.forEach(row => {
-                        const name = row.c[0] ? row.c[0].v : null;
-                        const link = row.c[1] ? row.c[1].v : '#';
-                        if (name && name !== "Name of app" && name !== "Name") {
-                            count++;
-                            const item = document.createElement('div');
-                            item.className = 'flex items-center justify-between p-3 bg-white border border-slate-100 rounded-lg hover:border-blue-200 transition group';
-                            item.innerHTML = `
-                                <div class="flex items-center gap-3 overflow-hidden">
-                                    <div class="w-8 h-8 rounded bg-slate-50 flex items-center justify-center text-slate-400 text-xs font-bold border border-slate-100 group-hover:text-blue-500 group-hover:bg-blue-50 transition">${name.charAt(0)}</div>
-                                    <span class="text-xs font-bold text-slate-700 truncate">${name}</span>
-                                </div>
-                                <a href="${link}" target="_blank" class="text-slate-300 hover:text-blue-600 px-2"><i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></a>
-                            `;
-                            container.appendChild(item);
-                        }
-                    });
-                    document.getElementById(countId).innerText = count;
-                    if(count === 0) container.innerHTML = '<div class="p-4 text-center text-slate-400 text-xs">No tools found.</div>';
-                };
-
-                renderList(basicData, basicList, 'count-basic');
-                renderList(premData, premList, 'count-premium');
-
-            } catch(err) {
-                console.error(err);
-                basicList.innerHTML = '<div class="p-4 text-center text-red-400 text-xs">Error loading data.</div>';
-                premList.innerHTML = '<div class="p-4 text-center text-red-400 text-xs">Error loading data.</div>';
-            }
-        }
-        
-        document.getElementById('refresh-tools-btn')?.addEventListener('click', loadAdminTools);
-
-        function closeAdminDashboard() {
-            if(!adminModal) return;
-            adminModal.classList.add('opacity-0');
-            if(adminModal.firstElementChild) {
-                adminModal.firstElementChild.classList.remove('scale-100');
-                adminModal.firstElementChild.classList.add('scale-95');
-            }
-            setTimeout(() => {
-                adminModal.classList.add('hidden');
-            }, 300);
-        }
-
-        if(adminLink) {
-            adminLink.addEventListener('click', (e) => {
-                e.preventDefault();
-                openAdminDashboard();
-            });
-        }
-        
-        if(closeAdminBtn) closeAdminBtn.addEventListener('click', closeAdminDashboard);
-        if(adminModal) adminModal.addEventListener('click', (e) => { if(e.target === adminModal) closeAdminDashboard(); });
-        
-        if(adminSearch) {
-            adminSearch.addEventListener('input', (e) => {
-                const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                renderAdminUserList(users, e.target.value);
-            });
-        }
-
-        /* --- BASIC SECURITY DETERRENTS --- */
-        document.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if(e.ctrlKey && e.shiftKey && e.key === 'F10') {
-                e.preventDefault();
-                const overlay = document.getElementById('credits-overlay');
-                const card = document.getElementById('credits-card');
-                if(overlay && card) {
-                    overlay.classList.remove('hidden');
-                    setTimeout(() => {
-                        card.classList.remove('opacity-0', 'scale-95');
-                        card.classList.add('opacity-100', 'scale-100', 'animate-zoom-in');
-                    }, 10);
-                }
-                return false;
-            }
-
-            if(e.key === 'F12' || e.keyCode === 123) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) {
-                e.preventDefault();
-                return false;
-            }
-            if(e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) {
-                e.preventDefault();
-                return false;
-            }
-            
-            // Fix: Add Tab handling for modal accessibility inside keydown listener
-            const modal = document.getElementById('login-modal');
-            if (!modal || modal.classList.contains('hidden') || e.key !== 'Tab') return;
-
-            const focusableElements = modal.querySelectorAll(
-                'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-            );
-            
-            if (focusableElements.length === 0) return;
-
-            const firstElement = focusableElements[0];
-            const lastElement = focusableElements[focusableElements.length - 1];
-
-            if (e.shiftKey) {
-                if (document.activeElement === firstElement) {
-                    e.preventDefault();
-                    lastElement.focus();
-                }
-            } 
-            else {
-                if (document.activeElement === lastElement) {
-                    e.preventDefault();
-                    firstElement.focus();
-                }
-            }
-        });
-
     </script>
 </body>
 </html>
