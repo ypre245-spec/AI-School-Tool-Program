@@ -82,6 +82,29 @@
             border-bottom: 3px solid #facc15; 
         }
         
+        /* ADDED: Global Protection Styles */
+        body {
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10 and IE 11 */
+            user-select: none; /* Standard syntax */
+            -webkit-touch-callout: none; /* iOS Safari */
+        }
+        
+        img {
+            -webkit-user-drag: none;
+            -khtml-user-drag: none;
+            -moz-user-drag: none;
+            -o-user-drag: none;
+            user-drag: none;
+            pointer-events: none; /* Disables right click on images specifically */
+        }
+        
+        /* Allow interaction only with specific interactive elements */
+        input, textarea, [contenteditable=true] {
+            -webkit-user-select: text !important;
+            user-select: text !important;
+        }
+
         .hero-pattern {
             background-color: #f8fafc;
             background-image: radial-gradient(#1e3a8a 0.5px, transparent 0.5px), radial-gradient(#dc2626 0.5px, #f8fafc 0.5px);
@@ -183,7 +206,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen font-sans selection:bg-deped-blue selection:text-white transition-colors duration-700">
+<body class="bg-slate-50 text-slate-800 antialiased flex flex-col min-h-screen font-sans selection:bg-deped-blue selection:text-white transition-colors duration-700 select-none oncontextmenu="return false;">
 
     <!-- Preloader -->
     <div id="initial-loader" class="fixed inset-0 z-[100] bg-white flex flex-col items-center justify-center transition-opacity duration-700">
@@ -3029,6 +3052,67 @@
         // Initialize (Wait for DOM)
         document.addEventListener('DOMContentLoaded', () => {
              
+             // --- SECURITY SUITE: ANTI-COPY & ANTI-DEBUG ---
+             
+             // 1. Disable Right Click Context Menu
+             document.addEventListener('contextmenu', event => event.preventDefault());
+
+             // 2. Disable Keyboard Shortcuts (Inspect, View Source, Save, Print)
+             document.addEventListener('keydown', function(e) {
+                 // F12 (DevTools)
+                 if(e.key === 'F12') {
+                     e.preventDefault();
+                     return false;
+                 }
+                 
+                 // Ctrl + Shift + I/J/C (DevTools)
+                 if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) {
+                     e.preventDefault();
+                     return false;
+                 }
+                 
+                 // Ctrl + U (View Source)
+                 if(e.ctrlKey && (e.key === 'u' || e.key === 'U')) {
+                     e.preventDefault();
+                     return false;
+                 }
+                 
+                 // Ctrl + S (Save Page)
+                 if(e.ctrlKey && (e.key === 's' || e.key === 'S')) {
+                     e.preventDefault();
+                     return false;
+                 }
+
+                 // Ctrl + P (Print)
+                 if(e.ctrlKey && (e.key === 'p' || e.key === 'P')) {
+                     e.preventDefault();
+                     return false;
+                 }
+             });
+
+             // 3. Clear Console to hide any logs
+             setInterval(() => {
+                 console.clear();
+                 // Optional: Add a warning for anyone who forces it open
+                 /* const styles = [
+                    'color: red', 
+                    'font-size: 30px', 
+                    'font-weight: bold', 
+                    'text-shadow: 2px 2px black',
+                    'padding: 10px'
+                 ].join(';');
+                 console.log('%cSTOP!', styles);
+                 console.log('%cThis is a protected government-aligned educational tool.', 'font-size: 16px'); 
+                 */
+             }, 2000);
+
+             // 4. Disable Image Dragging
+             document.querySelectorAll('img').forEach(img => {
+                 img.addEventListener('dragstart', e => e.preventDefault());
+             });
+
+             // --- END SECURITY SUITE ---
+
              Promise.all([
                  fetchSystemConfig(), 
                  fetchUsers()         
