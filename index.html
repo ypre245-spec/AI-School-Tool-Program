@@ -1086,40 +1086,52 @@
 
     <!-- ADMIN DASHBOARD MODAL (NEW) -->
     <div id="admin-modal" class="fixed inset-0 z-[250] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
-        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-5xl h-[85vh] relative transform scale-95 transition-all duration-300 overflow-hidden flex flex-col md:flex-row">
+        <div class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] relative transform scale-95 transition-all duration-300 overflow-hidden flex flex-col md:flex-row ring-1 ring-slate-900/5">
             
-            <!-- Sidebar Navigation -->
-            <div class="w-full md:w-64 bg-slate-900 flex-shrink-0 flex flex-col justify-between text-white border-r border-slate-800">
-                <div>
-                    <div class="p-6 border-b border-slate-800">
-                        <h3 class="text-lg font-bold flex items-center gap-2">
-                            <i class="fa-solid fa-gauge-high text-blue-500"></i> Admin Panel
-                        </h3>
-                        <p class="text-slate-500 text-[10px] mt-1 uppercase tracking-widest">System Control</p>
+            <!-- Sidebar Navigation (SaaS Style) -->
+            <div class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col justify-between border-r border-slate-800 relative overflow-hidden">
+                <!-- Decorative background blobs -->
+                <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
+                    <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600 rounded-full blur-3xl"></div>
+                    <div class="absolute bottom-0 right-0 w-64 h-64 bg-indigo-600 rounded-full blur-3xl"></div>
+                </div>
+
+                <div class="relative z-10">
+                    <div class="p-6 mb-2 flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 ring-1 ring-white/10">
+                            <i class="fa-solid fa-layer-group text-sm"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-white text-sm tracking-wide">Admin OS</h3>
+                            <p class="text-[10px] font-medium text-slate-500 uppercase tracking-widest">v2.4.0</p>
+                        </div>
                     </div>
                     
-                    <nav class="p-4 space-y-2">
-                        <button onclick="switchAdminTab('dashboard')" id="tab-btn-dashboard" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">
-                            <i class="fa-solid fa-chart-pie w-5 text-center"></i> Dashboard
+                    <nav class="px-3 space-y-1">
+                        <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 mt-4">Analytics</p>
+                        <button onclick="switchAdminTab('dashboard')" id="tab-btn-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all text-white bg-blue-600 shadow-md border border-blue-500/50 group">
+                            <i class="fa-solid fa-chart-pie w-5 text-center text-blue-200 group-hover:text-white transition-colors"></i> Dashboard
                         </button>
-                        <button onclick="switchAdminTab('payments')" id="tab-btn-payments" class="w-full flex items-center justify-between px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
+                        
+                        <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 mt-6">Management</p>
+                        <button onclick="switchAdminTab('payments')" id="tab-btn-payments" class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
                             <div class="flex items-center gap-3">
-                                <i class="fa-solid fa-receipt w-5 text-center"></i> Payments
+                                <i class="fa-solid fa-receipt w-5 text-center group-hover:text-blue-400 transition-colors"></i> Payments
                             </div>
-                            <span id="payment-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-sm animate-pulse">0</span>
+                            <span id="payment-badge" class="hidden bg-red-500 text-white text-[9px] font-extrabold px-1.5 py-0.5 rounded-full shadow-sm">0</span>
                         </button>
-                        <button onclick="switchAdminTab('communications')" id="tab-btn-communications" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                            <i class="fa-solid fa-bullhorn w-5 text-center"></i> Communications
+                        <button onclick="switchAdminTab('communications')" id="tab-btn-communications" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
+                            <i class="fa-solid fa-bullhorn w-5 text-center group-hover:text-blue-400 transition-colors"></i> Communications
                         </button>
-                        <button onclick="switchAdminTab('content')" id="tab-btn-content" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-white/5 hover:text-white transition-all">
-                            <i class="fa-solid fa-layer-group w-5 text-center"></i> Content Manager
+                        <button onclick="switchAdminTab('content')" id="tab-btn-content" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-medium text-slate-400 hover:text-white hover:bg-white/5 transition-all group">
+                            <i class="fa-solid fa-cube w-5 text-center group-hover:text-blue-400 transition-colors"></i> Content
                         </button>
                     </nav>
                 </div>
 
-                <div class="p-4 border-t border-slate-800">
-                    <button id="close-admin-modal" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-xs font-bold text-slate-400 hover:bg-red-500/10 hover:text-red-400 transition-all border border-slate-700 hover:border-red-500/50">
-                        <i class="fa-solid fa-xmark"></i> Close Panel
+                <div class="p-4 border-t border-slate-800 relative z-10 bg-slate-900/50 backdrop-blur-sm">
+                    <button id="close-admin-modal" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group border border-transparent hover:border-slate-700">
+                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Return to App
                     </button>
                 </div>
             </div>
@@ -1133,123 +1145,153 @@
                 </div>
 
                 <!-- TAB 1: DASHBOARD (Analytics & Users) -->
-                <div id="admin-tab-dashboard" class="admin-tab-content h-full overflow-y-auto custom-scroll p-6">
-                    <h2 class="text-lg font-bold text-slate-800 mb-4">System Overview</h2>
+                <div id="admin-tab-dashboard" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8">
                     
-                    <!-- Analytics Cards -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+                    <!-- SaaS Header -->
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">System Overview</h2>
+                            <p class="text-sm text-slate-500 font-medium">Welcome back, Admin. Here's what's happening today.</p>
+                        </div>
+                        <div class="flex items-center gap-1 bg-white border border-slate-200 rounded-lg p-1 shadow-sm">
+                            <button class="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:bg-slate-50 rounded-md transition">7D</button>
+                            <button class="px-3 py-1.5 text-[10px] font-bold bg-slate-100 text-slate-800 rounded-md shadow-sm border border-slate-200">30D</button>
+                            <button class="px-3 py-1.5 text-[10px] font-bold text-slate-500 hover:bg-slate-50 rounded-md transition">All</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Analytics Cards (Widgets) -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
                         <!-- Total Users Card -->
-                        <div onclick="filterAdminUsers('all')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-blue-400 transition-all duration-200 group active:scale-95 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <i class="fa-solid fa-users text-3xl text-blue-600"></i>
+                        <div onclick="filterAdminUsers('all')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group active:scale-95">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                                    <i class="fa-solid fa-users text-lg"></i>
+                                </div>
+                                <span class="bg-green-50 text-green-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> 12%
+                                </span>
                             </div>
-                            <div class="relative z-10">
-                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Total Users</p>
-                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight" id="stat-total">0</h3>
-                                <p class="text-[10px] text-blue-600 font-bold mt-1 flex items-center gap-1 group-hover:underline">View All <i class="fa-solid fa-arrow-right"></i></p>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Users</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-total">0</h3>
                             </div>
                         </div>
 
                         <!-- Pending Card -->
-                        <div onclick="filterAdminUsers('pending')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-yellow-400 transition-all duration-200 group active:scale-95 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <i class="fa-solid fa-clock text-3xl text-yellow-500"></i>
+                        <div onclick="filterAdminUsers('pending')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-yellow-400 hover:shadow-md transition-all group active:scale-95">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center border border-yellow-100">
+                                    <i class="fa-solid fa-clock text-lg"></i>
+                                </div>
+                                <span class="bg-slate-50 text-slate-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">--</span>
                             </div>
-                            <div class="relative z-10">
-                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Pending</p>
-                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight" id="stat-pending">0</h3>
-                                <p class="text-[10px] text-yellow-600 font-bold mt-1 flex items-center gap-1 group-hover:underline">Review <i class="fa-solid fa-arrow-right"></i></p>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Pending</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-pending">0</h3>
                             </div>
                         </div>
 
                         <!-- Premium Card -->
-                        <div onclick="filterAdminUsers('premium')" class="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700 shadow-sm cursor-pointer hover:shadow-lg hover:-translate-y-1 transition-all duration-200 group active:scale-95 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <i class="fa-solid fa-crown text-3xl text-yellow-400"></i>
+                        <div onclick="filterAdminUsers('premium')" class="bg-gradient-to-br from-slate-900 to-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all group active:scale-95 relative overflow-hidden">
+                            <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
+                            <div class="flex justify-between items-start mb-4 relative z-10">
+                                <div class="w-10 h-10 rounded-lg bg-white/10 text-yellow-400 flex items-center justify-center border border-white/5">
+                                    <i class="fa-solid fa-crown text-lg"></i>
+                                </div>
+                                <span class="bg-white/10 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white/5">Pro</span>
                             </div>
                             <div class="relative z-10">
-                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Premium</p>
-                                <h3 class="text-2xl font-bold text-white tracking-tight" id="stat-premium">0</h3>
-                                <p class="text-[10px] text-yellow-400 font-bold mt-1 flex items-center gap-1 group-hover:underline">Manage <i class="fa-solid fa-arrow-right"></i></p>
+                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Premium</p>
+                                <h3 class="text-2xl font-bold text-white mt-1" id="stat-premium">0</h3>
                             </div>
                         </div>
 
                         <!-- Basic Card -->
-                        <div onclick="filterAdminUsers('basic')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-green-400 transition-all duration-200 group active:scale-95 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <i class="fa-solid fa-user-shield text-3xl text-green-600"></i>
+                        <div onclick="filterAdminUsers('basic')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-green-400 hover:shadow-md transition-all group active:scale-95">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100">
+                                    <i class="fa-solid fa-user-shield text-lg"></i>
+                                </div>
+                                <span class="bg-green-50 text-green-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
+                                    <i class="fa-solid fa-arrow-trend-up"></i> 5%
+                                </span>
                             </div>
-                            <div class="relative z-10">
-                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Basic</p>
-                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight" id="stat-basic">0</h3>
-                                <p class="text-[10px] text-green-600 font-bold mt-1 flex items-center gap-1 group-hover:underline">Filter <i class="fa-solid fa-arrow-right"></i></p>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Basic</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-basic">0</h3>
                             </div>
                         </div>
 
                         <!-- Expired Card -->
-                        <div onclick="filterAdminUsers('expired')" class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm cursor-pointer hover:shadow-md hover:border-red-400 transition-all duration-200 group active:scale-95 relative overflow-hidden">
-                            <div class="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                <i class="fa-solid fa-calendar-xmark text-3xl text-red-500"></i>
+                        <div onclick="filterAdminUsers('expired')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-red-400 hover:shadow-md transition-all group active:scale-95">
+                            <div class="flex justify-between items-start mb-4">
+                                <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center border border-red-100">
+                                    <i class="fa-solid fa-calendar-xmark text-lg"></i>
+                                </div>
+                                <span class="bg-red-50 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Action</span>
                             </div>
-                            <div class="relative z-10">
-                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-1">Expired / Due</p>
-                                <h3 class="text-2xl font-bold text-slate-800 tracking-tight" id="stat-expired">0</h3>
-                                <p class="text-[10px] text-red-500 font-bold mt-1 flex items-center gap-1 group-hover:underline">Action Needed <i class="fa-solid fa-arrow-right"></i></p>
+                            <div>
+                                <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Expired</p>
+                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-expired">0</h3>
                             </div>
                         </div>
                     </div>
 
-                    <!-- NEW: Visual Distribution Bar -->
-                    <div class="bg-white rounded-xl border border-slate-200 p-4 mb-6 shadow-sm">
-                        <div class="flex justify-between items-end mb-2">
-                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wide">User Distribution</h4>
-                            <div class="flex gap-3 text-[10px] font-medium text-slate-500">
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-yellow-400"></span> Premium</span>
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500"></span> Basic</span>
-                                <span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-slate-300"></span> Pending</span>
+                    <!-- Visual Distribution Bar (SaaS Style) -->
+                    <div class="bg-white rounded-xl border border-slate-200 p-5 mb-8 shadow-sm">
+                        <div class="flex justify-between items-end mb-3">
+                            <div>
+                                <h4 class="text-sm font-bold text-slate-800">User Distribution</h4>
+                                <p class="text-[10px] text-slate-400 font-medium mt-0.5">Ratio of subscription tiers</p>
+                            </div>
+                            <div class="flex gap-4 text-[10px] font-bold text-slate-600">
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-yellow-400 shadow-sm"></span> Premium</span>
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-green-500 shadow-sm"></span> Basic</span>
+                                <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-slate-300 shadow-sm"></span> Pending</span>
                             </div>
                         </div>
-                        <div class="h-3 w-full bg-slate-50 rounded-full overflow-hidden flex border border-slate-100">
-                            <div id="bar-premium" class="h-full bg-yellow-400 transition-all duration-1000" style="width: 0%"></div>
-                            <div id="bar-basic" class="h-full bg-green-500 transition-all duration-1000" style="width: 0%"></div>
-                            <div id="bar-pending" class="h-full bg-slate-300 transition-all duration-1000" style="width: 0%"></div>
+                        <div class="h-4 w-full bg-slate-50 rounded-full overflow-hidden flex border border-slate-200 shadow-inner">
+                            <div id="bar-premium" class="h-full bg-gradient-to-r from-yellow-400 to-amber-400 transition-all duration-1000 relative group" style="width: 0%"></div>
+                            <div id="bar-basic" class="h-full bg-gradient-to-r from-green-400 to-emerald-500 transition-all duration-1000 relative group" style="width: 0%"></div>
+                            <div id="bar-pending" class="h-full bg-slate-300 transition-all duration-1000 relative group" style="width: 0%"></div>
                         </div>
                     </div>
 
                     <!-- User Directory -->
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
-                        <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row gap-4 justify-between items-center bg-white sticky top-0 z-10">
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
+                        <div class="p-5 border-b border-slate-200 flex flex-col md:flex-row gap-4 justify-between items-center bg-white sticky top-0 z-20">
                             <div class="flex items-center gap-3">
-                                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100 shadow-sm">
+                                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
                                     <i class="fa-solid fa-address-book"></i>
                                 </div>
                                 <div>
                                     <h4 class="font-bold text-slate-800 text-sm">User Directory</h4>
-                                    <p class="text-[10px] text-slate-500 uppercase tracking-wide font-medium">Manage Access & Roles</p>
+                                    <p class="text-[10px] text-slate-500 font-medium">Manage access and roles</p>
                                 </div>
                             </div>
                             <div class="flex gap-2 w-full md:w-auto">
                                 <div class="relative flex-grow md:w-64">
                                     <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-                                    <input type="text" id="admin-search" placeholder="Search by name or username..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition shadow-sm">
+                                    <input type="text" id="admin-search" placeholder="Search users..." class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 focus:bg-white transition shadow-sm font-medium">
                                 </div>
-                                <button onclick="exportToCSV('users')" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Export to CSV">
-                                    <i class="fa-solid fa-file-csv text-green-600"></i>
+                                <button onclick="exportToCSV('users')" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Export CSV">
+                                    <i class="fa-solid fa-download text-slate-400"></i>
                                 </button>
-                                <button onclick="refreshAdminData()" id="btn-admin-refresh" class="px-3 py-2 bg-slate-50 hover:bg-slate-100 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Force Refresh Data">
+                                <button onclick="refreshAdminData()" id="btn-admin-refresh" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Refresh">
                                     <i class="fa-solid fa-rotate"></i>
                                 </button>
                             </div>
                         </div>
                         
-                        <div class="flex-grow overflow-y-auto custom-scroll">
+                        <div class="flex-grow overflow-y-auto custom-scroll relative">
                             <table class="w-full text-left text-xs table-fixed">
                                 <thead class="bg-slate-50 sticky top-0 z-10 text-slate-500 font-bold uppercase tracking-wider shadow-sm">
                                     <tr>
                                         <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[30%]">User Profile</th>
-                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[20%] text-center">Current Role</th>
-                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[35%]">Subscription Details</th>
-                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 text-right w-[15%]">Manage</th>
+                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[20%] text-center">Role</th>
+                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[35%]">Status</th>
+                                        <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 text-right w-[15%]">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="admin-user-list" class="divide-y divide-slate-100 bg-white">
@@ -1262,30 +1304,33 @@
 
                 <!-- TAB: PAYMENTS (NEW) -->
                 <div id="admin-tab-payments" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8 hidden">
-                    <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-                        <h2 class="text-xl font-bold text-slate-800">Payment Verification</h2>
+                    <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Payment Verification</h2>
+                            <p class="text-sm text-slate-500 font-medium">Review and process premium upgrades</p>
+                        </div>
                         <div class="flex gap-2 w-full md:w-auto">
                              <div class="relative flex-grow md:w-64">
                                 <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-400 text-xs"></i>
-                                <input type="text" id="payment-search" placeholder="Filter by user or ref no..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition shadow-sm">
+                                <input type="text" id="payment-search" placeholder="Filter transactions..." class="w-full pl-9 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:border-blue-500 transition shadow-sm font-medium">
                             </div>
-                            <button onclick="exportToCSV('payments')" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm" title="Export to CSV">
-                                <i class="fa-solid fa-file-csv text-green-600"></i> Export
+                            <button onclick="exportToCSV('payments')" class="px-3 py-2 bg-white hover:bg-slate-50 text-slate-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm">
+                                <i class="fa-solid fa-download text-slate-400"></i> Export
                             </button>
-                            <button onclick="loadAdminPayments()" class="px-3 py-2 bg-blue-50 text-blue-600 hover:bg-blue-100 rounded-lg text-xs font-bold transition flex items-center gap-2 border border-blue-100">
+                            <button onclick="loadAdminPayments()" class="px-3 py-2 bg-white hover:bg-slate-50 text-blue-600 border border-slate-200 rounded-lg text-xs font-bold transition flex items-center gap-2 shadow-sm">
                                 <i class="fa-solid fa-rotate"></i> Refresh
                             </button>
                         </div>
                     </div>
 
-                    <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
+                    <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
                         <div class="flex-grow overflow-x-auto custom-scroll">
                             <table class="w-full text-left text-xs table-fixed">
                                 <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 font-bold uppercase tracking-wider sticky top-0 z-10">
                                     <tr>
-                                        <th class="px-6 py-4 bg-slate-50 w-[15%]">Date & Time</th>
-                                        <th class="px-6 py-4 bg-slate-50 w-[25%]">User Identity</th>
-                                        <th class="px-6 py-4 bg-slate-50 w-[25%]">Payment Details</th>
+                                        <th class="px-6 py-4 bg-slate-50 w-[15%]">Date</th>
+                                        <th class="px-6 py-4 bg-slate-50 w-[25%]">User</th>
+                                        <th class="px-6 py-4 bg-slate-50 w-[25%]">Reference</th>
                                         <th class="px-6 py-4 bg-slate-50 w-[15%]">Amount</th>
                                         <th class="px-6 py-4 bg-slate-50 text-right w-[20%]">Action</th>
                                     </tr>
@@ -1300,58 +1345,136 @@
 
                 <!-- TAB 2: COMMUNICATIONS -->
                 <div id="admin-tab-communications" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8 hidden">
-                    <h2 class="text-xl font-bold text-slate-800 mb-6">Communication Center</h2>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                        <!-- Global Announcement Status -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-slate-700">Global Announcement</h3>
-                                <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-bold uppercase">Sheet 1 · Col D-E</span>
-                            </div>
-
-                            <div id="admin-global-preview" class="bg-slate-50 rounded-xl p-6 border border-slate-200 text-center mb-6">
-                                <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100">
-                                    <i class="fa-solid fa-bullhorn text-slate-400"></i>
-                                </div>
-                                <h4 class="font-bold text-slate-400 text-sm">No Active Announcement</h4>
-                                <p class="text-xs text-slate-400 mt-1">Columns D and E in Sheet1 are empty.</p>
-                            </div>
-
-                            <div class="space-y-3">
-                                <p class="text-xs text-slate-500 leading-relaxed">
-                                    To update the global announcement popup seen by all users, edit <strong>Row 2</strong> of <strong>Sheet1</strong> in the database.
-                                </p>
-                                <a href="https://docs.google.com/spreadsheets/d/1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA/edit#gid=0" target="_blank" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition text-xs">
-                                    <i class="fa-solid fa-pen-to-square mr-2"></i> Update Global Announcement
-                                </a>
+                    <div class="max-w-6xl mx-auto h-full flex flex-col">
+                        <div class="mb-6 flex justify-between items-end flex-shrink-0">
+                            <div>
+                                <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Broadcast Console</h2>
+                                <p class="text-sm text-slate-500 font-medium">Manage system-wide announcements and real-time alerts.</p>
                             </div>
                         </div>
+                        
+                        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden flex flex-col lg:flex-row flex-grow mb-4 min-h-0">
+                            
+                            <!-- Editor Section -->
+                            <div class="p-6 lg:p-8 lg:w-5/12 border-b lg:border-b-0 lg:border-r border-slate-100 flex flex-col bg-white relative z-10 overflow-y-auto custom-scroll">
+                                <div class="flex items-center justify-between mb-6 flex-shrink-0">
+                                    <h3 class="font-bold text-slate-800 flex items-center gap-2">
+                                        <div class="w-8 h-8 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                                            <i class="fa-solid fa-pen-nib text-sm"></i>
+                                        </div>
+                                        Compose
+                                    </h3>
+                                    <span class="text-[10px] font-bold text-slate-400 uppercase bg-slate-50 px-2 py-1 rounded-md border border-slate-100 tracking-wider">Draft Mode</span>
+                                </div>
 
-                        <!-- Private Messaging Guide -->
-                        <div class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm">
-                            <div class="flex justify-between items-center mb-6">
-                                <h3 class="font-bold text-slate-700">Direct Messaging</h3>
-                                <span class="px-2 py-1 bg-blue-50 text-blue-600 rounded text-[10px] font-bold uppercase">Users Sheet · Col E</span>
+                                <form id="announcement-form" class="space-y-5 flex-grow flex flex-col">
+                                    
+                                    <!-- Style Selector -->
+                                    <div class="space-y-2">
+                                        <label class="text-xs font-bold text-slate-700 uppercase tracking-wide">Alert Style</label>
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="ann-style" value="standard" class="peer sr-only" checked onchange="updateAnnouncementPreview()">
+                                                <div class="p-2.5 rounded-lg border border-slate-200 bg-slate-50 peer-checked:bg-blue-50 peer-checked:border-blue-300 peer-checked:text-blue-700 text-slate-500 hover:bg-slate-100 transition flex items-center gap-2">
+                                                    <i class="fa-solid fa-bullhorn text-xs"></i>
+                                                    <span class="text-xs font-bold">Standard</span>
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="ann-style" value="urgent" class="peer sr-only" onchange="updateAnnouncementPreview()">
+                                                <div class="p-2.5 rounded-lg border border-slate-200 bg-slate-50 peer-checked:bg-red-50 peer-checked:border-red-300 peer-checked:text-red-700 text-slate-500 hover:bg-slate-100 transition flex items-center gap-2">
+                                                    <i class="fa-solid fa-triangle-exclamation text-xs"></i>
+                                                    <span class="text-xs font-bold">Urgent</span>
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="ann-style" value="maintenance" class="peer sr-only" onchange="updateAnnouncementPreview()">
+                                                <div class="p-2.5 rounded-lg border border-slate-200 bg-slate-50 peer-checked:bg-orange-50 peer-checked:border-orange-300 peer-checked:text-orange-700 text-slate-500 hover:bg-slate-100 transition flex items-center gap-2">
+                                                    <i class="fa-solid fa-screwdriver-wrench text-xs"></i>
+                                                    <span class="text-xs font-bold">Maintenance</span>
+                                                </div>
+                                            </label>
+                                            <label class="cursor-pointer">
+                                                <input type="radio" name="ann-style" value="update" class="peer sr-only" onchange="updateAnnouncementPreview()">
+                                                <div class="p-2.5 rounded-lg border border-slate-200 bg-slate-50 peer-checked:bg-indigo-50 peer-checked:border-indigo-300 peer-checked:text-indigo-700 text-slate-500 hover:bg-slate-100 transition flex items-center gap-2">
+                                                    <i class="fa-solid fa-wand-magic-sparkles text-xs"></i>
+                                                    <span class="text-xs font-bold">New Update</span>
+                                                </div>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <label class="text-xs font-bold text-slate-700 mb-1.5 block uppercase tracking-wide">Headline</label>
+                                        <input type="text" id="ann-input-title" oninput="updateAnnouncementPreview()" class="w-full p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition placeholder-slate-300" placeholder="e.g. System Notice">
+                                    </div>
+                                    
+                                    <div class="flex-grow">
+                                        <label class="text-xs font-bold text-slate-700 mb-1.5 block uppercase tracking-wide">Message Content</label>
+                                        <textarea id="ann-input-message" oninput="updateAnnouncementPreview()" class="w-full min-h-[150px] p-3.5 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-600 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition placeholder-slate-300 resize-none leading-relaxed" placeholder="Write your announcement here... HTML tags are supported for links and formatting."></textarea>
+                                    </div>
+
+                                    <div class="flex gap-3 pt-4 border-t border-slate-50 mt-auto">
+                                        <button type="button" onclick="saveAnnouncement(false)" id="btn-ann-clear" class="px-5 py-3 bg-white hover:bg-red-50 text-slate-500 hover:text-red-600 font-bold rounded-xl text-xs transition border border-slate-200 hover:border-red-200 shadow-sm">
+                                            Clear
+                                        </button>
+                                        <button type="button" onclick="saveAnnouncement(true)" id="btn-ann-pub" class="flex-grow bg-slate-900 hover:bg-blue-600 text-white font-bold py-3 rounded-xl text-xs transition shadow-lg shadow-slate-900/10 hover:shadow-blue-600/20 flex items-center justify-center gap-2 transform active:scale-95">
+                                            <i class="fa-solid fa-paper-plane"></i> Push Live Update
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
-                            <div class="space-y-4">
-                                <p class="text-xs text-slate-600">
-                                    You can now edit user messages directly from the <button onclick="switchAdminTab('dashboard')" class="text-blue-600 font-bold hover:underline">Dashboard User List</button>.
-                                </p>
-                                <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                    <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">1</div>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-700">Select User</p>
-                                        <p class="text-[10px] text-slate-500 mt-1">Click the <i class="fa-solid fa-pen-to-square"></i> Edit button next to any user.</p>
+                            <!-- Preview Section -->
+                            <div class="p-8 lg:w-7/12 bg-slate-50/80 flex flex-col relative overflow-hidden justify-center items-center">
+                                <!-- Background Decoration -->
+                                <div class="absolute inset-0 bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] [background-size:16px_16px] opacity-50"></div>
+                                <div class="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-100 rounded-full blur-3xl opacity-50"></div>
+                                <div class="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 bg-indigo-100 rounded-full blur-3xl opacity-50"></div>
+                                
+                                <div class="relative z-10 w-full max-w-sm">
+                                    <div class="flex justify-between items-center mb-4 px-1">
+                                        <h3 class="font-bold text-slate-400 text-xs uppercase tracking-widest flex items-center gap-2">
+                                            <i class="fa-solid fa-mobile-screen"></i> User Preview
+                                        </h3>
+                                        <div class="flex gap-1.5">
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                            <span class="w-1.5 h-1.5 rounded-full bg-slate-300"></span>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="flex items-start gap-4 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                                    <div class="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center flex-shrink-0 font-bold text-xs">2</div>
-                                    <div>
-                                        <p class="text-xs font-bold text-slate-700">Enter Message</p>
-                                        <p class="text-[10px] text-slate-500 mt-1">Type your message in the "Personal Message" box.</p>
+
+                                    <div class="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl border border-white/50 p-1 ring-1 ring-slate-900/5 transition-all duration-300">
+                                        <div class="bg-white rounded-xl overflow-hidden shadow-inner border border-slate-100 flex flex-col">
+                                            <!-- Fake App Header -->
+                                            <div class="h-12 bg-slate-900 flex items-center justify-between px-4 flex-shrink-0">
+                                                <div class="w-16 h-2 bg-slate-700 rounded-full opacity-50"></div>
+                                                <div class="flex gap-2">
+                                                    <div class="w-2 h-2 rounded-full bg-slate-700 opacity-50"></div>
+                                                    <div class="w-2 h-2 rounded-full bg-slate-700 opacity-50"></div>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- The Actual Preview Container -->
+                                            <div class="p-6 min-h-[300px] flex items-center justify-center bg-slate-50 relative overflow-y-auto" id="admin-global-preview">
+                                                <!-- Content injected by JS -->
+                                                <div class="text-center opacity-40 scale-90">
+                                                    <i class="fa-solid fa-bullhorn text-3xl text-slate-300 mb-2"></i>
+                                                    <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">No Active Announcement</p>
+                                                </div>
+                                            </div>
+                                            
+                                            <!-- Fake App Footer -->
+                                            <div class="h-10 border-t border-slate-100 bg-white flex items-center justify-around px-6 flex-shrink-0">
+                                                <div class="w-4 h-4 rounded-sm bg-slate-200"></div>
+                                                <div class="w-4 h-4 rounded-sm bg-slate-200"></div>
+                                                <div class="w-4 h-4 rounded-sm bg-slate-200"></div>
+                                            </div>
+                                        </div>
                                     </div>
+                                    
+                                    <p class="text-center text-[10px] text-slate-400 font-medium mt-6 bg-white/50 py-1 px-3 rounded-full w-fit mx-auto border border-slate-200/50">
+                                        Reflects immediately for all active users
+                                    </p>
                                 </div>
                             </div>
                         </div>
@@ -1360,45 +1483,48 @@
 
                 <!-- TAB 3: CONTENT MANAGER -->
                 <div id="admin-tab-content" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8 hidden">
-                    <div class="flex justify-between items-center mb-6">
-                        <h2 class="text-xl font-bold text-slate-800">Content Management</h2>
-                        <button id="refresh-tools-btn" class="text-xs font-bold text-blue-600 hover:text-blue-800 flex items-center gap-1">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-2xl font-bold text-slate-900 tracking-tight">Content Management</h2>
+                            <p class="text-sm text-slate-500 font-medium">Manage AI tools and resources</p>
+                        </div>
+                        <button id="refresh-tools-btn" class="text-xs font-bold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 px-4 py-2 rounded-lg transition flex items-center gap-2">
                             <i class="fa-solid fa-rotate"></i> Refresh Data
                         </button>
                     </div>
 
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         <!-- Basic Tools List -->
-                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
+                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
                             <div class="p-4 border-b border-slate-200 bg-slate-50 flex justify-between items-center sticky top-0 z-10">
                                 <h4 class="font-bold text-slate-700 text-xs uppercase tracking-wide">
                                     <i class="fa-solid fa-cube text-blue-500 mr-2"></i> Basic Tools
                                 </h4>
-                                <span id="count-basic" class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold">0</span>
+                                <span id="count-basic" class="bg-white border border-slate-200 text-slate-600 px-2 py-0.5 rounded text-[10px] font-bold shadow-sm">0</span>
                             </div>
-                            <div id="list-basic-tools" class="flex-grow overflow-y-auto custom-scroll p-2 space-y-2">
+                            <div id="list-basic-tools" class="flex-grow overflow-y-auto custom-scroll p-2 space-y-2 bg-slate-50/50">
                                 <div class="p-4 text-center text-slate-400 text-xs">Loading...</div>
                             </div>
-                            <div class="p-3 border-t border-slate-200 bg-slate-50">
-                                <a href="https://docs.google.com/spreadsheets/d/1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA/edit#gid=0" target="_blank" class="block w-full py-2 text-center text-[10px] font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition border border-blue-200 border-dashed">
+                            <div class="p-3 border-t border-slate-200 bg-white">
+                                <a href="https://docs.google.com/spreadsheets/d/1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA/edit#gid=0" target="_blank" class="block w-full py-2.5 text-center text-[10px] font-bold text-blue-600 hover:bg-blue-50 rounded-lg transition border border-blue-200 border-dashed hover:border-blue-300">
                                     <i class="fa-solid fa-plus mr-1"></i> Add Basic Tool (Sheet1)
                                 </a>
                             </div>
                         </div>
 
                         <!-- Premium Tools List -->
-                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
-                            <div class="p-4 border-b border-slate-200 bg-yellow-50 flex justify-between items-center sticky top-0 z-10">
+                        <div class="bg-white rounded-xl border border-slate-200 overflow-hidden shadow-sm flex flex-col h-[500px]">
+                            <div class="p-4 border-b border-slate-200 bg-yellow-50/50 flex justify-between items-center sticky top-0 z-10">
                                 <h4 class="font-bold text-yellow-800 text-xs uppercase tracking-wide">
                                     <i class="fa-solid fa-crown text-yellow-600 mr-2"></i> Premium Tools
                                 </h4>
-                                <span id="count-premium" class="bg-yellow-200 text-yellow-800 px-2 py-0.5 rounded text-[10px] font-bold">0</span>
+                                <span id="count-premium" class="bg-white border border-yellow-200 text-yellow-800 px-2 py-0.5 rounded text-[10px] font-bold shadow-sm">0</span>
                             </div>
-                            <div id="list-premium-tools" class="flex-grow overflow-y-auto custom-scroll p-2 space-y-2">
+                            <div id="list-premium-tools" class="flex-grow overflow-y-auto custom-scroll p-2 space-y-2 bg-slate-50/50">
                                 <div class="p-4 text-center text-slate-400 text-xs">Loading...</div>
                             </div>
-                            <div class="p-3 border-t border-slate-200 bg-slate-50">
-                                <a href="https://docs.google.com/spreadsheets/d/1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA/edit#gid=1355823203" target="_blank" class="block w-full py-2 text-center text-[10px] font-bold text-purple-600 hover:bg-purple-50 rounded-lg transition border border-purple-200 border-dashed">
+                            <div class="p-3 border-t border-slate-200 bg-white">
+                                <a href="https://docs.google.com/spreadsheets/d/1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA/edit#gid=1355823203" target="_blank" class="block w-full py-2.5 text-center text-[10px] font-bold text-purple-600 hover:bg-purple-50 rounded-lg transition border border-purple-200 border-dashed hover:border-purple-300">
                                     <i class="fa-solid fa-plus mr-1"></i> Add Premium Tool (PAID USERS)
                                 </a>
                             </div>
@@ -2468,7 +2594,7 @@
             if(!modal || !titleEl || !msgEl) return;
 
             titleEl.innerText = notifData.title;
-            msgEl.innerText = notifData.message;
+            msgEl.innerHTML = notifData.message; // CHANGED to innerHTML for links/formatting
             
             // 1. Check for Expiration / Gratitude Message
             if (notifData.type === 'expiration') {
@@ -2524,17 +2650,42 @@
                  ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
 
             } 
-            // 3. Standard Global Announcement
+            // 3. Standard Global Announcement (Dynamic Styling)
             else {
-                 titleEl.innerText = "System Update";
+                 titleEl.innerText = notifData.title || "System Update";
                  subtitleEl.innerText = "Global Announcement";
-                 
-                 iconEl.className = "fa-solid fa-bullhorn";
-                 iconBg.className = "w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-orange-500/10";
-                 
                  timestampEl.innerText = "Broadcast Message";
-                 statusEl.innerText = "Public";
-                 statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
+                 
+                 const lowerTitle = (notifData.title || "").toLowerCase();
+
+                 if (lowerTitle.includes('urgent') || lowerTitle.includes('alert') || lowerTitle.includes('critical')) {
+                     // Red / Urgent Theme
+                     iconEl.className = "fa-solid fa-triangle-exclamation";
+                     iconBg.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-red-500/10";
+                     statusEl.innerText = "Priority";
+                     statusEl.className = "text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-100";
+                 } 
+                 else if (lowerTitle.includes('maintenance') || lowerTitle.includes('warning') || lowerTitle.includes('attention')) {
+                     // Orange / Warning Theme
+                     iconEl.className = "fa-solid fa-screwdriver-wrench";
+                     iconBg.className = "w-8 h-8 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-orange-500/10";
+                     statusEl.innerText = "System Notice";
+                     statusEl.className = "text-[10px] font-bold text-orange-600 bg-orange-50 px-2 py-0.5 rounded-full border border-orange-100";
+                 }
+                 else if (lowerTitle.includes('new') || lowerTitle.includes('feature') || lowerTitle.includes('update')) {
+                     // Indigo / Feature Theme
+                     iconEl.className = "fa-solid fa-wand-magic-sparkles";
+                     iconBg.className = "w-8 h-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-indigo-500/10";
+                     statusEl.innerText = "What's New";
+                     statusEl.className = "text-[10px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-full border border-indigo-100";
+                 }
+                 else {
+                     // Default Blue Theme
+                     iconEl.className = "fa-solid fa-bullhorn";
+                     iconBg.className = "w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-blue-500/10";
+                     statusEl.innerText = "Public";
+                     statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
+                 }
 
                  ackBtn.innerText = "Got it";
                  ackBtn.className = "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold py-2 px-4 rounded-lg transition shadow-sm text-xs";
@@ -4115,7 +4266,7 @@
              let currentAdminTab = 'dashboard';
 
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx9EZEgXb2Hbitoz8L69Tiko8qGH31nwsTw8V0Rk4Ug5kV372qS1iBfdTeDKu-fvWdoOQ/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxh-eEX1ESB1WJMRBaEqCZ7MIJMf5c-wGdX0cquON0qZgcrmhWSXOmZe7eXsgsKYUISNw/exec"; 
              
              // Tab Logic
              window.switchAdminTab = function(tabName) {
@@ -4125,11 +4276,11 @@
                  document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
                      // Check if button ID matches current tab
                      if (btn.id === `tab-btn-${tabName}`) {
-                         btn.classList.remove('text-slate-400', 'hover:bg-white/5');
-                         btn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+                         btn.classList.remove('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                         btn.classList.add('bg-blue-600', 'text-white', 'shadow-md', 'border', 'border-blue-500/50');
                      } else {
-                         btn.classList.add('text-slate-400', 'hover:bg-white/5');
-                         btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+                         btn.classList.add('text-slate-400', 'hover:text-white', 'hover:bg-white/5');
+                         btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md', 'border', 'border-blue-500/50');
                      }
                  });
 
@@ -4939,26 +5090,194 @@
              // COMMUNICATION TAB LOGIC
              function loadAdminComm() {
                  const container = document.getElementById('admin-global-preview');
+                 const titleInput = document.getElementById('ann-input-title');
+                 const msgInput = document.getElementById('ann-input-message');
+                 const radios = document.getElementsByName('ann-style');
+
                  if(!container) return;
 
                  if (globalNotification) {
-                     container.innerHTML = `
-                        <div class="text-left bg-white p-4 rounded-lg border-l-4 border-orange-500 shadow-sm">
-                            <h4 class="font-bold text-slate-800 text-sm mb-1">${globalNotification.title}</h4>
-                            <p class="text-xs text-slate-600 leading-relaxed">${globalNotification.message}</p>
-                        </div>
-                        <p class="text-[10px] text-green-600 font-bold mt-3"><i class="fa-solid fa-circle-check"></i> Currently Active</p>
-                     `;
-                 } else {
-                     container.innerHTML = `
-                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center mx-auto mb-3 shadow-sm border border-slate-100">
-                            <i class="fa-solid fa-bullhorn text-slate-400"></i>
-                        </div>
-                        <h4 class="font-bold text-slate-400 text-sm">No Active Announcement</h4>
-                        <p class="text-xs text-slate-400 mt-1">Columns D and E in Sheet1 are empty.</p>
-                     `;
+                     // Populate inputs only if they are empty (initial load)
+                     if(titleInput && titleInput.value === '') {
+                         titleInput.value = globalNotification.title;
+                     }
+                     if(msgInput && msgInput.value === '') {
+                         // Convert <br> tags back to newlines for easy editing in textarea
+                         const rawMsg = globalNotification.message.replace(/<br\s*\/?>/gi, '\n');
+                         msgInput.value = rawMsg;
+                     }
+                     
+                     // Set Radio based on Title Content
+                     const lowerTitle = globalNotification.title.toLowerCase();
+                     if (lowerTitle.includes('urgent') || lowerTitle.includes('alert')) {
+                         setRadio('urgent');
+                     } else if (lowerTitle.includes('maintenance') || lowerTitle.includes('warning')) {
+                         setRadio('maintenance');
+                     } else if (lowerTitle.includes('new') || lowerTitle.includes('update')) {
+                         setRadio('update');
+                     } else {
+                         setRadio('standard');
+                     }
+                 }
+                 
+                 // Trigger preview render
+                 updateAnnouncementPreview();
+             }
+
+             function setRadio(value) {
+                 const radios = document.getElementsByName('ann-style');
+                 for(const r of radios) {
+                     if(r.value === value) r.checked = true;
                  }
              }
+
+             // NEW: Live Preview Updater (Triggered by input/radio)
+             window.updateAnnouncementPreview = function() {
+                 const container = document.getElementById('admin-global-preview');
+                 const titleVal = document.getElementById('ann-input-title').value || "System Update";
+                 let msgVal = document.getElementById('ann-input-message').value || "Announcement details will appear here.";
+                 
+                 // Convert newlines to <br> for preview display
+                 msgVal = msgVal.replace(/\n/g, '<br>');
+
+                 // Get Selected Style
+                 let selectedStyle = 'standard';
+                 const radios = document.getElementsByName('ann-style');
+                 for(const r of radios) { if(r.checked) selectedStyle = r.value; }
+
+                 let iconClass = "fa-bullhorn text-blue-500";
+                 let borderClass = "border-l-4 border-l-blue-500";
+                 
+                 if (selectedStyle === 'urgent') {
+                     iconClass = "fa-triangle-exclamation text-red-500";
+                     borderClass = "border-l-4 border-l-red-500";
+                 } else if (selectedStyle === 'maintenance') {
+                     iconClass = "fa-screwdriver-wrench text-orange-500";
+                     borderClass = "border-l-4 border-l-orange-500";
+                 } else if (selectedStyle === 'update') {
+                     iconClass = "fa-wand-magic-sparkles text-indigo-500";
+                     borderClass = "border-l-4 border-l-indigo-500";
+                 }
+
+                 container.innerHTML = `
+                    <div class="w-full text-left bg-white p-5 rounded-xl ${borderClass} shadow-lg ring-1 ring-slate-900/5 relative overflow-hidden transition-all duration-300">
+                        <div class="absolute top-0 right-0 p-3 opacity-5">
+                            <i class="fa-solid ${iconClass} text-6xl"></i>
+                        </div>
+                        <div class="relative z-10">
+                            <div class="flex items-center gap-2 mb-3">
+                                <i class="fa-solid ${iconClass} text-lg"></i>
+                                <h4 class="font-bold text-slate-800 text-base leading-tight">${titleVal}</h4>
+                            </div>
+                            <div class="text-sm text-slate-600 leading-relaxed font-medium pt-3 border-t border-slate-100 break-words">
+                                ${msgVal}
+                            </div>
+                        </div>
+                    </div>
+                 `;
+             }
+
+             // NEW: Save Announcement Function
+             window.saveAnnouncement = async function(isPublish) {
+                 const titleInput = document.getElementById('ann-input-title');
+                 const msgInput = document.getElementById('ann-input-message');
+                 const btnPub = document.getElementById('btn-ann-pub');
+                 const btnClear = document.getElementById('btn-ann-clear');
+                 const adminLoader = document.getElementById('admin-loader');
+
+                 if (isPublish && (!titleInput.value.trim() || !msgInput.value.trim())) {
+                     alert("Please enter both a Title and a Message.");
+                     return;
+                 }
+
+                 // Determine Style Keyword to prepend (ensures persistence)
+                 let finalTitle = titleInput.value.trim();
+                 let finalMsg = '';
+
+                 if (isPublish) {
+                     // 1. Process Title Keywords
+                     let selectedStyle = 'standard';
+                     const radios = document.getElementsByName('ann-style');
+                     for(const r of radios) { if(r.checked) selectedStyle = r.value; }
+                     
+                     const lowerT = finalTitle.toLowerCase();
+                     if (selectedStyle === 'urgent' && !lowerT.includes('urgent') && !lowerT.includes('alert')) {
+                         finalTitle = "Urgent: " + finalTitle;
+                     } else if (selectedStyle === 'maintenance' && !lowerT.includes('maintenance')) {
+                         finalTitle = "Maintenance: " + finalTitle;
+                     } else if (selectedStyle === 'update' && !lowerT.includes('new') && !lowerT.includes('update')) {
+                         finalTitle = "New Update: " + finalTitle;
+                     }
+
+                     // 2. Process Message Breaks (Convert \n to <br>)
+                     finalMsg = msgInput.value.trim().replace(/\n/g, '<br>');
+                 }
+
+                 // Disable UI
+                 if(btnPub) {
+                     btnPub.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing...';
+                     btnPub.disabled = true;
+                 }
+                 if(btnClear) btnClear.disabled = true;
+                 if(adminLoader) adminLoader.classList.remove('hidden');
+
+                 const payload = {
+                     action: 'updateAnnouncement', // Ensure your GAS handles this action
+                     title: isPublish ? finalTitle : '',
+                     message: finalMsg
+                 };
+
+                 try {
+                     // Optimistic UI Update (Update local state immediately)
+                     if (isPublish) {
+                         globalNotification = { title: payload.title, message: payload.message };
+                     } else {
+                         globalNotification = null;
+                         titleInput.value = '';
+                         msgInput.value = '';
+                         setRadio('standard');
+                     }
+                     
+                     // Manually update the title input to reflect the auto-keyword addition (optional but good for UX)
+                     if (isPublish && titleInput.value !== finalTitle) {
+                         titleInput.value = finalTitle;
+                     }
+                     
+                     loadAdminComm(); // Refresh Logic & Preview
+
+                     const response = await fetch(GOOGLE_SCRIPT_URL, {
+                         method: 'POST',
+                         mode: 'no-cors',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify(payload)
+                     });
+
+                     // Simulate success delay since no-cors is opaque
+                     setTimeout(() => {
+                         if(adminLoader) adminLoader.classList.add('hidden');
+                         if(btnPub) {
+                             btnPub.innerHTML = '<i class="fa-solid fa-check"></i> Updated!';
+                             setTimeout(() => {
+                                 btnPub.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Push Live Update';
+                                 btnPub.disabled = false;
+                                 if(btnClear) btnClear.disabled = false;
+                             }, 2000);
+                         }
+                         // Background fetch to ensure consistency
+                         fetchSystemConfig();
+                     }, 1500);
+
+                 } catch (err) {
+                     console.error(err);
+                     if(adminLoader) adminLoader.classList.add('hidden');
+                     alert("Failed to connect. Please check your internet.");
+                     if(btnPub) {
+                         btnPub.innerHTML = '<i class="fa-solid fa-paper-plane"></i> Push Live Update';
+                         btnPub.disabled = false;
+                     }
+                     if(btnClear) btnClear.disabled = false;
+                 }
+             };
 
              // CONTENT TAB LOGIC
              async function loadAdminTools() {
