@@ -83,6 +83,10 @@
         }
         
         /* ADDED: Global Protection Styles */
+        html {
+            scroll-padding-top: 100px; /* Ensures links don't get hidden behind the sticky header */
+        }
+
         body {
             -webkit-user-select: none; /* Safari */
             -ms-user-select: none; /* IE 10 and IE 11 */
@@ -1744,6 +1748,62 @@
         </div>
     </section>
 
+    <!-- FAQ Section (NEW) -->
+    <section id="faq" class="py-12 md:py-24 bg-white border-t border-slate-200 relative z-20">
+        <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold text-slate-800">Frequently Asked Questions</h2>
+                <div class="h-1.5 w-16 bg-yellow-400 mx-auto rounded-full mt-4"></div>
+            </div>
+            
+            <div class="space-y-4">
+                <!-- Question 1 -->
+                <div class="group border border-slate-200 rounded-xl overflow-hidden transition-all hover:border-blue-300 hover:shadow-sm">
+                    <button class="w-full flex justify-between items-center p-5 text-left bg-slate-50 hover:bg-white transition-colors" onclick="this.parentElement.classList.toggle('active-faq');">
+                        <span class="font-bold text-slate-700 text-sm">Is this platform free for public school teachers?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-[.active-faq]:rotate-180"></i>
+                    </button>
+                    <div class="hidden group-[.active-faq]:block p-5 pt-0 bg-white text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-fadeIn">
+                        <br>Yes! The Basic Workspace is completely free. It provides access to essential AI tools for lesson planning and simple assessments. We also offer a Premium tier for advanced features to support server costs.
+                    </div>
+                </div>
+
+                <!-- Question 2 -->
+                <div class="group border border-slate-200 rounded-xl overflow-hidden transition-all hover:border-blue-300 hover:shadow-sm">
+                    <button class="w-full flex justify-between items-center p-5 text-left bg-slate-50 hover:bg-white transition-colors" onclick="this.parentElement.classList.toggle('active-faq');">
+                        <span class="font-bold text-slate-700 text-sm">How do I upgrade to a Premium account?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-[.active-faq]:rotate-180"></i>
+                    </button>
+                    <div class="hidden group-[.active-faq]:block p-5 pt-0 bg-white text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-fadeIn">
+                        <br>First, create a free account or log in. Click your user profile in the navigation bar and select <strong>"Upgrade Plan"</strong>. You can verify your payment via GCash to unlock premium tools instantly after admin approval.
+                    </div>
+                </div>
+
+                <!-- Question 3 -->
+                <div class="group border border-slate-200 rounded-xl overflow-hidden transition-all hover:border-blue-300 hover:shadow-sm">
+                    <button class="w-full flex justify-between items-center p-5 text-left bg-slate-50 hover:bg-white transition-colors" onclick="this.parentElement.classList.toggle('active-faq');">
+                        <span class="font-bold text-slate-700 text-sm">Is this officially endorsed by DepEd?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-[.active-faq]:rotate-180"></i>
+                    </button>
+                    <div class="hidden group-[.active-faq]:block p-5 pt-0 bg-white text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-fadeIn">
+                        <br>We are an independent initiative developed to support Filipino teachers. While our tools are <strong>curriculum-aligned</strong> and designed based on DepEd guidelines (MATATAG curriculum), we are a third-party support tool.
+                    </div>
+                </div>
+
+                <!-- Question 4 -->
+                <div class="group border border-slate-200 rounded-xl overflow-hidden transition-all hover:border-blue-300 hover:shadow-sm">
+                    <button class="w-full flex justify-between items-center p-5 text-left bg-slate-50 hover:bg-white transition-colors" onclick="this.parentElement.classList.toggle('active-faq');">
+                        <span class="font-bold text-slate-700 text-sm">My account is still "Pending". What should I do?</span>
+                        <i class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300 group-[.active-faq]:rotate-180"></i>
+                    </button>
+                    <div class="hidden group-[.active-faq]:block p-5 pt-0 bg-white text-sm text-slate-600 leading-relaxed border-t border-slate-100 animate-fadeIn">
+                        <br>Account verification usually takes 24-48 hours. If it has been longer than that, please use the contact form in the footer or message the admin via the Community Hub.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer class="bg-slate-900 text-slate-300 py-10 md:py-20 border-t border-slate-800 relative overflow-hidden">
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-blue-900/20 blur-[100px] rounded-full pointer-events-none"></div>
@@ -1873,6 +1933,11 @@
         <img id="modal-img" src="" alt="Full Screen Support" class="max-w-full max-h-[90vh] rounded-lg shadow-2xl transform scale-95 transition-transform duration-300 border-2 border-yellow-500">
         <p class="absolute bottom-10 text-white/50 text-sm animate-pulse">Click anywhere to close</p>
     </div>
+
+    <!-- Back to Top Button (NEW) -->
+    <button id="back-to-top" class="fixed bottom-6 right-6 z-40 bg-deped-blue text-white w-12 h-12 rounded-full shadow-lg hover:bg-blue-800 transition-all duration-300 opacity-0 translate-y-10 pointer-events-none flex items-center justify-center group ring-2 ring-white/20">
+        <i class="fa-solid fa-arrow-up group-hover:-translate-y-1 transition-transform"></i>
+    </button>
 
     <!-- SECRET CREDITS OVERLAY (Shift + F10) -->
     <div id="credits-overlay" class="fixed inset-0 z-[300] bg-slate-900/95 hidden flex items-center justify-center p-4 backdrop-blur-md">
@@ -2622,9 +2687,9 @@
                  ackBtn.innerText = "I Understand";
                  ackBtn.className = "bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
             }
-            // 2. Personal Admin Message
+            // 2. Personal Admin Message (Or Combined)
             else if (isPersonal) {
-                 titleEl.innerText = "Admin Message"; 
+                 titleEl.innerText = notifData.title || "Admin Message"; 
                  subtitleEl.innerText = "Personal Notification";
                  
                  iconEl.className = "fa-solid fa-paper-plane";
@@ -2652,7 +2717,7 @@
                      timestampEl.innerText = 'Just now';
                  }
                  
-                 statusEl.innerText = "Personal";
+                 statusEl.innerText = notifData.statusText || "Personal";
                  statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
                  
                  ackBtn.innerText = "Mark as Read";
@@ -2758,46 +2823,27 @@
 
             // Use unified session helper
             const currentUser = getSession();
-            let expirationNotif = null; 
+            
+            // Temporary variables for logic
+            let adminMsg = null;
+            let expMsg = null;
+            let expStatus = "";
+            let expType = ""; // 'expired' or 'warning'
 
             if (currentUser) {
                 try {
                     const allUsers = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
                     const freshUser = allUsers.find(u => u.username.toLowerCase() === currentUser.username.toLowerCase());
                     
-                    // 1. Personal Message Check
+                    // 1. Get Admin Message
                     if (freshUser && freshUser.message) {
-                        currentPersonalMessage = { 
-                            title: `Message from the Admin`, 
-                            message: freshUser.message,
-                            timestamp: freshUser.messageTimestamp 
+                        adminMsg = {
+                            text: freshUser.message,
+                            ts: freshUser.messageTimestamp
                         };
-                        isPersonal = true;
-                        
-                        if(navBtn) navBtn.classList.remove('hidden');
-                        if(mobBtn) mobBtn.classList.remove('hidden');
-
-                        // --- NEW: Check Read Status to Toggle Badge ---
-                        const notificationId = currentPersonalMessage.title + "||" + currentPersonalMessage.message;
-                        const lastSeenId = localStorage.getItem('last_seen_personal_id');
-                        const isRead = lastSeenId === notificationId;
-
-                        if (isRead) {
-                            if(navBadge) navBadge.classList.add('hidden');
-                            if(mobBadge) mobBadge.classList.add('hidden');
-                        } else {
-                            if(navBadge) navBadge.classList.remove('hidden');
-                            if(mobBadge) mobBadge.classList.remove('hidden');
-                        }
-                        // ----------------------------------------------
-
-                    } else {
-                        currentPersonalMessage = null;
-                        if(navBtn) navBtn.classList.add('hidden');
-                        if(mobBtn) mobBtn.classList.add('hidden');
                     }
 
-                    // 2. Expiration Logic Check
+                    // 2. Get Expiration Status (Always calculate)
                     if (currentUser.expiration) {
                         const expDate = new Date(currentUser.expiration);
                         const now = new Date();
@@ -2812,25 +2858,93 @@
                         const lastSeenExp = localStorage.getItem('last_seen_expiration_warning');
                         const todayStr = new Date().toDateString();
 
-                        if (lastSeenExp !== todayStr) {
-                            if (diffTime < 0) {
-                                // EXPIRED
-                                expirationNotif = {
-                                    type: 'expiration',
-                                    title: "Membership Expired",
-                                    message: "Thank you for your support! Your premium account has expired. Please renew your subscription to continue accessing exclusive tools.",
-                                    statusText: "Expired"
-                                };
-                            } else if (diffDays <= 5) {
-                                // EXPIRING SOON (5 days or less)
-                                expirationNotif = {
-                                    type: 'expiration',
-                                    title: "Subscription Ending Soon",
-                                    message: `Thank you for being a valued member! Your premium access expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`,
-                                    statusText: `${diffDays} Days Left`
-                                };
-                            }
+                        if (diffTime < 0) {
+                            expType = 'expired';
+                            expStatus = "Expired";
+                            expMsg = "Thank you for your support! Your premium account has expired. Please renew your subscription to continue accessing exclusive tools.";
+                        } else if (diffDays <= 5) {
+                            expType = 'warning';
+                            expStatus = `${diffDays} Days Left`;
+                            expMsg = `Thank you for being a valued member! Your premium access expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`;
                         }
+                    }
+
+                    // 3. Construct currentPersonalMessage (The "Inbox") - Prioritizes combining both
+                    if (adminMsg || expMsg) {
+                        let combinedBody = "";
+                        let title = "Notification";
+                        let statusText = "Personal";
+                        let notifType = "personal";
+                        
+                        if (adminMsg && expMsg) {
+                            title = "Account Alerts";
+                            statusText = "Action Required";
+                            combinedBody = `
+                                <div class="space-y-4">
+                                    <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                                        <p class="text-[10px] font-bold text-blue-600 uppercase mb-1"><i class="fa-solid fa-user-shield mr-1"></i> Admin Message</p>
+                                        <p>${adminMsg.text}</p>
+                                    </div>
+                                    <div class="bg-pink-50 p-3 rounded-lg border border-pink-100">
+                                        <p class="text-[10px] font-bold text-pink-600 uppercase mb-1"><i class="fa-solid fa-clock mr-1"></i> Subscription Alert</p>
+                                        <p>${expMsg}</p>
+                                    </div>
+                                </div>`;
+                        } else if (expMsg) {
+                            title = expType === 'expired' ? "Membership Expired" : "Subscription Ending Soon";
+                            statusText = expStatus;
+                            combinedBody = expMsg; 
+                            notifType = "expiration";
+                        } else {
+                            title = "Message from Admin";
+                            combinedBody = adminMsg.text;
+                        }
+
+                        currentPersonalMessage = {
+                            title: title,
+                            message: combinedBody,
+                            timestamp: adminMsg ? adminMsg.ts : null, // Use admin TS if available
+                            statusText: statusText,
+                            type: notifType 
+                        };
+
+                        // Show Buttons
+                        if(navBtn) navBtn.classList.remove('hidden');
+                        if(mobBtn) mobBtn.classList.remove('hidden');
+
+                        // 4. Badge Logic (Check Read Status)
+                        // Create ID based on content. If content (e.g. days left) changes, it's new.
+                        const notificationId = title + "||" + combinedBody;
+                        const lastSeenId = localStorage.getItem('last_seen_personal_id');
+                        const lastSeenExp = localStorage.getItem('last_seen_expiration_warning');
+                        const todayStr = new Date().toDateString();
+                        
+                        // Complex check: 
+                        // If it's pure expiration, check date. 
+                        // If combined or personal, check ID.
+                        let isRead = false;
+                        if (notifType === 'expiration') {
+                            isRead = lastSeenExp === todayStr;
+                        } else {
+                            isRead = lastSeenId === notificationId;
+                        }
+
+                        if (isRead) {
+                            if(navBadge) navBadge.classList.add('hidden');
+                            if(mobBadge) mobBadge.classList.add('hidden');
+                        } else {
+                            if(navBadge) navBadge.classList.remove('hidden');
+                            if(mobBadge) mobBadge.classList.remove('hidden');
+                            
+                            // 5. Auto-Popup Logic (Only if not seen)
+                            activeNotif = currentPersonalMessage;
+                            isPersonal = true; 
+                        }
+
+                    } else {
+                        currentPersonalMessage = null;
+                        if(navBtn) navBtn.classList.add('hidden');
+                        if(mobBtn) mobBtn.classList.add('hidden');
                     }
 
                 } catch(e) { console.error(e); }
@@ -2839,33 +2953,15 @@
                 if(mobBtn) mobBtn.classList.add('hidden');
             }
 
-            // Priority Logic: Personal > Expiration > Global
-            if (currentPersonalMessage) {
-                activeNotif = currentPersonalMessage;
-                const notificationId = activeNotif.title + "||" + activeNotif.message;
-                const lastSeenId = localStorage.getItem('last_seen_personal_id');
-                
-                // If personal msg seen, clear activeNotif to allow next priority
-                if (lastSeenId === notificationId) {
-                    activeNotif = null;
-                    isPersonal = false;
-                }
-            } 
-            
-            // Fallback to Expiration if no personal message
-            if (!activeNotif && expirationNotif) {
-                activeNotif = expirationNotif;
-                isPersonal = false; 
-            }
-
-            // Fallback to Global if neither of above
+            // Fallback to Global if no personal/expiration auto-popup
             if (!activeNotif && globalNotification) {
-                activeNotif = globalNotification;
-                const notificationId = activeNotif.title + "||" + activeNotif.message;
+                // Check Global logic
+                const notificationId = globalNotification.title + "||" + globalNotification.message;
                 const lastSeenId = localStorage.getItem('last_seen_announcement_id');
-                
-                if (lastSeenId === notificationId) return;
-                if (localStorage.getItem('last_seen_announcement') === activeNotif.message) return;
+                if (lastSeenId !== notificationId && localStorage.getItem('last_seen_announcement') !== globalNotification.message) {
+                     activeNotif = globalNotification;
+                     isPersonal = false;
+                }
             }
 
             // Show Result
@@ -3571,6 +3667,24 @@
                      setTimeout(() => {
                         modal.classList.add('hidden');
                      }, 300);
+                 });
+             }
+
+             // Back to Top Logic (NEW)
+             const backToTopBtn = document.getElementById('back-to-top');
+             if(backToTopBtn) {
+                 window.addEventListener('scroll', () => {
+                     if (window.scrollY > 400) {
+                         backToTopBtn.classList.remove('opacity-0', 'translate-y-10', 'pointer-events-none');
+                         backToTopBtn.classList.add('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                     } else {
+                         backToTopBtn.classList.add('opacity-0', 'translate-y-10', 'pointer-events-none');
+                         backToTopBtn.classList.remove('opacity-100', 'translate-y-0', 'pointer-events-auto');
+                     }
+                 });
+                 
+                 backToTopBtn.addEventListener('click', () => {
+                     window.scrollTo({ top: 0, behavior: 'smooth' });
                  });
              }
 
