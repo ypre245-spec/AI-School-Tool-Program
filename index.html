@@ -442,9 +442,9 @@
                 </div>
                 
                 <div class="mt-12 pt-8 border-t border-slate-100 max-w-lg mx-auto flex justify-center items-center gap-6 text-slate-500 text-sm font-medium">
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-deped-blue"></i> Free to Use</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-deped-blue"></i> Easy to use</span>
                     <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-deped-blue"></i> DepEd Aligned</span>
-                    <span class="flex items-center gap-2"><i class="fa-solid fa-check-circle text-deped-blue"></i> Mobile Ready</span>
+                    
                 </div>
             </div>
         </section>
@@ -569,11 +569,12 @@
         <!-- Registration Modal -->
         <div id="register-modal" class="fixed inset-0 z-[200] bg-slate-900/80 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300 opacity-0">
             <div class="bg-white rounded-3xl shadow-2xl w-full max-w-5xl overflow-hidden relative transform scale-95 transition-all duration-300 flex flex-col lg:flex-row max-h-[90vh] lg:h-auto">
-                <button id="close-register-modal" class="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/20 hover:bg-black/10 flex items-center justify-center text-slate-500 hover:text-slate-800 transition">
+                <button id="close-register-modal" class="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 hover:text-slate-800 transition">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
 
-                <div class="bg-deped-blue p-8 lg:p-12 lg:w-2/5 flex flex-col justify-between relative overflow-hidden text-white flex-shrink-0">
+                <!-- Left Panel (Hidden on Mobile) -->
+                <div class="hidden lg:flex bg-deped-blue p-8 lg:p-12 lg:w-2/5 flex-col justify-between relative overflow-hidden text-white flex-shrink-0">
                      <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                      <div class="absolute top-0 right-0 w-64 h-64 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
                      <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
@@ -954,6 +955,22 @@
                         <p class="text-[10px] text-slate-500 mt-2 leading-tight px-4 max-w-xs mx-auto border-t border-blue-100 pt-2">
                             Enjoy full access to premium AI tools for 12 months. That's less than ₱9 per month!
                         </p>
+                    </div>
+
+                    <!-- ADDED: GCash Payment Details -->
+                    <div class="bg-white border-2 border-blue-100 border-dashed rounded-xl p-4 mb-6 text-center relative group hover:border-blue-300 transition-colors">
+                        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2 flex items-center justify-center gap-2">
+                            <i class="fa-solid fa-wallet text-blue-500"></i> Send Payment via GCash
+                        </p>
+                        <div class="flex flex-col items-center justify-center gap-1">
+                            <div class="flex items-center gap-3 bg-slate-50 px-4 py-2 rounded-lg border border-slate-100">
+                                <span class="text-lg font-bold text-deped-blue tracking-wider select-all font-mono">0935 465 7854</span>
+                                <button type="button" onclick="const el = document.createElement('textarea'); el.value = '09354657854'; document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el); this.innerHTML='<i class=\'fa-solid fa-check\'></i>'; setTimeout(()=>{this.innerHTML='<i class=\'fa-regular fa-copy\'></i>'}, 2000);" class="text-slate-400 hover:text-blue-600 transition w-6 h-6 flex items-center justify-center" title="Copy Number">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>
+                            <p class="text-[10px] font-bold text-slate-500 mt-1">DAVID JESS F. ASAURO</p>
+                        </div>
                     </div>
 
                     <iframe name="subscription_iframe" id="subscription_iframe" style="display:none;"></iframe>
