@@ -1089,15 +1089,16 @@
         <div class="bg-slate-50 rounded-2xl shadow-2xl w-full max-w-6xl h-[85vh] relative transform scale-95 transition-all duration-300 overflow-hidden flex flex-col md:flex-row ring-1 ring-slate-900/5">
             
             <!-- Sidebar Navigation (SaaS Style) -->
-            <div class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col justify-between border-r border-slate-800 relative overflow-hidden">
+            <div class="w-full md:w-64 bg-slate-900 text-slate-300 flex-shrink-0 flex flex-col border-r border-slate-800 relative overflow-hidden h-auto md:h-full">
                 <!-- Decorative background blobs -->
                 <div class="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none opacity-20">
                     <div class="absolute -top-24 -left-24 w-64 h-64 bg-blue-600 rounded-full blur-3xl"></div>
                     <div class="absolute bottom-0 right-0 w-64 h-64 bg-indigo-600 rounded-full blur-3xl"></div>
                 </div>
 
-                <div class="relative z-10">
-                    <div class="p-6 mb-2 flex items-center gap-3">
+                <!-- Header / Mobile Toggle -->
+                <div class="p-4 md:p-6 flex justify-between items-center relative z-20 flex-shrink-0">
+                    <div class="flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/20 ring-1 ring-white/10">
                             <i class="fa-solid fa-layer-group text-sm"></i>
                         </div>
@@ -1106,9 +1107,16 @@
                             <p class="text-[10px] font-medium text-slate-500 uppercase tracking-widest">v2.4.0</p>
                         </div>
                     </div>
-                    
-                    <nav class="px-3 space-y-1">
-                        <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 mt-4">Analytics</p>
+                    <!-- Mobile Hamburger -->
+                    <button onclick="toggleAdminMobileMenu()" class="md:hidden text-slate-400 hover:text-white transition p-2">
+                        <i class="fa-solid fa-bars text-lg" id="admin-mobile-icon"></i>
+                    </button>
+                </div>
+                
+                <!-- Collapsible Menu Content -->
+                <div id="admin-sidebar-menu" class="hidden md:flex flex-col justify-between flex-grow relative z-10 overflow-y-auto md:overflow-visible bg-slate-900/95 md:bg-transparent">
+                    <nav class="px-3 space-y-1 pb-4">
+                        <p class="px-3 text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 mt-2">Analytics</p>
                         <button onclick="switchAdminTab('dashboard')" id="tab-btn-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-bold transition-all text-white bg-blue-600 shadow-md border border-blue-500/50 group">
                             <i class="fa-solid fa-chart-pie w-5 text-center text-blue-200 group-hover:text-white transition-colors"></i> Dashboard
                         </button>
@@ -1127,12 +1135,12 @@
                             <i class="fa-solid fa-cube w-5 text-center group-hover:text-blue-400 transition-colors"></i> Content
                         </button>
                     </nav>
-                </div>
 
-                <div class="p-4 border-t border-slate-800 relative z-10 bg-slate-900/50 backdrop-blur-sm">
-                    <button id="close-admin-modal" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group border border-transparent hover:border-slate-700">
-                        <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Return to App
-                    </button>
+                    <div class="p-4 border-t border-slate-800 bg-slate-900/50 backdrop-blur-sm">
+                        <button id="close-admin-modal" class="w-full flex items-center gap-3 px-4 py-3 rounded-lg text-xs font-bold text-slate-400 hover:text-white hover:bg-white/5 transition-all group border border-transparent hover:border-slate-700">
+                            <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i> Return to App
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1145,7 +1153,7 @@
                 </div>
 
                 <!-- TAB 1: DASHBOARD (Analytics & Users) -->
-                <div id="admin-tab-dashboard" class="admin-tab-content h-full overflow-y-auto custom-scroll p-8">
+                <div id="admin-tab-dashboard" class="admin-tab-content h-full overflow-y-auto custom-scroll p-4 md:p-8">
                     
                     <!-- SaaS Header -->
                     <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end mb-8 gap-4">
@@ -1161,12 +1169,12 @@
                     </div>
                     
                     <!-- Analytics Cards (Widgets) -->
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3 md:gap-4 mb-8">
                         <!-- Total Users Card -->
-                        <div onclick="filterAdminUsers('all')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group active:scale-95">
+                        <div onclick="filterAdminUsers('all')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-blue-400 hover:shadow-md transition-all group active:scale-95">
                             <div class="flex justify-between items-start mb-4">
-                                <div class="w-10 h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
-                                    <i class="fa-solid fa-users text-lg"></i>
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-100">
+                                    <i class="fa-solid fa-users text-sm md:text-lg"></i>
                                 </div>
                                 <span class="bg-green-50 text-green-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
                                     <i class="fa-solid fa-arrow-trend-up"></i> 12%
@@ -1174,44 +1182,44 @@
                             </div>
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Total Users</p>
-                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-total">0</h3>
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-800 mt-1" id="stat-total">0</h3>
                             </div>
                         </div>
 
                         <!-- Pending Card -->
-                        <div onclick="filterAdminUsers('pending')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-yellow-400 hover:shadow-md transition-all group active:scale-95">
+                        <div onclick="filterAdminUsers('pending')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-yellow-400 hover:shadow-md transition-all group active:scale-95">
                             <div class="flex justify-between items-start mb-4">
-                                <div class="w-10 h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center border border-yellow-100">
-                                    <i class="fa-solid fa-clock text-lg"></i>
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center border border-yellow-100">
+                                    <i class="fa-solid fa-clock text-sm md:text-lg"></i>
                                 </div>
                                 <span class="bg-slate-50 text-slate-400 text-[10px] font-bold px-1.5 py-0.5 rounded-full">--</span>
                             </div>
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Pending</p>
-                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-pending">0</h3>
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-800 mt-1" id="stat-pending">0</h3>
                             </div>
                         </div>
 
                         <!-- Premium Card -->
-                        <div onclick="filterAdminUsers('premium')" class="bg-gradient-to-br from-slate-900 to-slate-800 p-5 rounded-xl border border-slate-700 shadow-lg cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all group active:scale-95 relative overflow-hidden">
+                        <div onclick="filterAdminUsers('premium')" class="bg-gradient-to-br from-slate-900 to-slate-800 p-4 md:p-5 rounded-xl border border-slate-700 shadow-lg cursor-pointer hover:shadow-xl hover:-translate-y-1 transition-all group active:scale-95 relative overflow-hidden">
                             <div class="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl"></div>
                             <div class="flex justify-between items-start mb-4 relative z-10">
-                                <div class="w-10 h-10 rounded-lg bg-white/10 text-yellow-400 flex items-center justify-center border border-white/5">
-                                    <i class="fa-solid fa-crown text-lg"></i>
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-white/10 text-yellow-400 flex items-center justify-center border border-white/5">
+                                    <i class="fa-solid fa-crown text-sm md:text-lg"></i>
                                 </div>
                                 <span class="bg-white/10 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full border border-white/5">Pro</span>
                             </div>
                             <div class="relative z-10">
                                 <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Premium</p>
-                                <h3 class="text-2xl font-bold text-white mt-1" id="stat-premium">0</h3>
+                                <h3 class="text-xl md:text-2xl font-bold text-white mt-1" id="stat-premium">0</h3>
                             </div>
                         </div>
 
                         <!-- Basic Card -->
-                        <div onclick="filterAdminUsers('basic')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-green-400 hover:shadow-md transition-all group active:scale-95">
+                        <div onclick="filterAdminUsers('basic')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-green-400 hover:shadow-md transition-all group active:scale-95">
                             <div class="flex justify-between items-start mb-4">
-                                <div class="w-10 h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100">
-                                    <i class="fa-solid fa-user-shield text-lg"></i>
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-green-50 text-green-600 flex items-center justify-center border border-green-100">
+                                    <i class="fa-solid fa-user-shield text-sm md:text-lg"></i>
                                 </div>
                                 <span class="bg-green-50 text-green-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full flex items-center gap-1">
                                     <i class="fa-solid fa-arrow-trend-up"></i> 5%
@@ -1219,27 +1227,28 @@
                             </div>
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Basic</p>
-                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-basic">0</h3>
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-800 mt-1" id="stat-basic">0</h3>
                             </div>
                         </div>
 
                         <!-- Expired Card -->
-                        <div onclick="filterAdminUsers('expired')" class="bg-white p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-red-400 hover:shadow-md transition-all group active:scale-95">
+                        <div onclick="filterAdminUsers('expired')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-red-400 hover:shadow-md transition-all group active:scale-95">
                             <div class="flex justify-between items-start mb-4">
-                                <div class="w-10 h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center border border-red-100">
-                                    <i class="fa-solid fa-calendar-xmark text-lg"></i>
+                                <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-red-50 text-red-600 flex items-center justify-center border border-red-100">
+                                    <i class="fa-solid fa-calendar-xmark text-sm md:text-lg"></i>
                                 </div>
                                 <span class="bg-red-50 text-red-600 text-[10px] font-bold px-1.5 py-0.5 rounded-full">Action</span>
                             </div>
                             <div>
                                 <p class="text-[10px] uppercase font-bold text-slate-400 tracking-wider">Expired</p>
-                                <h3 class="text-2xl font-bold text-slate-800 mt-1" id="stat-expired">0</h3>
+                                <h3 class="text-xl md:text-2xl font-bold text-slate-800 mt-1" id="stat-expired">0</h3>
                             </div>
                         </div>
                     </div>
 
                     <!-- Visual Distribution Bar (SaaS Style) -->
                     <div class="bg-white rounded-xl border border-slate-200 p-5 mb-8 shadow-sm">
+                        <!-- ... existing bar ... -->
                         <div class="flex justify-between items-end mb-3">
                             <div>
                                 <h4 class="text-sm font-bold text-slate-800">User Distribution</h4>
@@ -1284,8 +1293,8 @@
                             </div>
                         </div>
                         
-                        <div class="flex-grow overflow-y-auto custom-scroll relative">
-                            <table class="w-full text-left text-xs table-fixed">
+                        <div class="flex-grow overflow-auto custom-scroll relative">
+                            <table class="w-full text-left text-xs min-w-[600px] md:min-w-0 md:table-fixed">
                                 <thead class="bg-slate-50 sticky top-0 z-10 text-slate-500 font-bold uppercase tracking-wider shadow-sm">
                                     <tr>
                                         <th class="px-6 py-4 border-b border-slate-200 bg-slate-50 w-[30%]">User Profile</th>
@@ -4311,9 +4320,37 @@
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
              const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxh-eEX1ESB1WJMRBaEqCZ7MIJMf5c-wGdX0cquON0qZgcrmhWSXOmZe7eXsgsKYUISNw/exec"; 
              
+             // NEW: Mobile Menu Toggle Function
+             window.toggleAdminMobileMenu = function() {
+                 const menu = document.getElementById('admin-sidebar-menu');
+                 const icon = document.getElementById('admin-mobile-icon');
+                 if(!menu || !icon) return;
+                 
+                 if(menu.classList.contains('hidden')) {
+                     menu.classList.remove('hidden');
+                     icon.classList.remove('fa-bars');
+                     icon.classList.add('fa-xmark');
+                 } else {
+                     menu.classList.add('hidden');
+                     icon.classList.remove('fa-xmark');
+                     icon.classList.add('fa-bars');
+                 }
+             };
+
              // Tab Logic
              window.switchAdminTab = function(tabName) {
                  currentAdminTab = tabName; // Update active tab state
+
+                 // Auto-close Mobile Menu on Tab Switch
+                 const mobileMenu = document.getElementById('admin-sidebar-menu');
+                 const mobileIcon = document.getElementById('admin-mobile-icon');
+                 if(mobileMenu && !mobileMenu.classList.contains('hidden')) {
+                     mobileMenu.classList.add('hidden');
+                     if(mobileIcon) {
+                         mobileIcon.classList.remove('fa-xmark');
+                         mobileIcon.classList.add('fa-bars');
+                     }
+                 }
 
                  // Update Buttons
                  document.querySelectorAll('[id^="tab-btn-"]').forEach(btn => {
