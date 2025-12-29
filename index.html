@@ -2971,12 +2971,55 @@
             const container = document.getElementById('spotlight-content');
             if(!container) return; 
 
+            // ENHANCED: Lookup user details for better presentation
+            let role = 'Educator'; // Default title
+            // Generate avatar based on name (consistent color using name length or hash could be better, but random is fine for variety)
+            let avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(story.name)}&background=random&color=fff&bold=true&size=128`;
+            let badgeHtml = '';
+
+            try {
+                // Access the cached user list to find details about the storyteller
+                const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                const user = users.find(u => u.username.toLowerCase() === story.name.toLowerCase());
+                
+                if(user) {
+                    // Determine Role Label & Badge
+                    const r = user.role.toLowerCase();
+                    if(r === 'admin') {
+                        role = 'System Administrator';
+                        badgeHtml = '<span class="ml-2 inline-flex items-center gap-1 bg-slate-800 text-white text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border border-slate-700 shadow-sm"><i class="fa-solid fa-shield-halved text-[8px]"></i> Admin</span>';
+                    } else if (r.includes('paid')) {
+                        role = 'Premium Member';
+                        badgeHtml = '<span class="ml-2 inline-flex items-center gap-1 bg-yellow-100 text-yellow-700 text-[9px] px-2 py-0.5 rounded-full font-bold uppercase tracking-wider border border-yellow-200 shadow-sm"><i class="fa-solid fa-crown text-[8px]"></i> Pro</span>';
+                    } else if (r.includes('basic') || r.includes('local')) {
+                        role = 'Basic Member';
+                    }
+                }
+            } catch(e) {
+                console.warn("Could not load user details for spotlight", e);
+            }
+
+            // New Layout: Quote with Avatar Footer
             container.innerHTML = `
-                <div class="flex flex-col items-center text-center">
-                    <i class="fa-solid fa-quote-left text-4xl text-blue-100 mb-6 animate-pulse"></i>
-                    <p class="text-xl md:text-3xl text-slate-800 font-medium leading-relaxed tracking-tight mb-8">"${story.message}"</p>
-                    <div class="mt-2">
-                        <p class="text-base font-bold text-slate-900">${story.name}</p>
+                <div class="flex flex-col items-center text-center max-w-4xl mx-auto h-full justify-center">
+                    <div class="mb-6 relative">
+                        <div class="absolute -inset-4 bg-blue-50 rounded-full blur-lg opacity-50 animate-pulse"></div>
+                        <i class="fa-solid fa-quote-left text-5xl text-blue-200 relative z-10 transform -rotate-12"></i>
+                    </div>
+                    
+                    <p class="text-xl md:text-3xl text-slate-700 font-medium leading-relaxed tracking-tight mb-10 italic relative z-10 drop-shadow-sm">
+                        "${story.message}"
+                    </p>
+                    
+                    <div class="flex items-center gap-4 animate-fadeIn bg-white/50 backdrop-blur-sm px-6 py-3 rounded-full border border-slate-100 shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <img src="${avatarUrl}" alt="${story.name}" class="w-12 h-12 rounded-full shadow-md border-2 border-white ring-2 ring-blue-50 object-cover">
+                        <div class="text-left">
+                            <div class="flex items-center">
+                                <p class="text-sm font-bold text-slate-900">${story.name}</p>
+                                ${badgeHtml}
+                            </div>
+                            <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest text-deped-blue">${role}</p>
+                        </div>
                     </div>
                 </div>
             `;
