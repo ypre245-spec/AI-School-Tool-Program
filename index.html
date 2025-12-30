@@ -49,6 +49,7 @@
                         'spin-slow': 'spin 8s linear infinite',
                         'shake': 'shake 0.5s cubic-bezier(.36,.07,.19,.97) both',
                         'wiggle': 'wiggle 2s ease-in-out infinite',
+                        'pulse-glow': 'pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                     },
                     keyframes: {
                         float: {
@@ -67,6 +68,16 @@
                         wiggle: {
                             '0%, 100%': { transform: 'rotate(-3deg)' },
                             '50%': { transform: 'rotate(3deg)' },
+                        },
+                        'pulse-glow': {
+                            '0%, 100%': { 
+                                boxShadow: '0 0 0px rgba(250, 204, 21, 0)', 
+                                borderColor: '#e2e8f0' // slate-200
+                            },
+                            '50%': { 
+                                boxShadow: '0 0 20px rgba(250, 204, 21, 0.6)', 
+                                borderColor: '#facc15' // yellow-400
+                            },
                         }
                     }
                 }
@@ -1190,8 +1201,8 @@
                             </div>
                         </div>
 
-                        <!-- Pending Card -->
-                        <div onclick="filterAdminUsers('pending')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-yellow-400 hover:shadow-md transition-all group active:scale-95">
+                        <!-- Pending Card (Added ID for Glow Effect) -->
+                        <div id="card-pending" onclick="filterAdminUsers('pending')" class="bg-white p-4 md:p-5 rounded-xl border border-slate-200 shadow-[0_2px_10px_-4px_rgba(0,0,0,0.05)] cursor-pointer hover:border-yellow-400 hover:shadow-md transition-all group active:scale-95">
                             <div class="flex justify-between items-start mb-4">
                                 <div class="w-8 h-8 md:w-10 md:h-10 rounded-lg bg-yellow-50 text-yellow-600 flex items-center justify-center border border-yellow-100">
                                     <i class="fa-solid fa-clock text-sm md:text-lg"></i>
@@ -4531,6 +4542,9 @@
                      // Apply current filter on manual refresh too
                      const filtered = getFilteredUsers(users, currentAdminFilterType);
                      if(window.renderAdminUserList) window.renderAdminUserList(filtered);
+
+                     // FIXED: Check payments ONLY after users are refreshed to avoid false positives
+                     if(window.checkPaymentNotifications) window.checkPaymentNotifications();
                      
                  } catch(e) {
                      console.error(e);
@@ -4555,11 +4569,8 @@
                  if(window.renderAdminUserList) window.renderAdminUserList(users);
 
                  // Trigger a fresh fetch in background to ensure numbers are real-time
-                 // This handles the "13 vs 1" issue if cache was stale
+                 // Payment check moved inside refreshAdminData to ensure correct sequencing
                  refreshAdminData();
-                 
-                 // NEW: Check for pending payments to show badge
-                 checkPaymentNotifications();
 
                  // Show Modal
                  adminModal.classList.remove('hidden');
@@ -4599,6 +4610,20 @@
                  setStat('stat-basic', basic);
                  setStat('stat-premium', premium);
                  setStat('stat-expired', expired);
+
+                 // GLOW EFFECT LOGIC
+                 const pendingCard = document.getElementById('card-pending');
+                 if (pendingCard) {
+                     if (pending > 0) {
+                         // Add Breathing Glow
+                         pendingCard.classList.add('animate-pulse-glow', 'z-10');
+                         pendingCard.classList.remove('border-slate-200');
+                     } else {
+                         // Remove Glow
+                         pendingCard.classList.remove('animate-pulse-glow', 'z-10', 'ring-2', 'ring-yellow-400', 'shadow-[0_0_20px_rgba(250,204,21,0.3)]', 'border-yellow-400');
+                         pendingCard.classList.add('border-slate-200');
+                     }
+                 }
 
                  // Update Visual Distribution Bar
                  // Exclude Admin from distribution total so bars fill 100% of standard users
