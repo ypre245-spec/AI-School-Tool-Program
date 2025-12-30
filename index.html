@@ -5150,20 +5150,38 @@
 
                  // 3. Calculate Dates
                  const now = new Date();
-                 const expiry = new Date(now);
-                 expiry.setMonth(now.getMonth() + months);
+                 let baseDate = now;
+                 let isExtension = false;
+
+                 // Check for existing future expiration to extend
+                 const expInput = document.getElementById('edit-expiration-date');
+                 if (expInput && expInput.dataset.original) {
+                     const currentExp = new Date(expInput.dataset.original);
+                     // Only extend if the current expiration is valid and in the future
+                     if (!isNaN(currentExp.getTime()) && currentExp > now) {
+                         baseDate = currentExp;
+                         isExtension = true;
+                     }
+                 }
+
+                 const expiry = new Date(baseDate);
+                 expiry.setMonth(baseDate.getMonth() + months);
 
                  // Format for display and storage
-                 const startStr = now.toISOString();
+                 const startStr = now.toISOString(); // Transaction start is always now
                  const endStr = expiry.toISOString();
                  
                  const displayOpt = { year: 'numeric', month: 'short', day: 'numeric' };
 
                  document.getElementById('edit-start-date').value = startStr;
-                 document.getElementById('edit-expiration-date').value = endStr;
+                 expInput.value = endStr;
                  
                  document.getElementById('preview-start').innerText = now.toLocaleDateString('en-US', displayOpt);
-                 document.getElementById('preview-end').innerText = expiry.toLocaleDateString('en-US', displayOpt);
+                 
+                 const endDateStr = expiry.toLocaleDateString('en-US', displayOpt);
+                 const extLabel = isExtension ? " <span class='text-green-600 font-bold text-[9px] uppercase tracking-wide'>(Extended)</span>" : "";
+                 
+                 document.getElementById('preview-end').innerHTML = endDateStr + extLabel;
                  document.getElementById('date-preview').classList.remove('hidden');
              };
              
@@ -5179,7 +5197,16 @@
                  
                  // Reset Date Inputs
                  document.getElementById('edit-start-date').value = '';
-                 document.getElementById('edit-expiration-date').value = '';
+                 const expInput = document.getElementById('edit-expiration-date');
+                 expInput.value = '';
+                 
+                 // Store current expiration for extension logic
+                 if (user.expiration) {
+                     expInput.dataset.original = user.expiration;
+                 } else {
+                     delete expInput.dataset.original;
+                 }
+
                  document.getElementById('date-preview').classList.add('hidden');
                  document.querySelectorAll('.duration-btn').forEach(btn => {
                      btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
