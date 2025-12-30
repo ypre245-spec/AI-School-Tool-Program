@@ -366,6 +366,10 @@
                             <a href="#" id="admin-panel-link" class="hidden flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition">
                                 <i class="fa-solid fa-gauge-high text-slate-400"></i> Admin Dashboard
                             </a>
+                            <!-- NEW: Change Password Button -->
+                            <button id="nav-change-pass-btn" class="w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-slate-700 hover:bg-slate-50 transition border-t border-slate-50">
+                                <i class="fa-solid fa-lock text-slate-400"></i> Change Password
+                            </button>
                             <button id="btn-logout" class="w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-red-600 hover:bg-red-50 transition border-t border-slate-50">
                                 <i class="fa-solid fa-right-from-bracket"></i> Log Out
                             </button>
@@ -1047,53 +1051,31 @@
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Amount Paid</label>
                             <div class="relative">
                                 <i class="fa-solid fa-peso-sign absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="number" id="sub-amount" name="entry.629546664" required placeholder="100" value="100"
+                                <input type="number" id="sub-amount" name="entry.233589632" required placeholder="100" min="1"
                                     class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-yellow-500 transition-colors">
                             </div>
                         </div>
 
-                        <!-- Date of Payment (Visual Only) -->
-                        <div class="space-y-1">
-                            <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Date of Payment</label>
-                            <div class="relative">
-                                <i class="fa-solid fa-calendar-days absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="date" id="sub-date"
-                                    class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-yellow-500 transition-colors text-slate-600">
-                            </div>
-                            <p class="text-[10px] text-slate-400 mt-1 italic">Optional.</p>
-                        </div>
-
-                        <!-- UPDATED BUTTON LAYOUT -->
-                        <div class="mt-6 space-y-4 pt-2">
-                            <!-- Direct Submit (Primary) -->
-                            <button type="submit" id="btn-sub-submit" class="w-full bg-deped-blue hover:bg-blue-800 text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 group ring-1 ring-blue-700/20">
-                                <span>Submit Payment Verification</span>
-                                <i class="fa-solid fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
-                            </button>
-
-                            <div class="relative flex py-1 items-center">
-                                <div class="flex-grow border-t border-slate-200"></div>
-                                <span class="flex-shrink-0 mx-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest">Or</span>
-                                <div class="flex-grow border-t border-slate-200"></div>
-                            </div>
-
-                            <!-- Fallback Link (Secondary) -->
-                            <a id="backup-form-link" href="https://www.facebook.com/y2k2009/" target="_blank" class="w-full bg-white border-2 border-slate-100 text-slate-500 hover:text-blue-600 hover:border-blue-200 hover:bg-blue-50 font-bold py-3 rounded-xl transition flex items-center justify-center gap-2 text-xs group">
-                                <i class="fa-brands fa-facebook-messenger text-lg group-hover:scale-110 transition-transform"></i>
-                                <span>Contact Admin for Help</span>
-                            </a>
-                        </div>
+                        <button type="submit" id="btn-sub-submit" class="w-full mt-4 bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-500 hover:to-yellow-600 text-white font-bold py-3.5 rounded-xl transition shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                            <span>Submit Verification Request</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </button>
                     </form>
                 </div>
 
-                <!-- Success State -->
-                <div id="sub-success" class="hidden text-center py-4 animate-fadeIn">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 text-green-500 text-3xl">
+                <!-- Success Message -->
+                <div id="sub-success" class="hidden flex-col items-center justify-center text-center py-8 animate-fadeIn">
+                    <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mb-6 text-green-600 text-4xl shadow-sm border border-green-200">
                         <i class="fa-solid fa-check"></i>
                     </div>
-                    <h4 class="text-lg font-bold text-slate-800">Request Sent!</h4>
-                    <p class="text-sm text-slate-500 mt-2 mb-6">Your verification request has been submitted. Please wait for admin approval (usually 24-48 hours).</p>
-                    <button id="btn-sub-close" class="px-6 py-2 bg-slate-100 text-slate-700 font-bold rounded-lg hover:bg-slate-200 transition">Close</button>
+                    <h3 class="text-2xl font-bold text-slate-800 mb-2">Request Sent!</h3>
+                    <p class="text-slate-600 text-sm mb-8 leading-relaxed max-w-xs mx-auto">
+                        Your payment verification has been submitted.<br>
+                        Admin will review your request shortly. Access is usually granted within 24 hours.
+                    </p>
+                    <button id="btn-sub-close" class="bg-slate-100 text-slate-700 font-bold py-3 px-8 rounded-xl hover:bg-slate-200 transition text-sm">
+                        Close
+                    </button>
                 </div>
             </div>
         </div>
@@ -4254,6 +4236,68 @@
              if(logoutBtn) logoutBtn.addEventListener('click', handleLogout);
              if(mobileLogoutBtn) mobileLogoutBtn.addEventListener('click', handleLogout);
 
+             // --- CHANGE PASSWORD LOGIC (REDIRECT TO SECURITY QUESTION) ---
+             const cpBtn = document.getElementById('nav-change-pass-btn');
+             
+             if(cpBtn) {
+                 cpBtn.addEventListener('click', async () => {
+                     // Close user dropdown
+                     const ud = document.getElementById('user-dropdown');
+                     const icon = document.getElementById('user-menu-icon');
+                     if(ud) {
+                        ud.classList.add('opacity-0', 'scale-95', 'pointer-events-none');
+                        ud.classList.remove('opacity-100', 'scale-100', 'pointer-events-auto');
+                        if(icon) icon.classList.remove('rotate-180');
+                     }
+                     
+                     const session = getSession();
+                     if(!session) {
+                         toggleLoginModal(true);
+                         return;
+                     }
+
+                     // Open Recovery Modal (Resets state)
+                     openForgotModal();
+                     
+                     // Retrieve fresh user data to ensure question is loaded
+                     let users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                     let user = users.find(u => u.username.toLowerCase() === session.username.toLowerCase());
+                     
+                     // If cache miss (rare while logged in), fetch
+                     if (!user) {
+                         const loadingIcon = cpBtn.querySelector('i');
+                         if(loadingIcon) loadingIcon.className = "fa-solid fa-circle-notch fa-spin text-slate-400";
+                         users = await fetchUsers();
+                         user = users.find(u => u.username.toLowerCase() === session.username.toLowerCase());
+                         if(loadingIcon) loadingIcon.className = "fa-solid fa-lock text-slate-400";
+                     }
+
+                     if (user && user.question && user.answer) {
+                         // --- BYPASS STEP 1 -> JUMP TO SECURITY QUESTION ---
+                         resetTargetUser = user;
+                         
+                         // Set Question
+                         const qDisplay = document.getElementById('fp-question-display');
+                         if(qDisplay) qDisplay.innerText = user.question;
+                         
+                         // Toggle Views
+                         document.getElementById('fp-step-1').classList.add('hidden');
+                         document.getElementById('fp-step-2').classList.remove('hidden');
+                         document.getElementById('fp-step-2').classList.add('animate-fadeIn');
+                     } else {
+                         // Fallback: Show Step 1 but pre-fill username
+                         const fpUser = document.getElementById('fp-username');
+                         if(fpUser) fpUser.value = session.username;
+                         
+                         const err = document.getElementById('fp-error-1');
+                         if(err) {
+                             err.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> Security question not found.';
+                             err.classList.remove('hidden');
+                         }
+                     }
+                 });
+             }
+
              const userMenuBtn = document.getElementById('user-menu-btn');
              const userDropdown = document.getElementById('user-dropdown');
              const userMenuIcon = document.getElementById('user-menu-icon');
@@ -4443,7 +4487,7 @@
              let currentAdminTab = 'dashboard';
 
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxh-eEX1ESB1WJMRBaEqCZ7MIJMf5c-wGdX0cquON0qZgcrmhWSXOmZe7eXsgsKYUISNw/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8P49OJKqO_hNsrIyP8YYtSHWfM_MrtckRviwdyYfctRee7MHeYoSWptyTSzlsmjDhOw/exec"; 
              
              // NEW: Mobile Menu Toggle Function
              window.toggleAdminMobileMenu = function() {
