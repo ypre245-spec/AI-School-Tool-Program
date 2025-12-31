@@ -983,9 +983,22 @@
             <div class="p-8 overflow-y-auto custom-scroll">
                 <!-- Content -->
                 <div id="sub-content">
-                    <p class="text-sm text-slate-600 mb-4 leading-relaxed text-center">
+                    <p id="sub-intro-text" class="text-sm text-slate-600 mb-4 leading-relaxed text-center">
                         Submit a verification request to upgrade your account.
                     </p>
+
+                    <!-- NEW: Renewal Info Panel (Hidden by default) -->
+                    <div id="sub-renewal-panel" class="hidden mb-6 bg-blue-50 border border-blue-100 rounded-xl p-4 flex items-center justify-between shadow-sm">
+                        <div>
+                            <p class="text-[10px] font-bold text-blue-500 uppercase tracking-wider mb-0.5">Current Expiration</p>
+                            <p id="sub-current-expiry" class="text-sm font-bold text-slate-700 font-mono">--</p>
+                        </div>
+                        <div class="text-right">
+                            <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold uppercase tracking-wide">
+                                <i class="fa-solid fa-clock-rotate-left"></i> Extending
+                            </span>
+                        </div>
+                    </div>
 
                     <!-- NEW: Pricing Banner -->
                     <div class="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 rounded-xl p-4 mb-6 text-center shadow-sm relative overflow-hidden">
@@ -1051,7 +1064,7 @@
                             <label class="text-xs font-bold text-slate-500 uppercase tracking-wide">Amount Paid</label>
                             <div class="relative">
                                 <i class="fa-solid fa-peso-sign absolute left-3 top-3.5 text-slate-400 text-sm"></i>
-                                <input type="number" id="sub-amount" name="entry.233589632" required placeholder="200" value="200" min="1"
+                                <input type="number" id="sub-amount" name="entry.629546664" required placeholder="200" value="200" min="1"
                                     class="w-full pl-10 pr-4 py-3 bg-white border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-yellow-500 transition-colors">
                             </div>
                         </div>
@@ -2228,6 +2241,9 @@
         let lastConfigHash = "";
         let lastAppsHash = ""; 
         let lastStoryCount = 0; 
+        
+        // NEW: Global Polling Control
+        let isPollingPaused = false;
 
         async function fetchStories(forceRefresh = false) {
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
@@ -3281,10 +3297,19 @@
         async function fetchUsers() {
              const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
              const sheetName = 'USERS';
-             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}`;
+             // FIX: Added Math.random() to force stronger cache busting
+             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}_${Math.random()}`;
 
              try {
                  const response = await fetch(url);
+                 
+                 // CRITICAL FIX: If polling was paused while we were fetching (e.g. user clicked save),
+                 // discard this stale data so we don't overwrite the optimistic UI update.
+                 if (isPollingPaused) {
+                     console.log("Background fetch ignored due to active edit.");
+                     return [];
+                 }
+
                  const text = await response.text();
                  const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
                  if (jsonMatch && jsonMatch[1]) {
@@ -3330,26 +3355,33 @@
                          let expirationStr = null;
                          let startDateStr = null;
 
+                         // FIX: Robust Date Parsing for Subscription Dates (Matches Payment Logic)
+                         const parseRobust = (cell) => {
+                             if (!cell) return null;
+                             let d = null;
+                             if (cell.f) d = parseGvizDate(cell.f);
+                             if ((!d || isNaN(d.getTime())) && cell.v) d = parseGvizDate(cell.v);
+                             return d;
+                         };
+
                          // Get Subscription Dates
                          if (row.c[SHEET_COLUMNS.START_DATE]) {
-                             let sDate = parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].v) || (row.c[SHEET_COLUMNS.START_DATE].f ? parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].f) : null);
+                             let sDate = parseRobust(row.c[SHEET_COLUMNS.START_DATE]);
                              if(sDate) startDateStr = sDate.toISOString();
                          }
 
                          // Handle Expiration logic for Paid Users
                          if (row.c[SHEET_COLUMNS.EXPIRATION]) {
-                             let expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].v);
-                             if (!expDate && row.c[SHEET_COLUMNS.EXPIRATION].f) expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].f);
+                             let expDate = parseRobust(row.c[SHEET_COLUMNS.EXPIRATION]);
                              
                              if (expDate) {
                                  expirationStr = expDate.toISOString();
                                  const now = new Date();
-                                 now.setHours(0,0,0,0);
-                                 
                                  // Auto-downgrade logic (Visual only until sheet update)
+                                 // Note: We check specifically for time expiration now
                                  if (role.toLowerCase() === 'paid user' && expDate < now) {
-                                     role = 'Basic User';
-                                     console.log(`User ${username} expired on ${expDate.toDateString()}. Downgrading.`);
+                                     // Don't auto-downgrade locally instantly to give buffer, 
+                                     // but visually we might show expired. For now keep role from sheet.
                                  }
                              }
                          }
@@ -3371,68 +3403,111 @@
                      localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(users));
 
                      // --- NEW: Force Chat Re-render on User Update ---
-                     // This fixes the issue where roles reset to "normal" because the chat loaded 
-                     // before the user list was ready.
                      const currentUserHash = JSON.stringify(users.map(u => ({u: u.username, r: u.role}))); 
                      const lastUserHash = localStorage.getItem('ai_school_users_hash_v1');
                      
                      if (currentUserHash !== lastUserHash) {
                          localStorage.setItem('ai_school_users_hash_v1', currentUserHash);
-                         // Invalidate stories hash to ensure render method proceeds
                          if(typeof lastStoriesHash !== 'undefined') lastStoriesHash = ""; 
                          if(typeof fetchStories === 'function') fetchStories(false);
                      }
-                     // ------------------------------------------------
 
-                     const session = localStorage.getItem('ai_school_session');
-                     if (session) {
-                         const currentSession = JSON.parse(session);
+                     // --- SYNC SESSION LOGIC (Aggressive Update for Standard Users) ---
+                     let rawSession = localStorage.getItem('ai_school_session');
+                     let storageType = 'local';
+                     
+                     if (!rawSession) {
+                         rawSession = sessionStorage.getItem('ai_school_session');
+                         storageType = 'session';
+                     }
+
+                     if (rawSession) {
+                         const currentSession = JSON.parse(rawSession);
+                         // Find the user in the fresh data (case-insensitive)
                          const updatedUser = users.find(u => u.username.toLowerCase() === currentSession.username.toLowerCase());
                          
                          if (!updatedUser) {
                              console.warn('Session invalid: User not found in database.');
-                             localStorage.removeItem('ai_school_session');
-                             localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
-                             if (typeof updateAuthUI === 'function') updateAuthUI();
+                             if (currentSession.role !== 'admin') { 
+                                 localStorage.removeItem('ai_school_session');
+                                 sessionStorage.removeItem('ai_school_session');
+                                 localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
+                                 if (typeof updateAuthUI === 'function') updateAuthUI();
+                             }
                          } else {
-                             // Sync Role/Expiration
-                             if (updatedUser.role !== currentSession.role || updatedUser.expiration !== currentSession.expiration) {
-                                 console.log(`User sync: Status update detected for ${updatedUser.username}`);
-                                 currentSession.role = updatedUser.role;
-                                 currentSession.expiration = updatedUser.expiration; 
-                                 localStorage.setItem('ai_school_session', JSON.stringify(currentSession));
-                                 if (typeof updateAuthUI === 'function') updateAuthUI(currentSession);
+                             // Detect Changes
+                             const oldRole = (currentSession.role || "").trim();
+                             const newRole = (updatedUser.role || "").trim();
+                             const oldExp = (currentSession.expiration || "").trim();
+                             const newExp = (updatedUser.expiration || "").trim();
+                             // FIX: Also track start date for complete sync
+                             const oldStart = (currentSession.start || "").trim();
+                             const newStart = (updatedUser.start || "").trim();
+                             
+                             // Check for ANY mismatch
+                             if (newRole !== oldRole || newExp !== oldExp || newStart !== oldStart) {
+                                 console.log(`User sync: Account updated to [${newRole}]`);
+                                 
+                                 // Update Session Object
+                                 currentSession.role = newRole;
+                                 currentSession.expiration = newExp;
+                                 currentSession.start = newStart; // Sync start date
+                                 
+                                 // Save back to storage
+                                 if (storageType === 'local') {
+                                     localStorage.setItem('ai_school_session', JSON.stringify(currentSession));
+                                 } else {
+                                     sessionStorage.setItem('ai_school_session', JSON.stringify(currentSession));
+                                 }
+                                 
+                                 // Force UI Update Immediately
+                                 if (typeof updateAuthUI === 'function') {
+                                     updateAuthUI(currentSession);
+                                     // Also force app list refresh since role changed
+                                     if (typeof fetchApps === 'function') fetchApps();
+                                     
+                                     // Visual Feedback: Flash the Profile Button
+                                     const profileBtn = document.getElementById('user-menu-btn');
+                                     if(profileBtn) {
+                                         profileBtn.classList.add('ring-4', 'ring-green-400', 'scale-105');
+                                         setTimeout(() => profileBtn.classList.remove('ring-4', 'ring-green-400', 'scale-105'), 800);
+                                     }
+
+                                     // Show Toast Notification
+                                     const toast = document.createElement('div');
+                                     toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[300] flex items-center gap-3 animate-bounce transition-all duration-500';
+                                     toast.innerHTML = `<i class="fa-solid fa-circle-check text-green-400"></i> <span class="text-xs font-bold">Account Updated</span>`;
+                                     document.body.appendChild(toast);
+                                     setTimeout(() => {
+                                         toast.classList.add('opacity-0', 'translate-y-10');
+                                         setTimeout(() => toast.remove(), 500);
+                                     }, 3000);
+                                 }
                              }
 
-                             // NEW: Sync Message Timestamp Logic
-                             // If the message content from DB is different from what we have cached, update timestamp
+                             // Sync Personal Message Timestamp
                              if (updatedUser.message) {
                                  const cachedMsg = localStorage.getItem('personal_msg_content');
-                                 // Simple check. In a real app we'd use IDs. Here, if text changes, it's new.
                                  if (cachedMsg !== updatedUser.message) {
                                      localStorage.setItem('personal_msg_content', updatedUser.message);
                                      localStorage.setItem('personal_msg_ts', new Date().toISOString());
+                                     if(window.showNotification) window.showNotification();
                                  }
                              }
                          }
                      }
                      
-                     // --- NEW: Live Update Admin Dashboard if it is Open ---
+                     // --- Live Update Admin Dashboard if it is Open ---
                      const adminModal = document.getElementById('admin-modal');
                      if (adminModal && !adminModal.classList.contains('hidden')) {
-                         
-                         // Use window-attached function to ensure scope access
                          if(window.updateAdminStats) window.updateAdminStats(users);
                          
-                         // Only re-render list if search is empty to avoid interrupting typing
                          const searchInput = document.getElementById('admin-search');
                          if (searchInput && searchInput.value === '') {
-                             // CRITICAL FIX: Respect the current active filter
                              const filteredUsers = getFilteredUsers(users, currentAdminFilterType);
                              if(window.renderAdminUserList) window.renderAdminUserList(filteredUsers);
                          }
                      }
-                     // -----------------------------------------------------
 
                      showNotification();
                      return users;
@@ -3520,8 +3595,11 @@
              fetchApps();    
              
              setInterval(() => {
-                 fetchUsers();       
-                 fetchSystemConfig(); 
+                 // UPDATED: Only fetch if not paused by an active edit
+                 if (!isPollingPaused) {
+                     fetchUsers();       
+                     fetchSystemConfig(); 
+                 }
              }, 6000);
 
              setInterval(() => {
@@ -3977,6 +4055,16 @@
                  const navSubBtn = document.getElementById('nav-subscribe-btn');
                  const mobSubBtn = document.getElementById('mobile-subscribe-btn');
 
+                 // Reset Buttons (Clean slate)
+                 if(navSubBtn) {
+                     navSubBtn.classList.add('hidden');
+                     navSubBtn.onclick = null;
+                 }
+                 if(mobSubBtn) {
+                     mobSubBtn.classList.add('hidden');
+                     mobSubBtn.onclick = null;
+                 }
+
                  if (user) {
                      if(communitySection) communitySection.classList.remove('hidden');
                      if(navCommunityDesktop) navCommunityDesktop.classList.remove('hidden', 'md:hidden');
@@ -4014,23 +4102,29 @@
                      
                      const roleLower = user.role ? user.role.trim().toLowerCase() : '';
                      
+                     // Role Logic - Order matters! Check Paid/Admin first
                      if (roleLower === 'admin') {
                          roleLabel = 'Administrator';
                          menuValidity = 'System Access';
-                         if(navSubBtn) navSubBtn.classList.add('hidden'); // Admin don't need sub
-                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
-                     } else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
-                         roleLabel = 'Basic User';
-                         menuValidity = 'Standard Access';
-                         if(navSubBtn) navSubBtn.classList.remove('hidden'); // Show Upgrade
-                         if(mobSubBtn) mobSubBtn.classList.remove('hidden');
-                         // Add click listeners to these
-                         navSubBtn.onclick = openSubscriptionModal;
-                         mobSubBtn.onclick = openSubscriptionModal;
-                     } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
+                     } 
+                     else if (roleLower === 'paid user' || roleLower.includes('paid')) {
                          roleLabel = 'Premium Member';
-                         if(navSubBtn) navSubBtn.classList.add('hidden'); // Already paid
-                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
+                         
+                         // Show Extend Button for Paid Users
+                         if(navSubBtn) {
+                             navSubBtn.classList.remove('hidden');
+                             navSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Extend Subscription';
+                             navSubBtn.className = "w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition border-b border-slate-50 font-bold";
+                             navSubBtn.onclick = window.openSubscriptionModal;
+                         }
+                         if(mobSubBtn) {
+                             mobSubBtn.classList.remove('hidden');
+                             mobSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i> Extend Subscription';
+                             mobSubBtn.classList.remove('text-yellow-300');
+                             mobSubBtn.classList.add('text-blue-200');
+                             mobSubBtn.onclick = window.openSubscriptionModal;
+                         }
+
                          if (user.expiration) {
                              try {
                                  const expDate = new Date(user.expiration);
@@ -4041,11 +4135,28 @@
                          } else {
                              menuValidity = 'Active Membership';
                          }
+                     } 
+                     else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
+                         roleLabel = 'Basic User';
+                         menuValidity = 'Standard Access';
+                         
+                         // Show Upgrade Button
+                         if(navSubBtn) {
+                             navSubBtn.classList.remove('hidden');
+                             navSubBtn.innerHTML = '<i class="fa-solid fa-crown"></i> Upgrade Plan';
+                             navSubBtn.className = "w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition border-b border-slate-50 font-bold";
+                             navSubBtn.onclick = window.openSubscriptionModal;
+                         }
+                         if(mobSubBtn) {
+                             mobSubBtn.classList.remove('hidden');
+                             mobSubBtn.innerHTML = '<i class="fa-solid fa-crown mr-2"></i> Upgrade Plan';
+                             mobSubBtn.classList.remove('text-blue-200');
+                             mobSubBtn.classList.add('text-yellow-300');
+                             mobSubBtn.onclick = window.openSubscriptionModal;
+                         }
                      } else {
                          roleLabel = user.role && user.role.length > 1 ? user.role : 'New User';
                          menuValidity = 'Pending Verification';
-                         if(navSubBtn) navSubBtn.classList.add('hidden');
-                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
                      }
 
                      const roleDisplayBtn = document.getElementById('user-role-display');
@@ -4424,6 +4535,36 @@
                  if(subContent) subContent.classList.remove('hidden');
                  if(subSuccess) subSuccess.classList.add('hidden');
 
+                 // RENEWAL LOGIC START
+                 const renewalPanel = document.getElementById('sub-renewal-panel');
+                 const expiryDisplay = document.getElementById('sub-current-expiry');
+                 const introText = document.getElementById('sub-intro-text');
+                 
+                 // Modal Headers (if you want to change them dynamically)
+                 const headerTitle = subModal.querySelector('h3');
+                 const headerSub = subModal.querySelector('p.text-yellow-50');
+
+                 // Default State
+                 if(renewalPanel) renewalPanel.classList.add('hidden');
+                 if(introText) introText.innerText = "Submit a verification request to upgrade your account.";
+                 if(headerTitle) headerTitle.innerText = "Unlock Premium";
+                 if(headerSub) headerSub.innerText = "Verify your account for full access";
+
+                 // Check if user is Paid/Active and has expiration
+                 if (user.role && user.role.toLowerCase().includes('paid') && user.expiration) {
+                     const expDate = new Date(user.expiration);
+                     // Check if valid date
+                     if (!isNaN(expDate.getTime())) {
+                         if(renewalPanel) renewalPanel.classList.remove('hidden');
+                         if(expiryDisplay) expiryDisplay.innerText = expDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                         
+                         if(introText) introText.innerText = "Add more time to your current subscription.";
+                         if(headerTitle) headerTitle.innerText = "Extend Access";
+                         if(headerSub) headerSub.innerText = "Keep your premium features active";
+                     }
+                 }
+                 // RENEWAL LOGIC END
+
                  subModal.classList.remove('hidden');
                  setTimeout(() => {
                      subModal.classList.remove('opacity-0');
@@ -4800,27 +4941,41 @@
                          roleBadge = '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider bg-purple-100 text-purple-700 border border-purple-200 shadow-sm"><i class="fa-solid fa-crown"></i> Premium</span>'; 
                          statusDot = 'bg-green-500';
                          
-                         // Date Formatting
-                         const start = u.start ? new Date(u.start).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : 'N/A';
-                         const end = u.expiration ? new Date(u.expiration).toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'}) : 'N/A';
+                         // Date Formatting (Includes Time now)
+                         const dateOpt = {month:'short', day:'numeric', year:'numeric', hour:'numeric', minute:'2-digit'};
+                         const start = u.start ? new Date(u.start).toLocaleDateString('en-US', dateOpt) : 'N/A';
+                         const end = u.expiration ? new Date(u.expiration).toLocaleDateString('en-US', dateOpt) : 'N/A';
                          
-                         // Calculate days left
+                         // Calculate time left (Smart Logic)
                          let daysLeftHTML = '';
                          if(u.expiration) {
-                             const days = Math.ceil((new Date(u.expiration) - new Date()) / (1000 * 60 * 60 * 24));
-                             if(days < 0) daysLeftHTML = `<span class="text-red-500 font-bold ml-1">(Expired)</span>`;
-                             else daysLeftHTML = `<span class="text-green-600 font-bold ml-1">(${days} days left)</span>`;
+                             const diffMs = new Date(u.expiration) - new Date();
+                             const diffHrs = diffMs / (1000 * 60 * 60);
+                             const diffDays = diffMs / (1000 * 60 * 60 * 24);
+
+                             if (diffMs < 0) {
+                                 daysLeftHTML = `<span class="text-red-500 font-bold ml-1 text-[9px] uppercase">(Expired)</span>`;
+                             } else if (diffHrs < 24) {
+                                 // Show hours if less than a day
+                                 const h = Math.floor(diffHrs);
+                                 const m = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                                 daysLeftHTML = `<span class="text-orange-500 font-bold ml-1 text-[9px] uppercase">(${h}h ${m}m left)</span>`;
+                             } else {
+                                 // Show days
+                                 const d = Math.ceil(diffDays);
+                                 daysLeftHTML = `<span class="text-green-600 font-bold ml-1 text-[9px] uppercase">(${d} days left)</span>`;
+                             }
                          }
 
                          subDetails = `
                             <div class="flex flex-col gap-1.5 text-[10px]">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center"><i class="fa-solid fa-calendar-check"></i></div>
-                                    <span class="text-slate-500">Start: <span class="font-bold text-slate-700">${start}</span></span>
+                                    <div class="w-5 h-5 rounded bg-green-50 text-green-600 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-calendar-check"></i></div>
+                                    <span class="text-slate-500 truncate">Start: <span class="font-bold text-slate-700">${start}</span></span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <div class="w-5 h-5 rounded bg-red-50 text-red-500 flex items-center justify-center"><i class="fa-solid fa-flag-checkered"></i></div>
-                                    <span class="text-slate-500">End: <span class="font-bold text-slate-700">${end}</span> ${daysLeftHTML}</span>
+                                    <div class="w-5 h-5 rounded bg-red-50 text-red-500 flex items-center justify-center flex-shrink-0"><i class="fa-solid fa-flag-checkered"></i></div>
+                                    <span class="text-slate-500 truncate">End: <span class="font-bold text-slate-700">${end}</span> ${daysLeftHTML}</span>
                                 </div>
                             </div>
                          `;
@@ -4878,19 +5033,12 @@
                  
                  listBody.innerHTML = '';
                  const searchLower = filter.toLowerCase();
-                 // Normalize for flexible Ref No search (remove spaces)
                  const searchRefNormalized = searchLower.replace(/\s+/g, '');
                  
                  const filtered = paymentDataCache.filter(p => {
-                     // 1. Standard Name Search (Username/Fullname) - Respects spaces
                      const nameMatch = p.username.toLowerCase().includes(searchLower) || 
                                        p.fullName.toLowerCase().includes(searchLower);
-                                       
-                     // 2. Flexible Ref No Search - Ignores spaces
-                     // Remove all spaces from the stored Reference Number for comparison
                      const refRaw = p.refNo.toLowerCase().replace(/\s+/g, '');
-                     
-                     // Prevent match on empty normalized string unless input was truly empty
                      const refMatch = (searchRefNormalized.length > 0 || searchLower.length === 0) && refRaw.includes(searchRefNormalized);
                      
                      return nameMatch || refMatch;
@@ -4898,7 +5046,7 @@
 
                  if (filtered.length === 0) {
                      if (paymentDataCache.length === 0) {
-                         listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No payment requests found.</td></tr>';
+                         listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No pending payments found.</td></tr>';
                      } else {
                          listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400">No matches found.</td></tr>';
                      }
@@ -4906,11 +5054,10 @@
                  }
 
                  filtered.forEach(p => {
-                     // Date Formatting Logic for 2-Row Layout
+                     // Date Formatting Logic
                      let dateDisplay = p.timestamp;
                      let timeDisplay = '';
                      
-                     // Attempt to split common formats like "12/25/2025, 2:30 PM"
                      if (p.timestamp.includes(',')) {
                          const parts = p.timestamp.split(',');
                          dateDisplay = parts[0].trim();
@@ -4920,12 +5067,17 @@
                          dateDisplay = parts[0].trim();
                          timeDisplay = parts[1].trim();
                      } else {
-                         // Fallback: try splitting by first space if format is "YYYY-MM-DD HH:MM"
                          const parts = p.timestamp.split(' ');
                          if(parts.length > 1) {
                              dateDisplay = parts[0];
                              timeDisplay = parts.slice(1).join(' ');
                          }
+                     }
+
+                     // Renewal Tag Logic
+                     let statusTag = '<span class="bg-green-100 text-green-700 text-[9px] font-bold px-1.5 py-0.5 rounded border border-green-200 uppercase tracking-wide">New</span>';
+                     if (p.isRenewal) {
+                         statusTag = '<span class="bg-purple-100 text-purple-700 text-[9px] font-bold px-1.5 py-0.5 rounded border border-purple-200 uppercase tracking-wide flex items-center gap-1 w-fit"><i class="fa-solid fa-arrows-rotate"></i> Renewal</span>';
                      }
 
                      const tr = document.createElement('tr');
@@ -4943,7 +5095,10 @@
                                     ${p.username.charAt(0).toUpperCase()}
                                 </div>
                                 <div class="min-w-0">
-                                    <p class="font-bold text-slate-800 text-sm truncate">${p.fullName}</p>
+                                    <div class="flex items-center gap-2">
+                                        <p class="font-bold text-slate-800 text-sm truncate">${p.fullName}</p>
+                                        ${statusTag}
+                                    </div>
                                     <p class="text-xs text-slate-500 font-medium truncate">@${p.username}</p>
                                 </div>
                             </div>
@@ -4971,7 +5126,6 @@
                      listBody.appendChild(tr);
                  });
                  
-                 // Update badge based on TOTAL pending
                  const badge = document.getElementById('payment-badge');
                  if (badge) {
                      const count = paymentDataCache.length;
@@ -4985,13 +5139,12 @@
                 const listBody = document.getElementById('admin-payment-list');
                 if(!listBody) return;
                 
-                // Only show loading if cache is empty
                 if(paymentDataCache.length === 0) {
                     listBody.innerHTML = '<tr><td colspan="5" class="px-6 py-8 text-center text-slate-400"><i class="fa-solid fa-circle-notch fa-spin mr-2"></i>Fetching payment records...</td></tr>';
                 }
 
                 const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
-                const sheetName = 'Form Responses 4'; // Target Sheet
+                const sheetName = 'Form Responses 4';
                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
 
                 try {
@@ -5004,48 +5157,101 @@
                         const rows = json.table?.rows || [];
                         const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
 
-                        paymentDataCache = []; // Clear cache
+                        paymentDataCache = [];
                         
-                        // Iterate in reverse to show newest first
                         [...rows].reverse().forEach(row => {
                             if (!row.c) return;
 
                             const tsCell = row.c[0];
                             const userCell = row.c[1];
-                            const refCell = row.c[3]; // Column D
-                            const amtCell = row.c[6]; // Column G
+                            const refCell = row.c[3];
+                            const amtCell = row.c[6];
 
                             if (!userCell || !userCell.v) return;
 
                             const username = String(userCell.v).trim();
-                            const timestamp = tsCell ? (tsCell.f || parseGvizDate(tsCell.v)?.toLocaleString() || 'Unknown') : 'Unknown';
-                            const refNo = refCell ? String(refCell.v) : '---';
-                            const amount = amtCell ? String(amtCell.v) : '---';
-
-                            const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
                             
-                            // FILTER: Hide Active Paid Users & Admins
-                            if (userMatch) {
-                                const role = userMatch.role.toLowerCase();
-                                const now = new Date();
-                                if (role === 'admin') return;
-                                if (role.includes('paid')) {
-                                    if (userMatch.expiration) {
-                                        const expDate = new Date(userMatch.expiration);
-                                        if (expDate > now) return; 
-                                    } else {
-                                        return;
+                            // --- DATE PARSING FIX ---
+                            let payDateObj = null;
+                            let timestampStr = "Unknown";
+                            
+                            if (tsCell) {
+                                // Try parsing the formatted string (f) first using robust parser
+                                if (tsCell.f) {
+                                    timestampStr = tsCell.f;
+                                    payDateObj = parseGvizDate(tsCell.f);
+                                }
+                                // If that failed or didn't exist, try the raw value (v)
+                                if (!payDateObj || isNaN(payDateObj.getTime())) {
+                                    if (tsCell.v) {
+                                        payDateObj = parseGvizDate(tsCell.v);
+                                        if (payDateObj) timestampStr = payDateObj.toLocaleString();
                                     }
                                 }
                             }
+                            // ------------------------
+                            
+                            // FIX: Robust Value Extraction (Checks v then f)
+                            const getGvizValue = (cell) => {
+                                if (!cell) return '---';
+                                if (cell.v !== null && cell.v !== undefined) return String(cell.v);
+                                if (cell.f !== null && cell.f !== undefined) return String(cell.f);
+                                return '---';
+                            };
 
-                            const fullName = userMatch && userMatch.fullname ? userMatch.fullname : '<span class="text-slate-400 italic">Unknown Name</span>';
-                            const safeUser = username.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                            const refNo = getGvizValue(refCell);
+                            const amount = getGvizValue(amtCell);
 
-                            paymentDataCache.push({ timestamp, username, fullName, refNo, amount, safeUser });
+                            const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                            
+                            // --- SMART FILTER LOGIC ---
+                            let shouldShow = true;
+                            let isRenewal = false;
+
+                            if (userMatch) {
+                                const role = userMatch.role.toLowerCase();
+                                
+                                // 1. Strict Admin Exclusion
+                                if (role === 'admin') {
+                                    shouldShow = false;
+                                } else {
+                                    // 2. Date Comparison for Standard Users
+                                    // If current Start Date exists, check if this payment is NEWER than the start date.
+                                    if (userMatch.start && payDateObj && !isNaN(payDateObj.getTime())) {
+                                        const startDate = new Date(userMatch.start);
+                                        // Add 1 minute buffer to handle slight sync delays or same-day processing
+                                        // If Payment Date <= Start Date, it's already processed.
+                                        if (payDateObj <= startDate) {
+                                            shouldShow = false; 
+                                        } else {
+                                            // Payment is NEWER than current subscription start.
+                                            if (role.includes('paid')) isRenewal = true;
+                                        }
+                                    } else {
+                                        // No start date found on user profile? Show payment to be safe.
+                                        shouldShow = true;
+                                        if (role.includes('paid')) isRenewal = true; 
+                                    }
+                                }
+                            }
+                            // -------------------------
+
+                            if (shouldShow) {
+                                const fullName = userMatch && userMatch.fullname ? userMatch.fullname : '<span class="text-slate-400 italic">Unknown Name</span>';
+                                const safeUser = username.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
+                                paymentDataCache.push({ 
+                                    timestamp: timestampStr, 
+                                    username, 
+                                    fullName, 
+                                    refNo, 
+                                    amount, 
+                                    safeUser,
+                                    isRenewal // Pass this flag to renderer
+                                });
+                            }
                         });
                         
-                        // Render with current search term
                         const searchInput = document.getElementById('payment-search');
                         const currentFilter = searchInput ? searchInput.value : '';
                         renderAdminPayments(currentFilter);
@@ -5067,7 +5273,7 @@
                  });
              }
 
-             // NEW: Check for Payment Notifications (Badge Logic)
+             // NEW: Check for Payment Notifications (Badge Logic) - NOW MATCHES TABLE LOGIC
              window.checkPaymentNotifications = async function() {
                  const badge = document.getElementById('payment-badge');
                  if (!badge) return;
@@ -5090,23 +5296,36 @@
                          rows.forEach(row => {
                              if (!row.c || !row.c[1]) return;
                              const username = String(row.c[1].v).trim();
-                             const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                             const tsCell = row.c[0];
+                             
+                             // --- DATE PARSING FIX ---
+                             let payDateObj = null;
+                             if (tsCell) {
+                                if (tsCell.f) payDateObj = parseGvizDate(tsCell.f);
+                                if (!payDateObj || isNaN(payDateObj.getTime())) {
+                                    if(tsCell.v) payDateObj = parseGvizDate(tsCell.v);
+                                }
+                             }
+                             // ------------------------
 
-                             // Apply same filter logic as table
+                             const userMatch = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                             let shouldCount = true;
+
                              if (userMatch) {
                                  const role = userMatch.role.toLowerCase();
-                                 const now = new Date();
-                                 if (role === 'admin') return;
-                                 if (role.includes('paid')) {
-                                     if (userMatch.expiration) {
-                                         const expDate = new Date(userMatch.expiration);
-                                         if (expDate > now) return; 
-                                     } else {
-                                         return;
+                                 
+                                 // Strict Admin Exclusion
+                                 if (role === 'admin') {
+                                     shouldCount = false;
+                                 } else {
+                                     // Date Comparison for Standard Users
+                                     if (userMatch.start && payDateObj && !isNaN(payDateObj.getTime())) {
+                                         const startDate = new Date(userMatch.start);
+                                         if (payDateObj <= startDate) shouldCount = false;
                                      }
                                  }
                              }
-                             count++;
+                             if(shouldCount) count++;
                          });
 
                          badge.innerText = count;
@@ -5211,14 +5430,46 @@
                  document.getElementById('edit-username-display').value = user.username;
                  document.getElementById('edit-message').value = user.message || '';
                  
-                 // Reset Date Inputs
-                 document.getElementById('edit-start-date').value = '';
+                 // FIX: Pre-fill hidden inputs with existing data to prevent wiping if not changed
+                 document.getElementById('edit-start-date').value = user.start || '';
                  const expInput = document.getElementById('edit-expiration-date');
-                 expInput.value = '';
+                 expInput.value = user.expiration || '';
                  
-                 // Store current expiration for extension logic
+                 // PREPARE RENEWAL UI
+                 const renewalPanel = document.getElementById('renewal-info');
+                 const extendToggle = document.getElementById('extend-toggle');
+                 const expiryDisplay = document.getElementById('current-expiry-display');
+                 
+                 renewalPanel.classList.add('hidden'); // Hide by default
+                 
+                 // Check if user has an existing expiration
                  if (user.expiration) {
-                     expInput.dataset.original = user.expiration;
+                     const currentExp = new Date(user.expiration);
+                     const now = new Date();
+                     
+                     if (!isNaN(currentExp.getTime())) {
+                         // Store original for logic
+                         expInput.dataset.original = user.expiration;
+                         
+                         // Update Display
+                         const isFuture = currentExp > now;
+                         const dateStr = currentExp.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+                         const timeStr = currentExp.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
+                         
+                         expiryDisplay.innerHTML = `${dateStr} <span class="text-[9px] text-slate-400">${timeStr}</span>`;
+                         
+                         // Determine default toggle state
+                         // If Future -> Checked (Extend)
+                         // If Past -> Unchecked (Reset)
+                         extendToggle.checked = isFuture;
+                         
+                         // Show Panel logic handled in role change or here if already paid
+                         if (user.role.toLowerCase().includes('paid')) {
+                             renewalPanel.classList.remove('hidden');
+                         }
+                     } else {
+                         delete expInput.dataset.original;
+                     }
                  } else {
                      delete expInput.dataset.original;
                  }
@@ -5248,6 +5499,8 @@
                      }
                      roleSelect.value = "Paid User";
                      premiumOptions.classList.remove('hidden');
+                     // Force show renewal panel if data exists
+                     if(expInput.dataset.original) renewalPanel.classList.remove('hidden');
                  } else {
                      // Dashboard Mode: Allow all, map current role
                      const r = user.role.toLowerCase();
@@ -5255,6 +5508,7 @@
                      if(r.includes('paid')) {
                          roleSelect.value = "Paid User";
                          premiumOptions.classList.remove('hidden');
+                         if(expInput.dataset.original) renewalPanel.classList.remove('hidden');
                      }
                      else if(r.includes('admin')) {
                          roleSelect.value = "Admin";
@@ -5323,9 +5577,9 @@
                          return;
                      }
 
-                     // 2. Check if URL is the Editor link (Common Mistake)
+                     // 2. Check if URL is the Editor link
                      if (GOOGLE_SCRIPT_URL.includes("/edit")) {
-                         alert("Configuration Error: You pasted the Script Editor URL (.../edit).\n\nThe website needs the Deployment URL.\n\n1. Go to your Script\n2. Click 'Deploy' > 'New Deployment'\n3. Set 'Who has access' to 'Anyone'\n4. Copy the 'Web app' URL (ends in /exec)");
+                         alert("Configuration Error: You pasted the Script Editor URL (.../edit).\n\nThe website needs the Deployment URL.");
                          return;
                      }
 
@@ -5335,7 +5589,7 @@
                      const startDate = document.getElementById('edit-start-date').value;
                      const expirationDate = document.getElementById('edit-expiration-date').value;
 
-                     // 3. VALIDATION: Require Subscription Duration for Paid Users
+                     // 3. VALIDATION
                      if (role === 'Paid User' && (!startDate || !expirationDate)) {
                          alert("Please select a subscription duration.");
                          const optionsDiv = document.getElementById('premium-options');
@@ -5354,56 +5608,85 @@
                      if(adminLoader) adminLoader.classList.remove('hidden');
                      window.closeEditModal();
 
+                     // PAUSE POLLING
+                     isPollingPaused = true;
+
                      try {
-                         const response = await fetch(GOOGLE_SCRIPT_URL, {
+                         // 1. Send Request to Backend
+                         const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
                              method: 'POST',
-                             mode: 'no-cors', // Important for Google Apps Script Web App without CORS header complexity
-                             headers: {
-                                 'Content-Type': 'application/json',
-                             },
+                             mode: 'no-cors', 
+                             headers: { 'Content-Type': 'application/json' },
                              body: JSON.stringify({
                                  action: 'updateUser',
                                  username: username,
                                  role: role,
                                  message: message,
-                                 startDate: startDate,         // Send Start Date
-                                 expirationDate: expirationDate // Send Expiration Date
+                                 startDate: startDate,
+                                 expirationDate: expirationDate
                              })
                          });
 
-                         // Since 'no-cors' returns opaque response, we simulate success after a delay
-                     setTimeout(async () => {
-                         const users = await fetchUsers(); // Refresh data from sheet
-                         
-                         // Update Global Counters/Badges regardless of tab
-                         if(window.updateAdminStats) window.updateAdminStats(users);
-                         if(window.checkPaymentNotifications) window.checkPaymentNotifications();
+                         // 2. OPTIMISTIC UPDATE (Instant UI Refresh)
+                         const allUsers = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                         const userIndex = allUsers.findIndex(u => u.username === username);
 
-                         // Smart Refresh based on Active Tab
-                         if (currentAdminTab === 'payments') {
-                             if(window.loadAdminPayments) window.loadAdminPayments();
-                         } else if (currentAdminTab === 'dashboard') {
-                             // Maintain current filter or search state
-                             const searchVal = document.getElementById('admin-search')?.value || '';
-                             if (searchVal) {
-                                 if(window.renderAdminUserList) window.renderAdminUserList(users, searchVal);
-                             } else {
-                                 // Re-apply the active filter (e.g., 'pending')
-                                 if(window.filterAdminUsers) window.filterAdminUsers(currentAdminFilterType);
+                         if (userIndex !== -1) {
+                             // Update fields
+                             allUsers[userIndex].role = role;
+                             allUsers[userIndex].message = message;
+                             
+                             // Update Dates
+                             if (startDate) allUsers[userIndex].start = new Date(startDate).toISOString();
+                             else allUsers[userIndex].start = null;
+
+                             if (expirationDate) allUsers[userIndex].expiration = new Date(expirationDate).toISOString();
+                             else allUsers[userIndex].expiration = null;
+                             
+                             // Save to Local Storage
+                             localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(allUsers));
+                             
+                             // CRITICAL: Force Re-render of Dashboard Immediately
+                             if(window.updateAdminStats) window.updateAdminStats(allUsers);
+                             
+                             // Determine which list to render based on current filter state
+                             // Use global 'currentAdminFilterType' to keep user context
+                             if (window.renderAdminUserList) {
+                                 const searchVal = document.getElementById('admin-search')?.value || '';
+                                 if (searchVal) {
+                                     window.renderAdminUserList(allUsers, searchVal);
+                                 } else {
+                                     // Re-apply current filter (e.g. if viewing 'Expired' and user became 'Paid', they should disappear)
+                                     const filtered = getFilteredUsers(allUsers, currentAdminFilterType);
+                                     window.renderAdminUserList(filtered);
+                                 }
                              }
-                         } else if (currentAdminTab === 'content') {
-                             // No user data specific refresh needed for content usually, but good practice
-                             // loadAdminTools(); 
+                             
+                             // Refresh Payments (Badge & List)
+                             if(window.checkPaymentNotifications) window.checkPaymentNotifications();
+                             if(currentAdminTab === 'payments' && window.loadAdminPayments) window.loadAdminPayments();
                          }
 
-                         if(adminLoader) adminLoader.classList.add('hidden');
-                         alert(`Successfully updated user: ${username}`);
-                     }, 2000);
+                         // Wait for Network
+                         await fetchPromise;
+
+                         setTimeout(async () => {
+                             if(adminLoader) adminLoader.classList.add('hidden');
+                             alert(`Successfully updated user: ${username}`);
+                             
+                             // Resume polling
+                             setTimeout(() => {
+                                 isPollingPaused = false;
+                                 fetchUsers(); 
+                             }, 12000);
+                             
+                         }, 1000);
 
                      } catch(err) {
                          console.error(err);
                          if(adminLoader) adminLoader.classList.add('hidden');
                          alert("Failed to connect to the server. Check your internet connection.");
+                         isPollingPaused = false; 
                      }
                  });
              }
