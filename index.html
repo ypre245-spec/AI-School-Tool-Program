@@ -1572,11 +1572,18 @@
                     <p class="text-[10px] font-bold text-yellow-800 uppercase flex items-center gap-1">
                         <i class="fa-solid fa-clock"></i> Select Subscription Duration
                     </p>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" onclick="setPremiumDuration(3, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">3 Months</button>
-                        <button type="button" onclick="setPremiumDuration(6, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">6 Months</button>
-                        <button type="button" onclick="setPremiumDuration(9, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">9 Months</button>
-                        <button type="button" onclick="setPremiumDuration(12, this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">1 Year</button>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                        <!-- Short Term -->
+                        <button type="button" onclick="setPremiumDuration(3, 'hours', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">3 Hours</button>
+                        <button type="button" onclick="setPremiumDuration(1, 'days', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">1 Day</button>
+                        <button type="button" onclick="setPremiumDuration(7, 'days', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">7 Days</button>
+                        <button type="button" onclick="setPremiumDuration(1, 'months', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">1 Month</button>
+                        
+                        <!-- Long Term -->
+                        <button type="button" onclick="setPremiumDuration(3, 'months', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">3 Months</button>
+                        <button type="button" onclick="setPremiumDuration(6, 'months', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">6 Months</button>
+                        <button type="button" onclick="setPremiumDuration(9, 'months', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">9 Months</button>
+                        <button type="button" onclick="setPremiumDuration(12, 'months', this)" class="duration-btn px-2 py-2 bg-white border border-yellow-300 text-yellow-700 rounded text-xs font-bold hover:bg-yellow-100 transition shadow-sm">1 Year</button>
                     </div>
                     <input type="hidden" id="edit-start-date">
                     <input type="hidden" id="edit-expiration-date">
@@ -5137,7 +5144,7 @@
              }
 
              // Duration Button Logic
-             window.setPremiumDuration = function(months, btnElement) {
+             window.setPremiumDuration = function(value, unit, btnElement) {
                  // 1. Reset Styles
                  document.querySelectorAll('.duration-btn').forEach(btn => {
                      btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
@@ -5165,13 +5172,22 @@
                  }
 
                  const expiry = new Date(baseDate);
-                 expiry.setMonth(baseDate.getMonth() + months);
+                 
+                 // Flexible Date Calculation
+                 if (unit === 'hours') {
+                     expiry.setHours(baseDate.getHours() + value);
+                 } else if (unit === 'days') {
+                     expiry.setDate(baseDate.getDate() + value);
+                 } else if (unit === 'months') {
+                     expiry.setMonth(baseDate.getMonth() + value);
+                 }
 
                  // Format for display and storage
                  const startStr = now.toISOString(); // Transaction start is always now
                  const endStr = expiry.toISOString();
                  
-                 const displayOpt = { year: 'numeric', month: 'short', day: 'numeric' };
+                 // Display includes Time now for precision
+                 const displayOpt = { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' };
 
                  document.getElementById('edit-start-date').value = startStr;
                  expInput.value = endStr;
@@ -5318,6 +5334,21 @@
                      const message = document.getElementById('edit-message').value;
                      const startDate = document.getElementById('edit-start-date').value;
                      const expirationDate = document.getElementById('edit-expiration-date').value;
+
+                     // 3. VALIDATION: Require Subscription Duration for Paid Users
+                     if (role === 'Paid User' && (!startDate || !expirationDate)) {
+                         alert("Please select a subscription duration.");
+                         const optionsDiv = document.getElementById('premium-options');
+                         if(optionsDiv) {
+                             optionsDiv.classList.remove('border-yellow-200');
+                             optionsDiv.classList.add('animate-shake', 'border-red-500', 'bg-red-50');
+                             setTimeout(() => {
+                                 optionsDiv.classList.remove('animate-shake', 'border-red-500', 'bg-red-50');
+                                 optionsDiv.classList.add('border-yellow-200');
+                             }, 500);
+                         }
+                         return;
+                     }
 
                      // Show Loader
                      if(adminLoader) adminLoader.classList.remove('hidden');
