@@ -2811,14 +2811,22 @@
 
                     // 2. Get Expiration Status (Always calculate)
                     if (currentUser.expiration) {
+                        // Create distinct date objects for display (exact) and calculation (normalized)
+                        const exactExpDate = new Date(currentUser.expiration);
                         const expDate = new Date(currentUser.expiration);
                         const now = new Date();
-                        // Normalize to midnight for accurate day calculation
+                        
+                        // Normalize to midnight for accurate day calculation logic
                         expDate.setHours(0,0,0,0);
                         now.setHours(0,0,0,0);
                         
                         const diffTime = expDate - now;
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        // Format Display String
+                        const dateStr = exactExpDate.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
+                        const timeStr = exactExpDate.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                        const displayExp = `${dateStr} at ${timeStr}`;
                         
                         // Check if we showed this today already
                         const lastSeenExp = localStorage.getItem('last_seen_expiration_warning');
@@ -2827,11 +2835,11 @@
                         if (diffTime < 0) {
                             expType = 'expired';
                             expStatus = "Expired";
-                            expMsg = "Thank you for your support! Your premium account has expired. Please renew your subscription to continue accessing exclusive tools.";
+                            expMsg = `Thank you for your support! Your premium account expired on <strong>${displayExp}</strong>. Please renew your subscription to continue accessing exclusive tools.`;
                         } else if (diffDays <= 5) {
                             expType = 'warning';
                             expStatus = `${diffDays} Days Left`;
-                            expMsg = `Thank you for being a valued member! Your premium access expires in ${diffDays} day${diffDays !== 1 ? 's' : ''}.`;
+                            expMsg = `Thank you for being a valued member! Your premium access expires on <strong>${displayExp}</strong>.`;
                         }
                     }
 
@@ -4078,7 +4086,14 @@
                          if (user.expiration) {
                              try {
                                  const expDate = new Date(user.expiration);
-                                 menuValidity = `Valid until ${expDate.toLocaleDateString()}`;
+                                 const dateOptions = { 
+                                     year: 'numeric', 
+                                     month: 'short', 
+                                     day: 'numeric', 
+                                     hour: 'numeric', 
+                                     minute: '2-digit' 
+                                 };
+                                 menuValidity = `Valid until ${expDate.toLocaleString('en-US', dateOptions)}`;
                              } catch(e) {
                                  menuValidity = 'Active Membership';
                              }
@@ -4499,7 +4514,13 @@
                      // Check if valid date
                      if (!isNaN(expDate.getTime())) {
                          if(renewalPanel) renewalPanel.classList.remove('hidden');
-                         if(expiryDisplay) expiryDisplay.innerText = expDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                         if(expiryDisplay) expiryDisplay.innerText = expDate.toLocaleString('en-US', { 
+                             year: 'numeric', 
+                             month: 'short', 
+                             day: 'numeric', 
+                             hour: 'numeric', 
+                             minute: '2-digit' 
+                         });
                          
                          if(introText) introText.innerText = "Add more time to your current subscription.";
                          if(headerTitle) headerTitle.innerText = "Extend Access";
