@@ -1952,7 +1952,8 @@
             SEC_ANSWER: 7,    // Column H (Security Answer)
             START_DATE: 8,    // Column I (Start/Approval Date)
             EXPIRATION: 9,    // Column J (Expiration Date)
-            MSG_TIMESTAMP: 10 // Column K (Message Timestamp)
+            MSG_TIMESTAMP: 10,// Column K (Message Timestamp)
+            SESSION_TOKEN: 11 // Column L (Session Token for Single Device Lock)
         };
 
         // --- GLOBAL STATE TRACKER ---
@@ -2194,11 +2195,354 @@
         
         // NEW: Global Polling Control
         let isPollingPaused = false;
+        
+        // NEW: Logout Debounce Flag
+        let isLoggingOut = false;
+
+        // --- GLOBAL UI FUNCTIONS (Moved out of DOMContentLoaded to fix ReferenceError) ---
+
+        // 1. Announcement/Notification Modal
+        window.openAnnouncementModal = function(notifData, isPersonal) {
+            const modal = document.getElementById('announcement-modal');
+            const titleEl = document.getElementById('announcement-title');
+            const msgEl = document.getElementById('announcement-message');
+            const subtitleEl = document.getElementById('ann-subtitle');
+            const iconEl = document.getElementById('ann-icon');
+            const iconBg = document.getElementById('ann-icon-bg');
+            const timestampEl = document.getElementById('ann-timestamp');
+            const statusEl = document.getElementById('ann-status');
+            
+            const closeBtn = document.getElementById('close-announcement');
+            const ackBtn = document.getElementById('ack-announcement');
+            
+            if(!modal || !titleEl || !msgEl) return;
+
+            // Generate ID for this specific notification instance
+            const currentNotifId = notifData.title + "||" + notifData.message;
+
+            // PREVENT RE-RENDER / OVERWRITE LOGIC
+            if (!modal.classList.contains('hidden')) {
+                // 1. If exact same message is already showing, do nothing.
+                if (modal.dataset.activeId === currentNotifId) return;
+
+                // 2. PRIORITY CHECK: If currently showing an URGENT message (like Logout), 
+                // DO NOT overwrite it with a standard message (like Global Announcement).
+                if (modal.dataset.activeType === 'urgent' && notifData.type !== 'urgent') {
+                    console.log("Blocked non-urgent notification due to active security alert.");
+                    return; 
+                }
+            }
+            
+            // Store ID and Type for tracking
+            modal.dataset.activeId = currentNotifId;
+            modal.dataset.activeType = notifData.type || 'standard';
+
+            titleEl.innerText = notifData.title;
+            msgEl.innerHTML = notifData.message; 
+            
+            // Default Reset
+            subtitleEl.innerText = "System Notification";
+            ackBtn.onclick = () => closeModal();
+            closeBtn.onclick = () => closeModal();
+
+            // 1. Check for Expiration / Gratitude Message
+            if (notifData.type === 'expiration') {
+                 titleEl.innerText = notifData.title || "Membership Notice";
+                 subtitleEl.innerText = "System Notification";
+                 iconEl.className = "fa-solid fa-heart-pulse";
+                 iconBg.className = "w-8 h-8 rounded-lg bg-pink-100 text-pink-500 flex items-center justify-center text-sm shadow-md ring-2 ring-pink-100";
+                 timestampEl.innerText = "Important Update";
+                 statusEl.innerText = notifData.statusText || "Notice";
+                 statusEl.className = "text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100";
+                 ackBtn.innerText = "I Understand";
+                 ackBtn.className = "bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+            }
+            // 2. Personal Admin Message
+            else if (isPersonal) {
+                 titleEl.innerText = notifData.title || "Admin Message"; 
+                 subtitleEl.innerText = "Personal Notification";
+                 iconEl.className = "fa-solid fa-paper-plane";
+                 iconBg.className = "w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-blue-100";
+                 timestampEl.innerText = "Just now";
+                 statusEl.innerText = notifData.statusText || "Personal";
+                 statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
+                 ackBtn.innerText = "Mark as Read";
+                 ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+            } 
+            // 3. URGENT / SECURITY (e.g. Logout)
+            else if (notifData.type === 'urgent') {
+                 titleEl.innerText = notifData.title || "Security Alert";
+                 subtitleEl.innerText = "System Security";
+                 iconEl.className = "fa-solid fa-shield-halved";
+                 iconBg.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-md ring-2 ring-red-100";
+                 timestampEl.innerText = "Immediate Action";
+                 statusEl.innerText = "Logged Out";
+                 statusEl.className = "text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-100";
+                 ackBtn.innerText = "Log In Again";
+                 ackBtn.className = "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                 // Ensure clicking dismiss triggers UI cleanup/login modal if needed
+                 ackBtn.onclick = () => { closeModal(); if(window.toggleLoginModal) window.toggleLoginModal(true); };
+            }
+            // 4. Standard Global
+            else {
+                 titleEl.innerText = notifData.title || "System Update";
+                 subtitleEl.innerText = "Global Announcement";
+                 timestampEl.innerText = "Broadcast Message";
+                 iconEl.className = "fa-solid fa-bullhorn";
+                 iconBg.className = "w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-blue-500/10";
+                 statusEl.innerText = "Public";
+                 statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
+                 ackBtn.innerText = "Got it";
+                 ackBtn.className = "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold py-2 px-4 rounded-lg transition shadow-sm text-xs";
+            }
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                modal.classList.remove('opacity-0');
+                modal.firstElementChild.classList.remove('scale-95');
+                modal.firstElementChild.classList.add('scale-100');
+            }, 100);
+
+            function closeModal() {
+                // MARK AS READ IMMEDIATELY (Before animation completes)
+                
+                // FIXED: Urgent messages AND Profile Updates should NOT touch the global read status
+                // This prevents the "Profile Updated" message from overwriting the "Global Announcement" read history
+                if (notifData.type === 'expiration') {
+                    localStorage.setItem('last_seen_expiration_warning', new Date().toDateString());
+                } 
+                else if (notifData.type === 'urgent' || notifData.type === 'update') {
+                    // Do nothing to read status history for transient system alerts
+                    // 'urgent' = Security/Logout alerts
+                    // 'update' = Role change/Profile sync alerts
+                }
+                else if(isPersonal) {
+                     localStorage.setItem('last_seen_personal_id', currentNotifId);
+                } 
+                else {
+                     // Only standard global announcements (from the spreadsheet) go here
+                     localStorage.setItem('last_seen_announcement_id', currentNotifId);
+                     localStorage.removeItem('last_seen_announcement'); // Cleanup legacy
+                }
+                
+                // Force UI update to hide badges immediately
+                if(window.showNotification) window.showNotification();
+
+                // Proceed with closing animation
+                modal.classList.add('opacity-0');
+                modal.firstElementChild.classList.remove('scale-100');
+                modal.firstElementChild.classList.add('scale-95');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                    modal.dataset.activeId = ""; // Clear active ID
+                    modal.dataset.activeType = ""; // Clear active Type
+                }, 300);
+            };
+        }
+
+        // 2. Perform Logout
+        window.performLogout = function(isForced = false, forcedMessage = null) {
+             if (isLoggingOut) return; // Prevent double execution
+             if (isForced) isLoggingOut = true;
+
+             // Clear BOTH storages to ensure complete logout
+             localStorage.removeItem('ai_school_session');
+             sessionStorage.removeItem('ai_school_session');
+             localStorage.removeItem(CACHE_CONFIG.APPS.KEY); 
+             
+             // Update UI to Guest State
+             if(window.updateAuthUI) window.updateAuthUI();
+             
+             const mm = document.getElementById('mobile-menu');
+             if(mm) mm.classList.add('hidden');
+             
+             // Close Confirmation Modal if open
+             const confirmModal = document.getElementById('logout-confirm-modal');
+             if(confirmModal) {
+                 confirmModal.classList.add('opacity-0');
+                 setTimeout(() => confirmModal.classList.add('hidden'), 300);
+             }
+
+             if (isForced) {
+                 const msg = forcedMessage || "Session expired due to inactivity. Please log in again.";
+                 
+                 // Use the Nice Modal instead of Alert
+                 if(window.openAnnouncementModal) {
+                     // Anti-Spam: Don't open if already showing an urgent alert
+                     const modal = document.getElementById('announcement-modal');
+                     if (modal && !modal.classList.contains('hidden') && modal.dataset.activeType === 'urgent') {
+                         return; 
+                     }
+
+                     window.openAnnouncementModal({
+                         title: "Security Alert",
+                         message: msg,
+                         type: "urgent", // IMPORTANT: Must set type 'urgent'
+                         statusText: "Session Ended"
+                     }, false);
+                 } else {
+                     alert(msg); // Fallback
+                 }
+                 
+                 // Reset the lockout flag after a delay to allow future actions
+                 setTimeout(() => { isLoggingOut = false; }, 3000);
+             } else {
+                 isLoggingOut = false;
+             }
+        }
+
+        // 3. Update Auth UI
+        window.updateAuthUI = function(forceUser = null) {
+             let user = forceUser;
+             if (!user) {
+                 user = getSession();
+             }
+
+             fetchApps(); // Refresh tools based on new state
+             
+             const chatNameInput = document.getElementById('name');
+             const chatInputArea = document.getElementById('chat-input-area');
+             const chatGuestPrompt = document.getElementById('chat-guest-prompt');
+             const communitySection = document.getElementById('community');
+             const navCommunityDesktop = document.getElementById('nav-community-desktop');
+             const navCommunityMobile = document.getElementById('nav-community-mobile');
+             
+             const authGuest = document.getElementById('auth-guest');
+             const authUser = document.getElementById('auth-user');
+             const mobileAuthGuest = document.getElementById('mobile-auth-guest');
+             const mobileAuthUser = document.getElementById('mobile-auth-user');
+             
+             const navSubBtn = document.getElementById('nav-subscribe-btn');
+             const mobSubBtn = document.getElementById('mobile-subscribe-btn');
+
+             if (user) {
+                 // --- LOGGED IN STATE ---
+                 if(communitySection) communitySection.classList.remove('hidden');
+                 if(navCommunityDesktop) { navCommunityDesktop.classList.remove('hidden', 'md:hidden'); navCommunityDesktop.classList.add('flex'); }
+                 if(navCommunityMobile) navCommunityMobile.classList.remove('hidden');
+
+                 if(chatInputArea) chatInputArea.classList.remove('hidden');
+                 if(chatGuestPrompt) chatGuestPrompt.classList.add('hidden');
+
+                 if(chatNameInput) {
+                     chatNameInput.value = user.username;
+                     chatNameInput.setAttribute('readonly', 'true');
+                     chatNameInput.classList.add('text-deped-blue', 'cursor-not-allowed');
+                 }
+
+                 if(authGuest) authGuest.classList.add('hidden');
+                 if(authUser) authUser.classList.remove('hidden');
+                 if(mobileAuthGuest) mobileAuthGuest.classList.add('hidden');
+                 if(mobileAuthUser) mobileAuthUser.classList.remove('hidden');
+
+                 const avatarImg = document.getElementById('user-avatar-img');
+                 if(avatarImg) {
+                    avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=facc15&color=1e3a8a&bold=true&size=128`;
+                 }
+                 
+                 const initial = user.username.charAt(0).toUpperCase();
+                 const mobAvatar = document.getElementById('mobile-user-avatar');
+                 if(mobAvatar) mobAvatar.innerText = initial;
+                 
+                 const nameDisplays = ['user-name-display', 'user-dropdown-name', 'mobile-user-name'];
+                 nameDisplays.forEach(id => {
+                     const el = document.getElementById(id);
+                     if(el) el.innerText = user.username;
+                 });
+                 
+                 let roleLabel = user.role || 'New User'; 
+                 let menuValidity = 'Standard Access';
+                 const roleLower = user.role ? user.role.trim().toLowerCase() : '';
+                 
+                 // Role Logic for Buttons
+                 if (roleLower === 'admin') {
+                     roleLabel = 'Administrator';
+                     if(navSubBtn) navSubBtn.classList.add('hidden');
+                     if(mobSubBtn) mobSubBtn.classList.add('hidden');
+                 } else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
+                     roleLabel = 'Basic User';
+                     if(navSubBtn) { navSubBtn.classList.remove('hidden'); navSubBtn.onclick = window.openSubscriptionModal; }
+                     if(mobSubBtn) { mobSubBtn.classList.remove('hidden'); mobSubBtn.onclick = window.openSubscriptionModal; }
+                 } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
+                     roleLabel = 'Premium Member';
+                     if(navSubBtn) {
+                         navSubBtn.classList.remove('hidden');
+                         navSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Extend Subscription';
+                         navSubBtn.onclick = window.openSubscriptionModal;
+                     }
+                     if(mobSubBtn) {
+                         mobSubBtn.classList.remove('hidden');
+                         mobSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i> Extend Subscription';
+                         mobSubBtn.onclick = window.openSubscriptionModal;
+                     }
+                     
+                     if (user.expiration) {
+                         try {
+                             const expDate = new Date(user.expiration);
+                             const dateOptions = { 
+                                 year: 'numeric', 
+                                 month: 'short', 
+                                 day: 'numeric', 
+                                 hour: 'numeric', 
+                                 minute: '2-digit' 
+                             };
+                             menuValidity = `Valid until ${expDate.toLocaleString('en-US', dateOptions)}`;
+                         } catch(e) { menuValidity = 'Active Membership'; }
+                     }
+                 }
+
+                 const roleDisplayBtn = document.getElementById('user-role-display');
+                 if(roleDisplayBtn) roleDisplayBtn.innerText = roleLabel;
+                 
+                 const mobileRoleDisplay = document.getElementById('mobile-user-role');
+                 if(mobileRoleDisplay) mobileRoleDisplay.innerText = roleLabel;
+                 
+                 const dropValEl = document.getElementById('user-dropdown-validity');
+                 if(dropValEl) dropValEl.innerText = menuValidity;
+
+                 const adminLink = document.getElementById('admin-panel-link');
+                 if(adminLink) {
+                     if(roleLower === 'admin') adminLink.classList.remove('hidden');
+                     else adminLink.classList.add('hidden');
+                 }
+
+                 const statusDot = document.getElementById('user-status-dot');
+                 if(statusDot) {
+                     statusDot.className = "absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-800 transform translate-y-px translate-x-px";
+                     if (roleLower === 'admin' || roleLower.includes('paid') || roleLower.includes('basic')) {
+                         statusDot.classList.add('bg-green-400');
+                     } else {
+                         statusDot.classList.add('bg-slate-400');
+                     }
+                 }
+
+             } else {
+                 // --- GUEST STATE ---
+                 if(communitySection) communitySection.classList.add('hidden');
+                 if(navCommunityDesktop) { navCommunityDesktop.classList.add('hidden'); navCommunityDesktop.classList.remove('flex'); }
+                 if(navCommunityMobile) navCommunityMobile.classList.add('hidden');
+
+                 if(chatInputArea) chatInputArea.classList.add('hidden');
+                 if(chatGuestPrompt) chatGuestPrompt.classList.remove('hidden');
+
+                 if(chatNameInput) {
+                     chatNameInput.value = '';
+                     chatNameInput.removeAttribute('readonly');
+                     chatNameInput.classList.remove('text-deped-blue', 'cursor-not-allowed');
+                 }
+
+                 if(authGuest) authGuest.classList.remove('hidden');
+                 if(authUser) authUser.classList.add('hidden');
+                 if(mobileAuthGuest) mobileAuthGuest.classList.remove('hidden');
+                 if(mobileAuthUser) mobileAuthUser.classList.add('hidden');
+             }
+        }
 
         async function fetchStories(forceRefresh = false) {
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
             const gid = '1355823203';
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&tq&gid=${gid}`;
+            // UPDATED: Added &headers=1
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&tq&gid=${gid}`;
 
             try {
                 let rows = null;
@@ -2318,7 +2662,8 @@
         async function fetchSystemConfig() {
             const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
             const sheetName = 'Sheet1';
-            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}`;
+            // UPDATED: Added &headers=1
+            const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}&nocache=${Date.now()}`;
 
             try {
                 let rows = null;
@@ -2932,7 +3277,9 @@
                 // Check Global logic
                 const notificationId = globalNotification.title + "||" + globalNotification.message;
                 const lastSeenId = localStorage.getItem('last_seen_announcement_id');
-                if (lastSeenId !== notificationId && localStorage.getItem('last_seen_announcement') !== globalNotification.message) {
+                
+                // Simplified Logic: Just check the ID
+                if (lastSeenId !== notificationId) {
                      activeNotif = globalNotification;
                      isPersonal = false;
                 }
@@ -3255,7 +3602,8 @@
         async function fetchUsers() {
              const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
              const sheetName = 'USERS';
-             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}`;
+             // UPDATED: Added &headers=1
+             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${sheetName}&nocache=${Date.now()}`;
 
              try {
                  const response = await fetch(url);
@@ -3328,6 +3676,9 @@
                              }
                          }
 
+                         // Get Session Token (Remote)
+                         const remoteToken = (row.c[SHEET_COLUMNS.SESSION_TOKEN] && row.c[SHEET_COLUMNS.SESSION_TOKEN].v) ? String(row.c[SHEET_COLUMNS.SESSION_TOKEN].v).trim() : null;
+
                          return {
                              username: username,
                              password: row.c[SHEET_COLUMNS.PASSWORD] ? String(row.c[SHEET_COLUMNS.PASSWORD].v).trim() : "", 
@@ -3338,7 +3689,8 @@
                              question: row.c[SHEET_COLUMNS.SEC_QUESTION] ? String(row.c[SHEET_COLUMNS.SEC_QUESTION].v).trim() : null,
                              answer: row.c[SHEET_COLUMNS.SEC_ANSWER] ? String(row.c[SHEET_COLUMNS.SEC_ANSWER].v).trim() : null,
                              start: startDateStr,
-                             expiration: expirationStr
+                             expiration: expirationStr,
+                             sessionToken: remoteToken // Include in user object
                          };
                      }).filter(u => u !== null); // Filter out the nulls we returned above
 
@@ -3384,6 +3736,23 @@
                              localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
                              if (typeof updateAuthUI === 'function') updateAuthUI();
                          } else {
+                             // --- SECURITY: Single Device Check (Tug-of-War) ---
+                             // Check if the token in the database (sessionToken) exists AND is different from the one in our browser (currentSession.token)
+                             // This implies a newer login happened elsewhere.
+                             // We add a 15-second grace period after login to allow the sheet to update before we check.
+                             const GRACE_PERIOD = 15000; 
+                             const timeSinceLogin = Date.now() - (currentSession.loginTime || 0);
+
+                             if (timeSinceLogin > GRACE_PERIOD) {
+                                 // If cloud has a token, and it doesn't match ours -> Kick out
+                                 if (updatedUser.sessionToken && currentSession.token && updatedUser.sessionToken !== currentSession.token) {
+                                     console.warn("Session Token Mismatch: Logout triggered.");
+                                     performLogout(true, "Logged in on another device.");
+                                     return; // Stop further processing
+                                 }
+                             }
+                             // --------------------------------------------------
+
                              // Sync Role/Expiration
                              // Normalize for comparison
                              const oldRole = (currentSession.role || '').trim();
@@ -4181,11 +4550,15 @@
 
                      setTimeout(() => {
                          if(validUser) {
+                             // Generate Unique Session Token
+                             const sessionToken = Date.now().toString(36) + Math.random().toString(36).substr(2);
+
                              const sessionData = JSON.stringify({
                                  username: validUser.username, 
                                  role: validUser.role,
                                  expiration: validUser.expiration, 
-                                 loginTime: Date.now()
+                                 loginTime: Date.now(),
+                                 token: sessionToken // Store locally
                              });
 
                              // Storage Logic based on Remember Me
@@ -4197,6 +4570,22 @@
                                  localStorage.removeItem('ai_school_session'); // Clear other type
                              }
                              
+                             // --- SEND TOKEN TO CLOUD ---
+                             // This locks out other devices by updating Column L in the sheet
+                             if (typeof GOOGLE_SCRIPT_URL !== 'undefined' && GOOGLE_SCRIPT_URL) {
+                                 fetch(GOOGLE_SCRIPT_URL, {
+                                     method: 'POST',
+                                     mode: 'no-cors',
+                                     headers: { 'Content-Type': 'application/json' },
+                                     body: JSON.stringify({
+                                         action: 'login', // Ensure your Apps Script handles 'login' action to update Column 11 (L)
+                                         username: validUser.username,
+                                         token: sessionToken
+                                     })
+                                 }).catch(e => console.warn("Failed to sync session token", e));
+                             }
+                             // ---------------------------
+
                              updateAuthUI();
                              toggleLoginModal(false);
                              resetInactivityTimer(); // Start Inactivity Timer
@@ -4599,7 +4988,7 @@
              let currentAdminTab = 'dashboard';
 
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw8P49OJKqO_hNsrIyP8YYtSHWfM_MrtckRviwdyYfctRee7MHeYoSWptyTSzlsmjDhOw/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0B1YYdQcJOYFc9cdFTHKMm3o3VeIybErM-IR9A-D199sM0fyRkBGReYnkKKzGG-Xsmg/exec"; 
              
              // NEW: Mobile Menu Toggle Function
              window.toggleAdminMobileMenu = function() {
@@ -5109,7 +5498,8 @@
 
                 const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
                 const sheetName = 'Form Responses 4';
-                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
+                // UPDATED: Added &headers=1
+                const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
 
                 try {
                     const response = await fetch(url);
@@ -5244,7 +5634,8 @@
 
                  const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
                  const sheetName = 'Form Responses 4';
-                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
+                 // UPDATED: Added &headers=1
+                 const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&headers=1&sheet=${encodeURIComponent(sheetName)}&nocache=${Date.now()}`;
 
                  try {
                      const response = await fetch(url);
@@ -5387,7 +5778,10 @@
              window.openEditModal = function(username, source = 'dashboard') {
                  if(!editModal) return;
                  const users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                 const user = users.find(u => u.username === username);
+                 
+                 // FIXED: Case-insensitive match to handle payment form discrepancies
+                 const user = users.find(u => u.username.toLowerCase() === username.toLowerCase());
+                 
                  if(!user) return;
 
                  document.getElementById('edit-username-hidden').value = user.username;
