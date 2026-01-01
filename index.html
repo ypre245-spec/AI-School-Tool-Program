@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Digital AI Vision for Education | DepEd Aligned.</title>
+    <title>Digital AI Vision for Education | DepEd Aligned</title>
     
     <!-- Favicon -->
     <link rel="icon" href="https://ui-avatars.com/api/?name=Digital+AI&background=1e3a8a&color=fff&rounded=true" type="image/png">
@@ -4988,7 +4988,7 @@
              let currentAdminTab = 'dashboard';
 
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw0B1YYdQcJOYFc9cdFTHKMm3o3VeIybErM-IR9A-D199sM0fyRkBGReYnkKKzGG-Xsmg/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFE1Wf2kEfou8HjV1WkbpVEFQ4QOEv8FRixBnY3SZrOfqtyYTCcnBMOzuh-pTHK6AE_w/exec"; 
              
              // NEW: Mobile Menu Toggle Function
              window.toggleAdminMobileMenu = function() {
@@ -5368,14 +5368,84 @@
                              ${subDetails}
                          </td>
                          <td class="px-6 py-4 text-right whitespace-nowrap align-middle">
-                             <button onclick="openEditModal('${safeUsername}', 'dashboard')" class="group text-xs bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-600 px-4 py-2 rounded-lg font-bold shadow-sm border border-slate-200 hover:border-blue-200 transition-all duration-200 flex items-center gap-2 ml-auto">
-                                <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
-                             </button>
+                             <div class="flex justify-end gap-2">
+                                 <button onclick="openEditModal('${safeUsername}', 'dashboard')" class="group text-xs bg-white hover:bg-blue-50 text-slate-600 hover:text-blue-600 px-3 py-2 rounded-lg font-bold shadow-sm border border-slate-200 hover:border-blue-200 transition-all duration-200 flex items-center gap-2" title="Edit User">
+                                    <i class="fa-solid fa-pen-to-square"></i> <span>Edit</span>
+                                 </button>
+                                 <button onclick="deleteUser('${safeUsername}')" class="group text-xs bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 px-3 py-2 rounded-lg font-bold shadow-sm border border-slate-200 hover:border-red-200 transition-all duration-200 flex items-center gap-2" title="Delete User">
+                                    <i class="fa-solid fa-trash"></i>
+                                 </button>
+                             </div>
                          </td>
                      `;
                      listBody.appendChild(tr);
                  });
              }
+
+             // NEW: Delete User Function
+             window.deleteUser = async function(username) {
+                 if (!confirm(`Are you sure you want to delete user "${username}"?\n\nThis action cannot be undone.`)) return;
+
+                 // Show Loader
+                 const adminLoader = document.getElementById('admin-loader');
+                 if (adminLoader) adminLoader.classList.remove('hidden');
+
+                 // Pause polling
+                 isPollingPaused = true;
+
+                 try {
+                     // 1. Optimistic Update (Local)
+                     let users = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
+                     const initialLength = users.length;
+                     users = users.filter(u => u.username !== username);
+                     
+                     if (users.length < initialLength) {
+                         localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(users));
+                         
+                         // Refresh UI
+                         if(window.updateAdminStats) window.updateAdminStats(users);
+                         
+                         const searchInput = document.getElementById('admin-search');
+                         const currentFilter = searchInput ? searchInput.value : '';
+                         if(window.renderAdminUserList) window.renderAdminUserList(users, currentFilter);
+                     }
+
+                     // 2. Send to Backend
+                     if (!GOOGLE_SCRIPT_URL) {
+                         alert("Backend URL configuration missing.");
+                         if (adminLoader) adminLoader.classList.add('hidden');
+                         isPollingPaused = false;
+                         return;
+                     }
+
+                     await fetch(GOOGLE_SCRIPT_URL, {
+                         method: 'POST',
+                         mode: 'no-cors',
+                         headers: { 'Content-Type': 'application/json' },
+                         body: JSON.stringify({
+                             action: 'deleteUser',
+                             username: username
+                         })
+                     });
+
+                     // 3. Cleanup & Resume
+                     setTimeout(() => {
+                         if (adminLoader) adminLoader.classList.add('hidden');
+                         // Resume polling later to sync with sheet
+                         setTimeout(() => {
+                             isPollingPaused = false;
+                             fetchUsers(); // Sync with real data
+                         }, 5000);
+                     }, 1500);
+
+                 } catch (err) {
+                     console.error(err);
+                     if (adminLoader) adminLoader.classList.add('hidden');
+                     alert("Delete request failed. Check connection.");
+                     isPollingPaused = false;
+                     fetchUsers(); // Revert local changes if network fail
+                 }
+             };
 
              // NEW: Fetch Payment Data (Moved inside DOMContentLoaded)
              let paymentDataCache = []; // Store raw data for filtering
@@ -5756,7 +5826,7 @@
                      expiry.setMonth(baseDate.getMonth() + value);
                  }
 
-                 // Format for display and storage
+                 // Format for display and storage - STRICT ISO 8601 (YYYY-MM-DDTHH:mm:ss.sssZ)
                  const startStr = now.toISOString(); // Transaction start is always now
                  const endStr = expiry.toISOString();
                  
@@ -5799,8 +5869,21 @@
                      
                      // PRE-FILL Logic for existing Paid Users
                      if (user.role.toLowerCase().includes('paid')) {
-                         expInput.value = user.expiration;
-                         if(user.start) document.getElementById('edit-start-date').value = user.start;
+                         // STRICT FORMATTING: Ensure pre-filled values are valid ISO strings
+                         try {
+                             expInput.value = new Date(user.expiration).toISOString();
+                         } catch(e) { 
+                             console.warn("Invalid expiration date in cache, clearing.", e);
+                             expInput.value = ""; 
+                         }
+
+                         if(user.start) {
+                             try {
+                                document.getElementById('edit-start-date').value = new Date(user.start).toISOString();
+                             } catch(e) { 
+                                document.getElementById('edit-start-date').value = ""; 
+                             }
+                         }
                          
                          // Show preview of current subscription
                          const dOpt = { year: 'numeric', month: 'short', day: 'numeric' };
