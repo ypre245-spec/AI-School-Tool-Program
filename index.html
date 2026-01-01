@@ -5421,11 +5421,30 @@
                  // Store current expiration for extension logic
                  if (user.expiration) {
                      expInput.dataset.original = user.expiration;
+                     
+                     // PRE-FILL Logic for existing Paid Users
+                     if (user.role.toLowerCase().includes('paid')) {
+                         expInput.value = user.expiration;
+                         if(user.start) document.getElementById('edit-start-date').value = user.start;
+                         
+                         // Show preview of current subscription
+                         const dOpt = { year: 'numeric', month: 'short', day: 'numeric' };
+                         const sTxt = user.start ? new Date(user.start).toLocaleDateString('en-US', dOpt) : 'N/A';
+                         const eTxt = new Date(user.expiration).toLocaleDateString('en-US', dOpt);
+                         
+                         document.getElementById('preview-start').innerText = sTxt;
+                         document.getElementById('preview-end').innerHTML = `${eTxt} <span class='text-slate-400 font-normal text-[9px]'>(Current)</span>`;
+                         document.getElementById('date-preview').classList.remove('hidden');
+                     }
                  } else {
                      delete expInput.dataset.original;
                  }
 
-                 document.getElementById('date-preview').classList.add('hidden');
+                 // document.getElementById('date-preview').classList.add('hidden'); // REMOVED to allow pre-fill showing
+                 if (!user.role.toLowerCase().includes('paid')) {
+                     document.getElementById('date-preview').classList.add('hidden');
+                 }
+
                  document.querySelectorAll('.duration-btn').forEach(btn => {
                      btn.classList.remove('bg-yellow-500', 'text-white', 'border-yellow-600');
                      btn.classList.add('bg-white', 'text-yellow-700', 'border-yellow-300');
@@ -5538,7 +5557,8 @@
                      const expirationDate = document.getElementById('edit-expiration-date').value;
 
                      // 3. VALIDATION: Require Subscription Duration for Paid Users
-                     if (role === 'Paid User' && (!startDate || !expirationDate)) {
+                     // FIX: Allow if Expiration Date is present (pre-filled or selected). 
+                     if (role === 'Paid User' && !expirationDate) {
                          alert("Please select a subscription duration.");
                          const optionsDiv = document.getElementById('premium-options');
                          if(optionsDiv) {
@@ -5572,7 +5592,7 @@
                                  username: username,
                                  role: role,
                                  message: message,
-                                 startDate: startDate,
+                                 startDate: startDate, // If empty, backend might clear it, but openEditModal pre-fills it now
                                  expirationDate: expirationDate
                              })
                          });
@@ -5590,7 +5610,7 @@
                              // Handle Dates (ensure they are strings for consistency)
                              // FIX: Clear dates if they are empty strings (e.g. downgrading role)
                              if (startDate) allUsers[userIndex].start = new Date(startDate).toISOString();
-                             else allUsers[userIndex].start = null;
+                             else if (!expirationDate) allUsers[userIndex].start = null; // Only clear start if exp is also gone/downgrade
 
                              if (expirationDate) allUsers[userIndex].expiration = new Date(expirationDate).toISOString();
                              else allUsers[userIndex].expiration = null;
