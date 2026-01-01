@@ -1828,124 +1828,88 @@
     </section>
 
     <!-- Footer -->
-    <footer class="bg-slate-900 text-slate-300 py-10 md:py-20 border-t border-slate-800 relative overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-blue-900/20 blur-[100px] rounded-full pointer-events-none"></div>
-        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-900 to-transparent opacity-30"></div>
+    <footer class="bg-slate-900 text-slate-400 py-12 md:py-16 border-t border-slate-800 relative overflow-hidden font-sans text-sm">
+        <!-- Background Effects -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-3xl h-full bg-blue-900/10 blur-[100px] rounded-full pointer-events-none"></div>
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-900/50 to-transparent"></div>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-12 lg:gap-16 mb-16 items-start">
+            <!-- UPDATED: Changed to 3 columns -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-8 mb-12">
                 
-                <div class="space-y-6">
+                <!-- Col 1: Brand -->
+                <div class="flex flex-col gap-6">
                     <div class="flex items-center space-x-3">
                         <div class="relative group">
                             <div class="absolute inset-0 bg-blue-500 blur rounded-full opacity-20 group-hover:opacity-40 transition duration-500"></div>
                             <img src="https://ui-avatars.com/api/?name=Digital+AI&background=1e3a8a&color=fff&size=64&rounded=true&bold=true" 
-                                 alt="Digital AI Vision for Education Logo" 
-                                 class="h-12 w-12 rounded-full border-2 border-slate-700 relative z-10">
+                                 alt="Logo" 
+                                 class="h-10 w-10 rounded-full border border-slate-700 relative z-10 shadow-lg">
                         </div>
                         <div>
-                            <h4 class="text-white font-bold text-lg leading-tight">Digital AI Vision for Education</h4>
-                            <p class="text-[10px] text-blue-400 uppercase tracking-widest font-bold">Official Release</p>
+                            <h4 class="text-slate-100 font-bold text-base leading-tight tracking-tight">Digital AI Vision</h4>
+                            <p class="text-[10px] text-blue-500 uppercase tracking-widest font-bold">for Education</p>
                         </div>
                     </div>
-                    <p class="text-sm text-slate-400 leading-relaxed max-w-xs">
-                        An independent, non-profit initiative dedicated to empowering Filipino teachers with accessible, cutting-edge technology. 
+                    <p class="text-xs leading-relaxed text-slate-500 max-w-xs">
+                        Empowering Filipino educators with cutting-edge, curriculum-aligned AI tools. Built for the future of learning.
                     </p>
-                    <div class="flex space-x-3 pt-2">
-                        <a href="https://www.facebook.com/y2k2009/" class="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all duration-300 group">
-                            <i class="fa-brands fa-facebook-f transform group-hover:scale-110 transition"></i>
+                    <div class="flex space-x-3">
+                        <a href="https://www.facebook.com/y2k2009/" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all border border-slate-700/50">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
                         </a>
-                        <a href="#" class="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:bg-sky-500 hover:text-white hover:border-sky-400 transition-all duration-300 group">
-                            <i class="fa-brands fa-twitter transform group-hover:scale-110 transition"></i>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all border border-slate-700/50">
+                            <i class="fa-brands fa-twitter text-xs"></i>
                         </a>
-                        <a href="#" class="w-9 h-9 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:bg-pink-600 hover:text-white hover:border-pink-500 transition-all duration-300 group">
-                            <i class="fa-brands fa-instagram transform group-hover:scale-110 transition"></i>
+                        <a href="#" class="w-8 h-8 rounded-lg bg-slate-800 hover:bg-slate-700 flex items-center justify-center text-slate-400 hover:text-white transition-all border border-slate-700/50">
+                            <i class="fa-brands fa-linkedin-in text-xs"></i>
                         </a>
                     </div>
                 </div>
-                
-                <div class="md:pl-8">
-                    <h4 class="text-blue-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <span class="w-8 h-[1px] bg-blue-500/50"></span> Navigate
-                    </h4>
-                    
+
+                <!-- Col 2: Product -->
+                <div>
+                    <h4 class="text-slate-100 font-bold mb-6 text-xs uppercase tracking-wider">Product</h4>
                     <ul class="space-y-3">
-                        <li>
-                            <a href="#home" class="group flex items-center text-sm text-slate-400 hover:text-white transition-colors duration-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-700 mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                                Home
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#tools" class="group flex items-center text-sm text-slate-400 hover:text-white transition-colors duration-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-700 mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                                AI Tools
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#about" class="group flex items-center text-sm text-slate-400 hover:text-white transition-colors duration-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-700 mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                                Our Mission
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#community" class="group flex items-center text-sm text-slate-400 hover:text-white transition-colors duration-300">
-                                <span class="w-1.5 h-1.5 rounded-full bg-slate-700 mr-3 group-hover:bg-blue-500 transition-colors"></span>
-                                Community Hub
-                            </a>
-                        </li>
+                        <li><a href="#tools" class="hover:text-blue-400 transition-colors flex items-center gap-2">AI Tools <span class="text-[9px] bg-blue-900/50 text-blue-300 px-1.5 py-0.5 rounded border border-blue-800">Hot</span></a></li>
+                        <li><a href="#community" class="hover:text-blue-400 transition-colors">Community Hub</a></li>
+                        <li><button onclick="if(window.openSubscriptionModal) window.openSubscriptionModal(); else alert('Please log in first.');" class="hover:text-blue-400 transition-colors text-left">Pricing & Plans</button></li>
+                        <!-- Removed API Access Link -->
                     </ul>
                 </div>
 
+                <!-- Col 3: Resources -->
                 <div>
-                    <h4 class="text-blue-400 text-xs font-bold uppercase tracking-widest mb-6 flex items-center gap-2">
-                        <span class="w-8 h-[1px] bg-blue-500/50"></span> Developer Support
-                    </h4>
-                    
-                    <div class="bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-1 border border-slate-700/50 shadow-lg group hover:border-blue-500/30 transition-colors duration-500">
-                        <div class="bg-slate-900/80 rounded-xl p-5 backdrop-blur-sm relative overflow-hidden">
-                            <div class="absolute -top-10 -right-10 w-20 h-20 bg-blue-500/10 rounded-full blur-xl group-hover:bg-blue-500/20 transition duration-500"></div>
-
-                            <h5 class="text-white font-bold mb-2 flex items-center gap-2">
-                                <i class="fa-solid fa-mug-hot text-yellow-500"></i> Buy me a coffee?
-                            </h5>
-                            <p class="text-xs text-slate-400 mb-4 leading-relaxed">
-                                Helps keep the servers running and the tools free for everyone.
-                            </p>
-                            
-                            <button id="support-toggle" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-bold py-2.5 px-4 rounded-lg border border-slate-700 transition-all flex items-center justify-between group-hover:text-white">
-                                <span>View GCash QR</span>
-                                <i id="support-icon" class="fa-solid fa-chevron-down text-[10px]"></i>
-                            </button>
-
-                            <div id="support-content" class="hidden mt-3 pt-3 border-t border-slate-800/50 transition-all duration-300">
-                                <div class="relative rounded-lg overflow-hidden border border-slate-700 bg-white">
-                                    <img src="gcash.jpg" 
-                                         id="support-img"
-                                         onerror="this.onerror=null; this.src='https://placehold.co/400x400/1e293b/fbbf24?text=GCash+QR';" 
-                                         alt="Support via GCash" 
-                                         class="w-full h-auto opacity-90 hover:opacity-100 hover:scale-105 transition duration-500 cursor-zoom-in">
-                                </div>
-                                <p class="text-[10px] text-center text-slate-500 mt-2">Click QR to enlarge</p>
-                            </div>
-                        </div>
-                    </div>
+                    <h4 class="text-slate-100 font-bold mb-6 text-xs uppercase tracking-wider">Resources</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="hover:text-blue-400 transition-colors">Home</a></li>
+                        <li><a href="#about" class="hover:text-blue-400 transition-colors">Our Mission</a></li>
+                        <li><a href="#faq" class="hover:text-blue-400 transition-colors">Help Center</a></li>
+                        <li><a href="#" class="hover:text-blue-400 transition-colors">User Guides</a></li>
+                    </ul>
                 </div>
+
+                <!-- Removed "Stay Updated" Column -->
             </div>
             
-            <div class="border-t border-slate-800/50 pt-8 flex flex-col items-center justify-center text-center relative z-10">
-                <p class="text-slate-500 text-sm mb-6">&copy; 2026 Digital AI Vision for Education. All rights reserved.</p>
-                
-                <div class="group relative inline-flex items-center gap-2 px-6 py-3 bg-slate-900/80 rounded-full border border-slate-700/50 hover:border-blue-500/40 transition-all duration-500 shadow-lg hover:shadow-blue-500/10 hover:-translate-y-1 cursor-default">
-                    <div class="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition duration-700 rounded-full"></div>
+            <div class="border-t border-slate-800 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex flex-col md:flex-row items-center gap-4 md:gap-8">
+                    <p class="text-slate-500 text-xs text-center md:text-left">&copy; 2026 Digital AI Vision. Created by David Jess F. Asauro.</p>
                     
-                    <span class="text-xs text-slate-400 font-medium relative z-10">Created by</span>
-                    
-                    <span class="relative z-10 font-bold tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-blue-200 to-blue-400 animate-pulse group-hover:animate-none transition-all duration-300">
-                        DAVID JESS F. ASAURO
-                    </span>
-                    
-                    <i class="fa-solid fa-code text-blue-500 text-[10px] opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300"></i>
+                    <!-- Moved Status Indicator Here -->
+                    <div class="flex items-center gap-2 bg-slate-800/50 px-3 py-1.5 rounded-full border border-slate-700/50">
+                        <span class="relative flex h-2 w-2">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span class="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">Operational</span>
+                    </div>
+                </div>
+
+                <div class="flex gap-6 text-xs font-medium text-slate-500">
+                    <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    <a href="#" class="hover:text-white transition-colors">Terms of Service</a>
+                    <a href="#" class="hover:text-white transition-colors">Cookie Settings</a>
                 </div>
             </div>
         </div>
