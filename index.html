@@ -3297,19 +3297,10 @@
         async function fetchUsers() {
              const sheetId = '1p69v6YNSjn8n7IrW9h0Qk9get61eh-ONYNxaMz76RFA';
              const sheetName = 'USERS';
-             // FIX: Added Math.random() to force stronger cache busting
-             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}_${Math.random()}`;
+             const url = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?tqx=out:json&sheet=${sheetName}&nocache=${Date.now()}`;
 
              try {
                  const response = await fetch(url);
-                 
-                 // CRITICAL FIX: If polling was paused while we were fetching (e.g. user clicked save),
-                 // discard this stale data so we don't overwrite the optimistic UI update.
-                 if (isPollingPaused) {
-                     console.log("Background fetch ignored due to active edit.");
-                     return [];
-                 }
-
                  const text = await response.text();
                  const jsonMatch = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\);/);
                  if (jsonMatch && jsonMatch[1]) {
@@ -3355,33 +3346,26 @@
                          let expirationStr = null;
                          let startDateStr = null;
 
-                         // FIX: Robust Date Parsing for Subscription Dates (Matches Payment Logic)
-                         const parseRobust = (cell) => {
-                             if (!cell) return null;
-                             let d = null;
-                             if (cell.f) d = parseGvizDate(cell.f);
-                             if ((!d || isNaN(d.getTime())) && cell.v) d = parseGvizDate(cell.v);
-                             return d;
-                         };
-
                          // Get Subscription Dates
                          if (row.c[SHEET_COLUMNS.START_DATE]) {
-                             let sDate = parseRobust(row.c[SHEET_COLUMNS.START_DATE]);
+                             let sDate = parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].v) || (row.c[SHEET_COLUMNS.START_DATE].f ? parseGvizDate(row.c[SHEET_COLUMNS.START_DATE].f) : null);
                              if(sDate) startDateStr = sDate.toISOString();
                          }
 
                          // Handle Expiration logic for Paid Users
                          if (row.c[SHEET_COLUMNS.EXPIRATION]) {
-                             let expDate = parseRobust(row.c[SHEET_COLUMNS.EXPIRATION]);
+                             let expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].v);
+                             if (!expDate && row.c[SHEET_COLUMNS.EXPIRATION].f) expDate = parseGvizDate(row.c[SHEET_COLUMNS.EXPIRATION].f);
                              
                              if (expDate) {
                                  expirationStr = expDate.toISOString();
                                  const now = new Date();
+                                 now.setHours(0,0,0,0);
+                                 
                                  // Auto-downgrade logic (Visual only until sheet update)
-                                 // Note: We check specifically for time expiration now
                                  if (role.toLowerCase() === 'paid user' && expDate < now) {
-                                     // Don't auto-downgrade locally instantly to give buffer, 
-                                     // but visually we might show expired. For now keep role from sheet.
+                                     role = 'Basic User';
+                                     console.log(`User ${username} expired on ${expDate.toDateString()}. Downgrading.`);
                                  }
                              }
                          }
@@ -3403,111 +3387,116 @@
                      localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(users));
 
                      // --- NEW: Force Chat Re-render on User Update ---
+                     // This fixes the issue where roles reset to "normal" because the chat loaded 
+                     // before the user list was ready.
                      const currentUserHash = JSON.stringify(users.map(u => ({u: u.username, r: u.role}))); 
                      const lastUserHash = localStorage.getItem('ai_school_users_hash_v1');
                      
                      if (currentUserHash !== lastUserHash) {
                          localStorage.setItem('ai_school_users_hash_v1', currentUserHash);
+                         // Invalidate stories hash to ensure render method proceeds
                          if(typeof lastStoriesHash !== 'undefined') lastStoriesHash = ""; 
                          if(typeof fetchStories === 'function') fetchStories(false);
                      }
+                     // ------------------------------------------------
 
-                     // --- SYNC SESSION LOGIC (Aggressive Update for Standard Users) ---
-                     let rawSession = localStorage.getItem('ai_school_session');
+                     // --- UPDATED: Session Sync Logic (Checks both Storage Types) ---
+                     let currentSession = null;
                      let storageType = 'local';
                      
-                     if (!rawSession) {
-                         rawSession = sessionStorage.getItem('ai_school_session');
+                     const localSession = localStorage.getItem('ai_school_session');
+                     const sessSession = sessionStorage.getItem('ai_school_session');
+
+                     if (localSession) {
+                         currentSession = JSON.parse(localSession);
+                         storageType = 'local';
+                     } else if (sessSession) {
+                         currentSession = JSON.parse(sessSession);
                          storageType = 'session';
                      }
 
-                     if (rawSession) {
-                         const currentSession = JSON.parse(rawSession);
-                         // Find the user in the fresh data (case-insensitive)
+                     if (currentSession) {
                          const updatedUser = users.find(u => u.username.toLowerCase() === currentSession.username.toLowerCase());
                          
                          if (!updatedUser) {
                              console.warn('Session invalid: User not found in database.');
-                             if (currentSession.role !== 'admin') { 
-                                 localStorage.removeItem('ai_school_session');
-                                 sessionStorage.removeItem('ai_school_session');
-                                 localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
-                                 if (typeof updateAuthUI === 'function') updateAuthUI();
-                             }
-                         } else {
-                             // Detect Changes
-                             const oldRole = (currentSession.role || "").trim();
-                             const newRole = (updatedUser.role || "").trim();
-                             const oldExp = (currentSession.expiration || "").trim();
-                             const newExp = (updatedUser.expiration || "").trim();
-                             // FIX: Also track start date for complete sync
-                             const oldStart = (currentSession.start || "").trim();
-                             const newStart = (updatedUser.start || "").trim();
+                             if(storageType === 'local') localStorage.removeItem('ai_school_session');
+                             else sessionStorage.removeItem('ai_school_session');
                              
-                             // Check for ANY mismatch
-                             if (newRole !== oldRole || newExp !== oldExp || newStart !== oldStart) {
-                                 console.log(`User sync: Account updated to [${newRole}]`);
+                             localStorage.removeItem(CACHE_CONFIG.APPS.KEY);
+                             if (typeof updateAuthUI === 'function') updateAuthUI();
+                         } else {
+                             // Sync Role/Expiration
+                             // Normalize for comparison
+                             const oldRole = (currentSession.role || '').trim();
+                             const newRole = (updatedUser.role || '').trim();
+
+                             if (newRole !== oldRole || updatedUser.expiration !== currentSession.expiration) {
+                                 console.log(`User sync: Status update detected for ${updatedUser.username} (${oldRole} -> ${newRole})`);
+                                 currentSession.role = updatedUser.role;
+                                 currentSession.expiration = updatedUser.expiration; 
                                  
-                                 // Update Session Object
-                                 currentSession.role = newRole;
-                                 currentSession.expiration = newExp;
-                                 currentSession.start = newStart; // Sync start date
-                                 
-                                 // Save back to storage
+                                 // Save to correct storage
                                  if (storageType === 'local') {
                                      localStorage.setItem('ai_school_session', JSON.stringify(currentSession));
                                  } else {
                                      sessionStorage.setItem('ai_school_session', JSON.stringify(currentSession));
                                  }
-                                 
-                                 // Force UI Update Immediately
-                                 if (typeof updateAuthUI === 'function') {
-                                     updateAuthUI(currentSession);
-                                     // Also force app list refresh since role changed
-                                     if (typeof fetchApps === 'function') fetchApps();
-                                     
-                                     // Visual Feedback: Flash the Profile Button
-                                     const profileBtn = document.getElementById('user-menu-btn');
-                                     if(profileBtn) {
-                                         profileBtn.classList.add('ring-4', 'ring-green-400', 'scale-105');
-                                         setTimeout(() => profileBtn.classList.remove('ring-4', 'ring-green-400', 'scale-105'), 800);
-                                     }
 
-                                     // Show Toast Notification
-                                     const toast = document.createElement('div');
-                                     toast.className = 'fixed bottom-4 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-6 py-3 rounded-full shadow-2xl z-[300] flex items-center gap-3 animate-bounce transition-all duration-500';
-                                     toast.innerHTML = `<i class="fa-solid fa-circle-check text-green-400"></i> <span class="text-xs font-bold">Account Updated</span>`;
-                                     document.body.appendChild(toast);
-                                     setTimeout(() => {
-                                         toast.classList.add('opacity-0', 'translate-y-10');
-                                         setTimeout(() => toast.remove(), 500);
-                                     }, 3000);
+                                 // Clear cached app list for the old role AND new role to force a total refresh
+                                 const cacheKeyOld = CACHE_CONFIG.APPS.KEY + '_' + oldRole.toLowerCase();
+                                 const cacheKeyNew = CACHE_CONFIG.APPS.KEY + '_' + newRole.toLowerCase();
+                                 localStorage.removeItem(cacheKeyOld);
+                                 localStorage.removeItem(cacheKeyNew);
+                                 // Also clear general cache timestamp to be safe
+                                 localStorage.removeItem(CACHE_CONFIG.APPS.TS);
+
+                                 if (typeof updateAuthUI === 'function') updateAuthUI(currentSession);
+                                 
+                                 // Force fetch apps immediately to update UI
+                                 if (typeof fetchApps === 'function') setTimeout(() => fetchApps(), 100);
+
+                                 // Visual Notification of Status Change
+                                 if (typeof openAnnouncementModal === 'function' && newRole !== oldRole) {
+                                     openAnnouncementModal({
+                                         title: "Profile Updated",
+                                         message: `Your account status has been updated to <strong>${newRole}</strong>. The workspace has been refreshed.`,
+                                         statusText: "Synced",
+                                         type: "update"
+                                     }, false);
                                  }
                              }
 
-                             // Sync Personal Message Timestamp
+                             // NEW: Sync Message Timestamp Logic
+                             // If the message content from DB is different from what we have cached, update timestamp
                              if (updatedUser.message) {
                                  const cachedMsg = localStorage.getItem('personal_msg_content');
+                                 // Simple check. In a real app we'd use IDs. Here, if text changes, it's new.
                                  if (cachedMsg !== updatedUser.message) {
                                      localStorage.setItem('personal_msg_content', updatedUser.message);
                                      localStorage.setItem('personal_msg_ts', new Date().toISOString());
-                                     if(window.showNotification) window.showNotification();
                                  }
                              }
                          }
                      }
+                     // ------------------------------------------------------------------
                      
-                     // --- Live Update Admin Dashboard if it is Open ---
+                     // --- NEW: Live Update Admin Dashboard if it is Open ---
                      const adminModal = document.getElementById('admin-modal');
                      if (adminModal && !adminModal.classList.contains('hidden')) {
+                         
+                         // Use window-attached function to ensure scope access
                          if(window.updateAdminStats) window.updateAdminStats(users);
                          
+                         // Only re-render list if search is empty to avoid interrupting typing
                          const searchInput = document.getElementById('admin-search');
                          if (searchInput && searchInput.value === '') {
+                             // CRITICAL FIX: Respect the current active filter
                              const filteredUsers = getFilteredUsers(users, currentAdminFilterType);
                              if(window.renderAdminUserList) window.renderAdminUserList(filteredUsers);
                          }
                      }
+                     // -----------------------------------------------------
 
                      showNotification();
                      return users;
@@ -3634,7 +3623,16 @@
                      manualSyncBtn.classList.add('text-deped-blue');
                      manualSyncBtn.classList.remove('text-slate-300');
                      
+                     // Force clear tool cache to ensure new permissions load
+                     localStorage.removeItem(CACHE_CONFIG.APPS.TS);
+                     // Clear specific role caches just in case
+                     const session = getSession();
+                     if(session && session.role) {
+                        localStorage.removeItem(CACHE_CONFIG.APPS.KEY + '_' + session.role.toLowerCase());
+                     }
+
                      await fetchUsers();
+                     await fetchApps(); // Explicitly fetch apps after users
                      
                      setTimeout(() => {
                          icon.classList.remove('fa-spin');
@@ -4055,16 +4053,6 @@
                  const navSubBtn = document.getElementById('nav-subscribe-btn');
                  const mobSubBtn = document.getElementById('mobile-subscribe-btn');
 
-                 // Reset Buttons (Clean slate)
-                 if(navSubBtn) {
-                     navSubBtn.classList.add('hidden');
-                     navSubBtn.onclick = null;
-                 }
-                 if(mobSubBtn) {
-                     mobSubBtn.classList.add('hidden');
-                     mobSubBtn.onclick = null;
-                 }
-
                  if (user) {
                      if(communitySection) communitySection.classList.remove('hidden');
                      if(navCommunityDesktop) navCommunityDesktop.classList.remove('hidden', 'md:hidden');
@@ -4102,19 +4090,30 @@
                      
                      const roleLower = user.role ? user.role.trim().toLowerCase() : '';
                      
-                     // Role Logic - Order matters! Check Paid/Admin first
                      if (roleLower === 'admin') {
                          roleLabel = 'Administrator';
                          menuValidity = 'System Access';
-                     } 
-                     else if (roleLower === 'paid user' || roleLower.includes('paid')) {
+                         if(navSubBtn) navSubBtn.classList.add('hidden'); // Admin don't need sub
+                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
+                     } else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
+                         roleLabel = 'Basic User';
+                         menuValidity = 'Standard Access';
+                         if(navSubBtn) navSubBtn.classList.remove('hidden'); // Show Upgrade
+                         if(mobSubBtn) mobSubBtn.classList.remove('hidden');
+                         // Add click listeners to these
+                         navSubBtn.onclick = openSubscriptionModal;
+                         mobSubBtn.onclick = openSubscriptionModal;
+                     } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
                          roleLabel = 'Premium Member';
                          
-                         // Show Extend Button for Paid Users
+                         // UPDATED: Show Extend Button for Paid Users
                          if(navSubBtn) {
                              navSubBtn.classList.remove('hidden');
                              navSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Extend Subscription';
-                             navSubBtn.className = "w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-blue-600 hover:bg-blue-50 transition border-b border-slate-50 font-bold";
+                             // Optional: Change style to distinguish from Upgrade
+                             navSubBtn.classList.remove('text-yellow-600', 'hover:bg-yellow-50');
+                             navSubBtn.classList.add('text-blue-600', 'hover:bg-blue-50');
+                             // FIX: Attach Event Listener for Paid Users
                              navSubBtn.onclick = window.openSubscriptionModal;
                          }
                          if(mobSubBtn) {
@@ -4122,6 +4121,7 @@
                              mobSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i> Extend Subscription';
                              mobSubBtn.classList.remove('text-yellow-300');
                              mobSubBtn.classList.add('text-blue-200');
+                             // FIX: Attach Event Listener for Paid Users
                              mobSubBtn.onclick = window.openSubscriptionModal;
                          }
 
@@ -4135,28 +4135,11 @@
                          } else {
                              menuValidity = 'Active Membership';
                          }
-                     } 
-                     else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
-                         roleLabel = 'Basic User';
-                         menuValidity = 'Standard Access';
-                         
-                         // Show Upgrade Button
-                         if(navSubBtn) {
-                             navSubBtn.classList.remove('hidden');
-                             navSubBtn.innerHTML = '<i class="fa-solid fa-crown"></i> Upgrade Plan';
-                             navSubBtn.className = "w-full text-left flex items-center gap-2 px-4 py-3 text-sm text-yellow-600 hover:bg-yellow-50 transition border-b border-slate-50 font-bold";
-                             navSubBtn.onclick = window.openSubscriptionModal;
-                         }
-                         if(mobSubBtn) {
-                             mobSubBtn.classList.remove('hidden');
-                             mobSubBtn.innerHTML = '<i class="fa-solid fa-crown mr-2"></i> Upgrade Plan';
-                             mobSubBtn.classList.remove('text-blue-200');
-                             mobSubBtn.classList.add('text-yellow-300');
-                             mobSubBtn.onclick = window.openSubscriptionModal;
-                         }
                      } else {
                          roleLabel = user.role && user.role.length > 1 ? user.role : 'New User';
                          menuValidity = 'Pending Verification';
+                         if(navSubBtn) navSubBtn.classList.add('hidden');
+                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
                      }
 
                      const roleDisplayBtn = document.getElementById('user-role-display');
@@ -5430,46 +5413,14 @@
                  document.getElementById('edit-username-display').value = user.username;
                  document.getElementById('edit-message').value = user.message || '';
                  
-                 // FIX: Pre-fill hidden inputs with existing data to prevent wiping if not changed
-                 document.getElementById('edit-start-date').value = user.start || '';
+                 // Reset Date Inputs
+                 document.getElementById('edit-start-date').value = '';
                  const expInput = document.getElementById('edit-expiration-date');
-                 expInput.value = user.expiration || '';
+                 expInput.value = '';
                  
-                 // PREPARE RENEWAL UI
-                 const renewalPanel = document.getElementById('renewal-info');
-                 const extendToggle = document.getElementById('extend-toggle');
-                 const expiryDisplay = document.getElementById('current-expiry-display');
-                 
-                 renewalPanel.classList.add('hidden'); // Hide by default
-                 
-                 // Check if user has an existing expiration
+                 // Store current expiration for extension logic
                  if (user.expiration) {
-                     const currentExp = new Date(user.expiration);
-                     const now = new Date();
-                     
-                     if (!isNaN(currentExp.getTime())) {
-                         // Store original for logic
-                         expInput.dataset.original = user.expiration;
-                         
-                         // Update Display
-                         const isFuture = currentExp > now;
-                         const dateStr = currentExp.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
-                         const timeStr = currentExp.toLocaleTimeString('en-US', {hour:'2-digit', minute:'2-digit'});
-                         
-                         expiryDisplay.innerHTML = `${dateStr} <span class="text-[9px] text-slate-400">${timeStr}</span>`;
-                         
-                         // Determine default toggle state
-                         // If Future -> Checked (Extend)
-                         // If Past -> Unchecked (Reset)
-                         extendToggle.checked = isFuture;
-                         
-                         // Show Panel logic handled in role change or here if already paid
-                         if (user.role.toLowerCase().includes('paid')) {
-                             renewalPanel.classList.remove('hidden');
-                         }
-                     } else {
-                         delete expInput.dataset.original;
-                     }
+                     expInput.dataset.original = user.expiration;
                  } else {
                      delete expInput.dataset.original;
                  }
@@ -5499,8 +5450,6 @@
                      }
                      roleSelect.value = "Paid User";
                      premiumOptions.classList.remove('hidden');
-                     // Force show renewal panel if data exists
-                     if(expInput.dataset.original) renewalPanel.classList.remove('hidden');
                  } else {
                      // Dashboard Mode: Allow all, map current role
                      const r = user.role.toLowerCase();
@@ -5508,7 +5457,6 @@
                      if(r.includes('paid')) {
                          roleSelect.value = "Paid User";
                          premiumOptions.classList.remove('hidden');
-                         if(expInput.dataset.original) renewalPanel.classList.remove('hidden');
                      }
                      else if(r.includes('admin')) {
                          roleSelect.value = "Admin";
@@ -5577,9 +5525,9 @@
                          return;
                      }
 
-                     // 2. Check if URL is the Editor link
+                     // 2. Check if URL is the Editor link (Common Mistake)
                      if (GOOGLE_SCRIPT_URL.includes("/edit")) {
-                         alert("Configuration Error: You pasted the Script Editor URL (.../edit).\n\nThe website needs the Deployment URL.");
+                         alert("Configuration Error: You pasted the Script Editor URL (.../edit).\n\nThe website needs the Deployment URL.\n\n1. Go to your Script\n2. Click 'Deploy' > 'New Deployment'\n3. Set 'Who has access' to 'Anyone'\n4. Copy the 'Web app' URL (ends in /exec)");
                          return;
                      }
 
@@ -5589,7 +5537,7 @@
                      const startDate = document.getElementById('edit-start-date').value;
                      const expirationDate = document.getElementById('edit-expiration-date').value;
 
-                     // 3. VALIDATION
+                     // 3. VALIDATION: Require Subscription Duration for Paid Users
                      if (role === 'Paid User' && (!startDate || !expirationDate)) {
                          alert("Please select a subscription duration.");
                          const optionsDiv = document.getElementById('premium-options');
@@ -5608,15 +5556,17 @@
                      if(adminLoader) adminLoader.classList.remove('hidden');
                      window.closeEditModal();
 
-                     // PAUSE POLLING
+                     // PAUSE POLLING to prevent overwriting optimistic data with stale sheet data
                      isPollingPaused = true;
 
                      try {
-                         // 1. Send Request to Backend
+                         // 1. Send Request to Backend (Fire and Forget for UI purposes)
                          const fetchPromise = fetch(GOOGLE_SCRIPT_URL, {
                              method: 'POST',
                              mode: 'no-cors', 
-                             headers: { 'Content-Type': 'application/json' },
+                             headers: {
+                                 'Content-Type': 'application/json',
+                             },
                              body: JSON.stringify({
                                  action: 'updateUser',
                                  username: username,
@@ -5627,57 +5577,58 @@
                              })
                          });
 
-                         // 2. OPTIMISTIC UPDATE (Instant UI Refresh)
+                         // 2. OPTIMISTIC UPDATE: Update Local Cache Immediately
+                         // This makes the UI feel instant without waiting for Google Sheets latency
                          const allUsers = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
                          const userIndex = allUsers.findIndex(u => u.username === username);
 
                          if (userIndex !== -1) {
-                             // Update fields
+                             // Update fields locally
                              allUsers[userIndex].role = role;
                              allUsers[userIndex].message = message;
                              
-                             // Update Dates
+                             // Handle Dates (ensure they are strings for consistency)
+                             // FIX: Clear dates if they are empty strings (e.g. downgrading role)
                              if (startDate) allUsers[userIndex].start = new Date(startDate).toISOString();
                              else allUsers[userIndex].start = null;
 
                              if (expirationDate) allUsers[userIndex].expiration = new Date(expirationDate).toISOString();
                              else allUsers[userIndex].expiration = null;
                              
-                             // Save to Local Storage
+                             // Save back to Local Storage
                              localStorage.setItem(CACHE_CONFIG.USERS.KEY, JSON.stringify(allUsers));
                              
-                             // CRITICAL: Force Re-render of Dashboard Immediately
+                             // 3. Force UI Refresh using new Local Data
                              if(window.updateAdminStats) window.updateAdminStats(allUsers);
                              
-                             // Determine which list to render based on current filter state
-                             // Use global 'currentAdminFilterType' to keep user context
-                             if (window.renderAdminUserList) {
+                             // Refresh Dashboard List
+                             if (currentAdminTab === 'dashboard' && window.renderAdminUserList) {
                                  const searchVal = document.getElementById('admin-search')?.value || '';
                                  if (searchVal) {
                                      window.renderAdminUserList(allUsers, searchVal);
                                  } else {
-                                     // Re-apply current filter (e.g. if viewing 'Expired' and user became 'Paid', they should disappear)
                                      const filtered = getFilteredUsers(allUsers, currentAdminFilterType);
                                      window.renderAdminUserList(filtered);
                                  }
                              }
                              
-                             // Refresh Payments (Badge & List)
+                             // Refresh Payment Badges & List (Hide payment if renewed)
                              if(window.checkPaymentNotifications) window.checkPaymentNotifications();
                              if(currentAdminTab === 'payments' && window.loadAdminPayments) window.loadAdminPayments();
                          }
 
-                         // Wait for Network
+                         // Wait for the actual network request to ensure it was sent
                          await fetchPromise;
 
+                         // Simulate success delay for UX (hide loader)
                          setTimeout(async () => {
                              if(adminLoader) adminLoader.classList.add('hidden');
                              alert(`Successfully updated user: ${username}`);
                              
-                             // Resume polling
+                             // Resume polling after 12 seconds (enough time for GSheets to update)
                              setTimeout(() => {
                                  isPollingPaused = false;
-                                 fetchUsers(); 
+                                 fetchUsers(); // Fetch fresh data
                              }, 12000);
                              
                          }, 1000);
@@ -5686,7 +5637,7 @@
                          console.error(err);
                          if(adminLoader) adminLoader.classList.add('hidden');
                          alert("Failed to connect to the server. Check your internet connection.");
-                         isPollingPaused = false; 
+                         isPollingPaused = false; // Resume immediately on error
                      }
                  });
              }
