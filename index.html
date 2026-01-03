@@ -335,20 +335,20 @@
                             </span>
                         </button>
 
-                        <button id="user-menu-btn" class="flex items-center gap-3 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 px-2 py-1.5 pr-4 rounded-full transition-all group shadow-lg ring-1 ring-white/10">
+                        <!-- User Menu Button (Restored) -->
+                        <button id="user-menu-btn" class="flex items-center gap-3 hover:bg-white/10 rounded-full pl-2 pr-4 py-1.5 transition duration-300 border border-transparent hover:border-white/10 group relative">
                             <div class="relative">
-                                <img id="user-avatar-img" src="" alt="User" class="w-9 h-9 rounded-full shadow-sm ring-2 ring-white/30 group-hover:ring-white/60 transition-all object-cover bg-white">
-                                <span id="user-status-dot" class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-900 bg-slate-400"></span>
+                                <img id="user-avatar-img" src="https://ui-avatars.com/api/?name=User&background=facc15&color=1e3a8a&bold=true" class="h-8 w-8 rounded-full border-2 border-white/50 shadow-sm group-hover:scale-105 transition-transform">
+                                <span id="user-status-dot" class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-900 bg-slate-400 transform translate-y-px translate-x-px"></span>
                             </div>
-                            
-                            <div class="text-left leading-tight hidden lg:block">
-                                <p class="text-xs font-bold text-white group-hover:text-yellow-400 transition-colors" id="user-name-display">User</p>
-                                <p class="text-[9px] text-blue-200 uppercase tracking-wider font-medium" id="user-role-display">Teacher</p>
+                            <div class="hidden lg:block text-left">
+                                <p id="user-name-display" class="text-xs font-bold text-white leading-none">User</p>
+                                <p id="user-role-display" class="text-[10px] text-blue-200 font-medium leading-none mt-1">Role</p>
                             </div>
-                            <i id="user-menu-icon" class="fa-solid fa-chevron-down text-[10px] text-blue-200 ml-1 transition-transform duration-200 group-hover:text-white"></i>
+                            <i id="user-menu-icon" class="fa-solid fa-chevron-down text-xs text-blue-300 group-hover:text-white transition-transform duration-300 ml-1"></i>
                         </button>
 
-                        <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden transform scale-95 opacity-0 pointer-events-none transition-all duration-200 origin-top-right z-50">
+                        <div id="user-dropdown" class="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-xl border border-slate-100 overflow-hidden transform scale-95 opacity-0 pointer-events-none transition-all duration-200 origin-top-right z-50">
                             <div class="p-3 border-b border-slate-100 relative">
                                 <button id="manual-sync-btn" class="absolute top-3 right-3 text-slate-300 hover:text-deped-blue transition-colors p-1" title="Sync Profile Status">
                                     <i class="fa-solid fa-rotate"></i>
@@ -359,18 +359,19 @@
                                 <p class="text-[10px] text-slate-400 mt-0.5 font-medium" id="user-dropdown-validity"></p>
 
                                 <!-- NEW: Session Token Display -->
-                                <div id="session-token-container" class="mt-3 pt-2 border-t border-slate-100 hidden">
-                                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest mb-1">Session Token</p>
-                                    <div class="flex items-center gap-1 bg-slate-50 rounded border border-slate-200 p-1.5 group hover:border-blue-300 transition-colors">
-                                        <code id="user-session-token" class="text-[9px] text-slate-600 font-mono truncate flex-grow select-all cursor-text" title="Your Session ID"></code>
-                                        <button id="copy-token-btn" class="text-slate-400 hover:text-blue-600 w-5 h-5 flex items-center justify-center rounded hover:bg-blue-50 transition flex-shrink-0" title="Copy Token">
+                                <div class="mt-3 bg-slate-50 rounded border border-slate-200 p-2">
+                                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                                        <i class="fa-solid fa-key text-[8px]"></i> Session Key
+                                    </p>
+                                    <div class="flex items-center gap-1">
+                                        <code id="user-session-token" class="text-[10px] font-mono text-slate-600 truncate flex-grow bg-white px-2 py-1 rounded border border-slate-200 select-all cursor-text tracking-tight h-6 leading-4">...</code>
+                                        <button onclick="copySessionToken(this)" class="text-slate-400 hover:text-blue-500 hover:bg-blue-50 transition p-1 rounded border border-slate-200 hover:border-blue-300 h-6 w-6 flex items-center justify-center bg-white shadow-sm" title="Copy Key">
                                             <i class="fa-regular fa-copy text-xs"></i>
                                         </button>
                                     </div>
-                                    <div class="mt-2 bg-yellow-50 border border-yellow-200 rounded p-2 shadow-sm">
-                                        <p class="text-[9px] text-yellow-800 font-bold leading-tight flex items-start gap-1.5">
-                                            <i class="fa-solid fa-circle-exclamation mt-0.5 text-yellow-600"></i>
-                                            <span>Important: Copy this token! You will need it to unlock and open Premium Apps.</span>
+                                    <div class="mt-2 pt-1 border-t border-slate-200/50">
+                                        <p class="text-[9px] text-blue-700 font-bold text-center bg-blue-100/50 border border-blue-200 rounded px-2 py-1.5 leading-tight">
+                                            <i class="fa-solid fa-circle-exclamation mr-1"></i> Copy this session token to log in to external apps
                                         </p>
                                     </div>
                                 </div>
@@ -2224,6 +2225,33 @@
         // NEW: Logout Debounce Flag
         let isLoggingOut = false;
 
+        // NEW: Copy Session Token Logic
+        window.copySessionToken = function(btnElement) {
+            const tokenEl = document.getElementById('user-session-token');
+            if (!tokenEl) return;
+            
+            const tokenText = tokenEl.innerText;
+            if (!tokenText || tokenText === "...") return;
+
+            // Use execCommand for iframe compatibility
+            const el = document.createElement('textarea');
+            el.value = tokenText;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+
+            // Visual Feedback
+            const originalHTML = btnElement.innerHTML;
+            btnElement.innerHTML = '<i class="fa-solid fa-check text-green-500 text-xs"></i>';
+            btnElement.classList.add('border-green-300', 'bg-green-50');
+            
+            setTimeout(() => {
+                btnElement.innerHTML = originalHTML;
+                btnElement.classList.remove('border-green-300', 'bg-green-50');
+            }, 2000);
+        };
+
         // --- GLOBAL UI FUNCTIONS (Moved out of DOMContentLoaded to fix ReferenceError) ---
 
         // 1. Announcement/Notification Modal
@@ -2266,66 +2294,84 @@
             msgEl.innerHTML = notifData.message; 
             
             // Default Reset
-            subtitleEl.innerText = "System Notification";
-            ackBtn.onclick = () => closeModal();
-            closeBtn.onclick = () => closeModal();
+            if (subtitleEl) subtitleEl.innerText = "System Notification";
+            if (ackBtn) ackBtn.onclick = () => closeModal();
+            if (closeBtn) closeBtn.onclick = () => closeModal();
 
             // 1. Check for Expiration / Gratitude Message
             if (notifData.type === 'expiration') {
                  titleEl.innerText = notifData.title || "Membership Notice";
-                 subtitleEl.innerText = "System Notification";
-                 iconEl.className = "fa-solid fa-heart-pulse";
-                 iconBg.className = "w-8 h-8 rounded-lg bg-pink-100 text-pink-500 flex items-center justify-center text-sm shadow-md ring-2 ring-pink-100";
-                 timestampEl.innerText = "Important Update";
-                 statusEl.innerText = notifData.statusText || "Notice";
-                 statusEl.className = "text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100";
-                 ackBtn.innerText = "I Understand";
-                 ackBtn.className = "bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                 if (subtitleEl) subtitleEl.innerText = "System Notification";
+                 if (iconEl) iconEl.className = "fa-solid fa-heart-pulse";
+                 if (iconBg) iconBg.className = "w-8 h-8 rounded-lg bg-pink-100 text-pink-500 flex items-center justify-center text-sm shadow-md ring-2 ring-pink-100";
+                 if (timestampEl) timestampEl.innerText = "Important Update";
+                 if (statusEl) {
+                     statusEl.innerText = notifData.statusText || "Notice";
+                     statusEl.className = "text-[10px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full border border-pink-100";
+                 }
+                 if (ackBtn) {
+                     ackBtn.innerText = "I Understand";
+                     ackBtn.className = "bg-pink-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                 }
             }
             // 2. Personal Admin Message
             else if (isPersonal) {
                  titleEl.innerText = notifData.title || "Admin Message"; 
-                 subtitleEl.innerText = "Personal Notification";
-                 iconEl.className = "fa-solid fa-paper-plane";
-                 iconBg.className = "w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-blue-100";
-                 timestampEl.innerText = "Just now";
-                 statusEl.innerText = notifData.statusText || "Personal";
-                 statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
-                 ackBtn.innerText = "Mark as Read";
-                 ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                 if (subtitleEl) subtitleEl.innerText = "Personal Notification";
+                 if (iconEl) iconEl.className = "fa-solid fa-paper-plane";
+                 if (iconBg) iconBg.className = "w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-blue-100";
+                 if (timestampEl) timestampEl.innerText = "Just now";
+                 if (statusEl) {
+                     statusEl.innerText = notifData.statusText || "Personal";
+                     statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
+                 }
+                 if (ackBtn) {
+                     ackBtn.innerText = "Mark as Read";
+                     ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                 }
             } 
             // 3. URGENT / SECURITY (e.g. Logout)
             else if (notifData.type === 'urgent') {
                  titleEl.innerText = notifData.title || "Security Alert";
-                 subtitleEl.innerText = "System Security";
-                 iconEl.className = "fa-solid fa-shield-halved";
-                 iconBg.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-md ring-2 ring-red-100";
-                 timestampEl.innerText = "Immediate Action";
-                 statusEl.innerText = "Logged Out";
-                 statusEl.className = "text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-100";
-                 ackBtn.innerText = "Log In Again";
-                 ackBtn.className = "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
-                 // Ensure clicking dismiss triggers UI cleanup/login modal if needed
-                 ackBtn.onclick = () => { closeModal(); if(window.toggleLoginModal) window.toggleLoginModal(true); };
+                 if (subtitleEl) subtitleEl.innerText = "System Security";
+                 if (iconEl) iconEl.className = "fa-solid fa-shield-halved";
+                 if (iconBg) iconBg.className = "w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center text-sm shadow-md ring-2 ring-red-100";
+                 if (timestampEl) timestampEl.innerText = "Immediate Action";
+                 if (statusEl) {
+                     statusEl.innerText = "Logged Out";
+                     statusEl.className = "text-[10px] font-bold text-red-600 bg-red-50 px-2 py-0.5 rounded-full border border-red-100";
+                 }
+                 if (ackBtn) {
+                     ackBtn.innerText = "Log In Again";
+                     ackBtn.className = "bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
+                     // Ensure clicking dismiss triggers UI cleanup/login modal if needed
+                     ackBtn.onclick = () => { closeModal(); if(window.toggleLoginModal) window.toggleLoginModal(true); };
+                 }
             }
             // 4. Standard Global
             else {
                  titleEl.innerText = notifData.title || "System Update";
-                 subtitleEl.innerText = "Global Announcement";
-                 timestampEl.innerText = "Broadcast Message";
-                 iconEl.className = "fa-solid fa-bullhorn";
-                 iconBg.className = "w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-blue-500/10";
-                 statusEl.innerText = "Public";
-                 statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
-                 ackBtn.innerText = "Got it";
-                 ackBtn.className = "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold py-2 px-4 rounded-lg transition shadow-sm text-xs";
+                 if (subtitleEl) subtitleEl.innerText = "Global Announcement";
+                 if (timestampEl) timestampEl.innerText = "Broadcast Message";
+                 if (iconEl) iconEl.className = "fa-solid fa-bullhorn";
+                 if (iconBg) iconBg.className = "w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm shadow-sm ring-1 ring-blue-500/10";
+                 if (statusEl) {
+                     statusEl.innerText = "Public";
+                     statusEl.className = "text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-full border border-slate-200";
+                 }
+                 if (ackBtn) {
+                     ackBtn.innerText = "Got it";
+                     ackBtn.className = "bg-white hover:bg-slate-50 text-slate-700 border border-slate-300 font-bold py-2 px-4 rounded-lg transition shadow-sm text-xs";
+                 }
             }
             
             modal.classList.remove('hidden');
             setTimeout(() => {
                 modal.classList.remove('opacity-0');
-                modal.firstElementChild.classList.remove('scale-95');
-                modal.firstElementChild.classList.add('scale-100');
+                if (modal.firstElementChild) {
+                    modal.firstElementChild.classList.remove('scale-95');
+                    modal.firstElementChild.classList.add('scale-100');
+                }
             }, 100);
 
             function closeModal() {
@@ -2355,8 +2401,10 @@
 
                 // Proceed with closing animation
                 modal.classList.add('opacity-0');
-                modal.firstElementChild.classList.remove('scale-100');
-                modal.firstElementChild.classList.add('scale-95');
+                if (modal.firstElementChild) {
+                    modal.firstElementChild.classList.remove('scale-100');
+                    modal.firstElementChild.classList.add('scale-95');
+                }
                 setTimeout(() => {
                     modal.classList.add('hidden');
                     modal.dataset.activeId = ""; // Clear active ID
@@ -2418,206 +2466,178 @@
 
         // 3. Update Auth UI
         window.updateAuthUI = function(forceUser = null) {
-             let user = forceUser;
-             if (!user) {
-                 user = getSession();
-             }
+             try {
+                 let user = forceUser;
+                 if (!user) {
+                     // Use unified session helper
+                     user = getSession();
+                 }
 
-             fetchApps(); // Refresh tools based on new state
-             
-             const chatNameInput = document.getElementById('name');
-             const chatInputArea = document.getElementById('chat-input-area');
-             const chatGuestPrompt = document.getElementById('chat-guest-prompt');
-             const communitySection = document.getElementById('community');
-             const navCommunityDesktop = document.getElementById('nav-community-desktop');
-             const navCommunityMobile = document.getElementById('nav-community-mobile');
-             
-             const authGuest = document.getElementById('auth-guest');
-             const authUser = document.getElementById('auth-user');
-             const mobileAuthGuest = document.getElementById('mobile-auth-guest');
-             const mobileAuthUser = document.getElementById('mobile-auth-user');
-             
-             const navSubBtn = document.getElementById('nav-subscribe-btn');
-             const mobSubBtn = document.getElementById('mobile-subscribe-btn');
-
-             // Token Elements
-             const tokenContainer = document.getElementById('session-token-container');
-             const tokenDisplay = document.getElementById('user-session-token');
-             const tokenCopyBtn = document.getElementById('copy-token-btn');
-
-             if (user) {
-                 // --- LOGGED IN STATE ---
-                 if(communitySection) communitySection.classList.remove('hidden');
-                 if(navCommunityDesktop) { navCommunityDesktop.classList.remove('hidden', 'md:hidden'); navCommunityDesktop.classList.add('flex'); }
-                 if(navCommunityMobile) navCommunityMobile.classList.remove('hidden');
-
-                 // Update Session Token UI
-                 let displayToken = user.token; 
+                 fetchApps();
                  
-                 // Fallback 1: Check cached user list (Column L) if local token is missing
-                 if (!displayToken) {
-                     try {
-                         const cachedUsers = JSON.parse(localStorage.getItem(CACHE_CONFIG.USERS.KEY) || '[]');
-                         const matchedUser = cachedUsers.find(u => u.username.toLowerCase() === user.username.toLowerCase());
-                         if (matchedUser && matchedUser.sessionToken) {
-                             displayToken = matchedUser.sessionToken;
+                 const chatNameInput = document.getElementById('name');
+                 const chatInputArea = document.getElementById('chat-input-area');
+                 const chatGuestPrompt = document.getElementById('chat-guest-prompt');
+                 const communitySection = document.getElementById('community');
+                 const navCommunityDesktop = document.getElementById('nav-community-desktop');
+                 const navCommunityMobile = document.getElementById('nav-community-mobile');
+                 
+                 const authGuest = document.getElementById('auth-guest');
+                 const authUser = document.getElementById('auth-user');
+                 const mobileAuthGuest = document.getElementById('mobile-auth-guest');
+                 const mobileAuthUser = document.getElementById('mobile-auth-user');
+                 
+                 const navSubBtn = document.getElementById('nav-subscribe-btn');
+                 const mobSubBtn = document.getElementById('mobile-subscribe-btn');
+
+                 if (user) {
+                     if(communitySection) communitySection.classList.remove('hidden');
+                     if(navCommunityDesktop) { navCommunityDesktop.classList.remove('hidden', 'md:hidden'); navCommunityDesktop.classList.add('flex'); }
+                     if(navCommunityMobile) navCommunityMobile.classList.remove('hidden');
+
+                     if(chatInputArea) chatInputArea.classList.remove('hidden');
+                     if(chatGuestPrompt) chatGuestPrompt.classList.add('hidden');
+
+                     if(chatNameInput) {
+                         chatNameInput.value = user.username;
+                         chatNameInput.setAttribute('readonly', 'true');
+                         chatNameInput.classList.add('text-deped-blue', 'cursor-not-allowed');
+                     }
+
+                     if(authGuest) authGuest.classList.add('hidden');
+                     if(authUser) authUser.classList.remove('hidden');
+                     if(mobileAuthGuest) mobileAuthGuest.classList.add('hidden');
+                     if(mobileAuthUser) mobileAuthUser.classList.remove('hidden');
+
+                     const avatarImg = document.getElementById('user-avatar-img');
+                     if(avatarImg) {
+                        avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=facc15&color=1e3a8a&bold=true&size=128`;
+                     }
+                     
+                     if (user.username) {
+                         const initial = user.username.charAt(0).toUpperCase();
+                         const mobAvatar = document.getElementById('mobile-user-avatar');
+                         if(mobAvatar) mobAvatar.innerText = initial;
+                         
+                         const nameDisplays = ['user-name-display', 'user-dropdown-name', 'mobile-user-name'];
+                         nameDisplays.forEach(id => {
+                             const el = document.getElementById(id);
+                             if(el) el.innerText = user.username;
+                         });
+                     }
+                     
+                     let roleLabel = user.role || 'New User'; 
+                     let menuValidity = 'Standard Access';
+                     const roleLower = user.role ? user.role.trim().toLowerCase() : '';
+                     
+                     // Role Logic for Buttons
+                     if (roleLower === 'admin') {
+                         roleLabel = 'Administrator';
+                         menuValidity = 'System Access';
+                         if(navSubBtn) navSubBtn.classList.add('hidden'); 
+                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
+                     } else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
+                         roleLabel = 'Basic User';
+                         menuValidity = 'Standard Access';
+                         if(navSubBtn) { navSubBtn.classList.remove('hidden'); navSubBtn.onclick = window.openSubscriptionModal; }
+                         if(mobSubBtn) { mobSubBtn.classList.remove('hidden'); mobSubBtn.onclick = window.openSubscriptionModal; }
+                     } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
+                         roleLabel = 'Premium Member';
+                         if(navSubBtn) {
+                             navSubBtn.classList.remove('hidden');
+                             navSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Extend Subscription';
+                             navSubBtn.onclick = window.openSubscriptionModal;
                          }
-                     } catch(e) { console.log("Token lookup failed", e); }
-                 }
-
-                 // Fallback 2: Generate/Repair Token if completely missing (Fix for existing sessions)
-                 if (!displayToken) {
-                     displayToken = Date.now().toString(36) + Math.random().toString(36).substr(2);
-                     // Update session object to persist this repair
-                     user.token = displayToken;
-                     const sessionStr = JSON.stringify(user);
-                     if (localStorage.getItem('ai_school_session')) {
-                         localStorage.setItem('ai_school_session', sessionStr);
+                         if(mobSubBtn) {
+                             mobSubBtn.classList.remove('hidden');
+                             mobSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i> Extend Subscription';
+                             mobSubBtn.onclick = window.openSubscriptionModal;
+                         }
+                         
+                         if (user.expiration) {
+                             try {
+                                 const expDate = new Date(user.expiration);
+                                 const dateOptions = { 
+                                     year: 'numeric', 
+                                     month: 'short', 
+                                     day: 'numeric', 
+                                     hour: 'numeric', 
+                                     minute: '2-digit' 
+                                 };
+                                 menuValidity = `Valid until ${expDate.toLocaleString('en-US', dateOptions)}`;
+                             } catch(e) {
+                                 menuValidity = 'Active Membership';
+                             }
+                         } else {
+                             menuValidity = 'Active Membership';
+                         }
                      } else {
-                         sessionStorage.setItem('ai_school_session', sessionStr);
+                         roleLabel = user.role && user.role.length > 1 ? user.role : 'New User';
+                         menuValidity = 'Pending Verification';
+                         if(navSubBtn) navSubBtn.classList.add('hidden');
+                         if(mobSubBtn) mobSubBtn.classList.add('hidden');
                      }
-                 }
 
-                 // Force display if elements exist
-                 if (tokenContainer && tokenDisplay) {
-                     tokenContainer.classList.remove('hidden');
-                     tokenDisplay.innerText = displayToken || "Loading...";
+                     const roleDisplayBtn = document.getElementById('user-role-display');
+                     if(roleDisplayBtn) roleDisplayBtn.innerText = roleLabel;
                      
-                     if (tokenCopyBtn) {
-                         tokenCopyBtn.onclick = (e) => {
-                             e.stopPropagation();
-                             // Robust copy using textarea approach
-                             const el = document.createElement('textarea');
-                             el.value = displayToken;
-                             document.body.appendChild(el);
-                             el.select();
-                             document.execCommand('copy');
-                             document.body.removeChild(el);
-                             
-                             // Visual Feedback
-                             const originalHtml = tokenCopyBtn.innerHTML;
-                             tokenCopyBtn.innerHTML = '<i class="fa-solid fa-check text-green-500 text-xs"></i>';
-                             setTimeout(() => {
-                                 tokenCopyBtn.innerHTML = originalHtml;
-                             }, 2000);
-                         };
-                     }
-                 }
-
-                 if(chatInputArea) chatInputArea.classList.remove('hidden');
-                 if(chatGuestPrompt) chatGuestPrompt.classList.add('hidden');
-
-                 if(chatNameInput) {
-                     chatNameInput.value = user.username;
-                     chatNameInput.setAttribute('readonly', 'true');
-                     chatNameInput.classList.add('text-deped-blue', 'cursor-not-allowed');
-                 }
-
-                 if(authGuest) authGuest.classList.add('hidden');
-                 if(authUser) authUser.classList.remove('hidden');
-                 if(mobileAuthGuest) mobileAuthGuest.classList.add('hidden');
-                 if(mobileAuthUser) mobileAuthUser.classList.remove('hidden');
-
-                 const avatarImg = document.getElementById('user-avatar-img');
-                 if(avatarImg) {
-                    avatarImg.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(user.username)}&background=facc15&color=1e3a8a&bold=true&size=128`;
-                 }
-                 
-                 const initial = user.username.charAt(0).toUpperCase();
-                 const mobAvatar = document.getElementById('mobile-user-avatar');
-                 if(mobAvatar) mobAvatar.innerText = initial;
-                 
-                 const nameDisplays = ['user-name-display', 'user-dropdown-name', 'mobile-user-name'];
-                 nameDisplays.forEach(id => {
-                     const el = document.getElementById(id);
-                     if(el) el.innerText = user.username;
-                 });
-                 
-                 let roleLabel = user.role || 'New User'; 
-                 let menuValidity = 'Standard Access';
-                 const roleLower = user.role ? user.role.trim().toLowerCase() : '';
-                 
-                 // Role Logic for Buttons
-                 if (roleLower === 'admin') {
-                     roleLabel = 'Administrator';
-                     if(navSubBtn) navSubBtn.classList.add('hidden');
-                     if(mobSubBtn) mobSubBtn.classList.add('hidden');
-                 } else if (roleLower === 'basic user' || roleLower.includes('basic') || roleLower === 'local user') {
-                     roleLabel = 'Basic User';
-                     if(navSubBtn) { navSubBtn.classList.remove('hidden'); navSubBtn.onclick = window.openSubscriptionModal; }
-                     if(mobSubBtn) { mobSubBtn.classList.remove('hidden'); mobSubBtn.onclick = window.openSubscriptionModal; }
-                 } else if (roleLower === 'paid user' || roleLower.includes('paid')) {
-                     roleLabel = 'Premium Member';
-                     if(navSubBtn) {
-                         navSubBtn.classList.remove('hidden');
-                         navSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Extend Subscription';
-                         navSubBtn.onclick = window.openSubscriptionModal;
-                     }
-                     if(mobSubBtn) {
-                         mobSubBtn.classList.remove('hidden');
-                         mobSubBtn.innerHTML = '<i class="fa-solid fa-clock-rotate-left mr-2"></i> Extend Subscription';
-                         mobSubBtn.onclick = window.openSubscriptionModal;
-                     }
+                     const mobileRoleDisplay = document.getElementById('mobile-user-role');
+                     if(mobileRoleDisplay) mobileRoleDisplay.innerText = roleLabel;
                      
-                     if (user.expiration) {
-                         try {
-                             const expDate = new Date(user.expiration);
-                             const dateOptions = { 
-                                 year: 'numeric', 
-                                 month: 'short', 
-                                 day: 'numeric', 
-                                 hour: 'numeric', 
-                                 minute: '2-digit' 
-                             };
-                             menuValidity = `Valid until ${expDate.toLocaleString('en-US', dateOptions)}`;
-                         } catch(e) { menuValidity = 'Active Membership'; }
+                     const dropValEl = document.getElementById('user-dropdown-validity');
+                     if(dropValEl) dropValEl.innerText = menuValidity;
+
+                     // UPDATE: Set Session Token in Dropdown
+                     const sessionTokenEl = document.getElementById('user-session-token');
+                     if (sessionTokenEl) {
+                         if (user.token) {
+                             sessionTokenEl.innerText = user.token;
+                         } else {
+                             sessionTokenEl.innerText = "No active token";
+                         }
                      }
-                 }
 
-                 const roleDisplayBtn = document.getElementById('user-role-display');
-                 if(roleDisplayBtn) roleDisplayBtn.innerText = roleLabel;
-                 
-                 const mobileRoleDisplay = document.getElementById('mobile-user-role');
-                 if(mobileRoleDisplay) mobileRoleDisplay.innerText = roleLabel;
-                 
-                 const dropValEl = document.getElementById('user-dropdown-validity');
-                 if(dropValEl) dropValEl.innerText = menuValidity;
-
-                 const adminLink = document.getElementById('admin-panel-link');
-                 if(adminLink) {
-                     if(roleLower === 'admin') adminLink.classList.remove('hidden');
-                     else adminLink.classList.add('hidden');
-                 }
-
-                 const statusDot = document.getElementById('user-status-dot');
-                 if(statusDot) {
-                     statusDot.className = "absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-800 transform translate-y-px translate-x-px";
-                     if (roleLower === 'admin' || roleLower.includes('paid') || roleLower.includes('basic')) {
-                         statusDot.classList.add('bg-green-400');
-                     } else {
-                         statusDot.classList.add('bg-slate-400');
+                     const adminLink = document.getElementById('admin-panel-link');
+                     if(adminLink) {
+                         if(roleLower === 'admin') adminLink.classList.remove('hidden');
+                         else adminLink.classList.add('hidden');
                      }
+
+                     const statusDot = document.getElementById('user-status-dot');
+                     if(statusDot) {
+                         statusDot.className = "absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full ring-2 ring-blue-800 transform translate-y-px translate-x-px";
+                         
+                         if (roleLower === 'admin' || roleLower.includes('paid') || roleLower.includes('basic') || roleLower.includes('local')) {
+                             statusDot.classList.add('bg-green-400');
+                             statusDot.title = "Account Verified";
+                         } else {
+                             statusDot.classList.add('bg-slate-400');
+                             statusDot.title = "Pending Verification";
+                         }
+                     }
+
+                 } else {
+                     // --- GUEST STATE ---
+                     if(communitySection) communitySection.classList.add('hidden');
+                     if(navCommunityDesktop) { navCommunityDesktop.classList.add('hidden'); navCommunityDesktop.classList.remove('flex'); }
+                     if(navCommunityMobile) navCommunityMobile.classList.add('hidden');
+
+                     if(chatInputArea) chatInputArea.classList.add('hidden');
+                     if(chatGuestPrompt) chatGuestPrompt.classList.remove('hidden');
+
+                     if(chatNameInput) {
+                         chatNameInput.value = '';
+                         chatNameInput.removeAttribute('readonly');
+                         chatNameInput.classList.remove('text-deped-blue', 'cursor-not-allowed');
+                     }
+
+                     if(authGuest) authGuest.classList.remove('hidden');
+                     if(authUser) authUser.classList.add('hidden');
+                     if(mobileAuthGuest) mobileAuthGuest.classList.remove('hidden');
+                     if(mobileAuthUser) mobileAuthUser.classList.add('hidden');
                  }
-
-             } else {
-                 // --- GUEST STATE ---
-                 if(communitySection) communitySection.classList.add('hidden');
-                 if(navCommunityDesktop) { navCommunityDesktop.classList.add('hidden'); navCommunityDesktop.classList.remove('flex'); }
-                 if(navCommunityMobile) navCommunityMobile.classList.add('hidden');
-
-                 if(chatInputArea) chatInputArea.classList.add('hidden');
-                 if(chatGuestPrompt) chatGuestPrompt.classList.remove('hidden');
-
-                 if(chatNameInput) {
-                     chatNameInput.value = '';
-                     chatNameInput.removeAttribute('readonly');
-                     chatNameInput.classList.remove('text-deped-blue', 'cursor-not-allowed');
-                 }
-
-                 if(authGuest) authGuest.classList.remove('hidden');
-                 if(authUser) authUser.classList.add('hidden');
-                 if(mobileAuthGuest) mobileAuthGuest.classList.remove('hidden');
-                 if(mobileAuthUser) mobileAuthUser.classList.add('hidden');
+             } catch(e) {
+                 console.warn("UI Update Error suppressed:", e);
              }
         }
 
@@ -3820,6 +3840,8 @@
                              if (typeof updateAuthUI === 'function') updateAuthUI();
                          } else {
                              // --- SECURITY: Single Device Check (Tug-of-War) ---
+                             // ENFORCED: Single device session active. Logs out other devices.
+                             
                              // Check if the token in the database (sessionToken) exists AND is different from the one in our browser (currentSession.token)
                              // This implies a newer login happened elsewhere.
                              // We add a 15-second grace period after login to allow the sheet to update before we check.
@@ -4442,8 +4464,11 @@
                  if(e.target === loginModal) toggleLoginModal(false);
              });
 
-             // REMOVED DUPLICATE updateAuthUI FUNCTION HERE TO FIX TOKEN VISIBILITY
-             
+             // --- DUPLICATE FUNCTION REMOVED HERE --- 
+             // The previous duplicate definition of updateAuthUI(forceUser) that caused the 
+             // 'Cannot set properties of null' error has been completely removed.
+             // The code now relies on the global window.updateAuthUI defined earlier.
+
              if(loginForm) {
                  loginForm.addEventListener('submit', async (e) => {
                      e.preventDefault();
@@ -5760,8 +5785,11 @@
                  const endDateStr = expiry.toLocaleDateString('en-US', displayOpt);
                  const extLabel = isExtension ? " <span class='text-green-600 font-bold text-[9px] uppercase tracking-wide'>(Extended)</span>" : "";
                  
-                 document.getElementById('preview-end').innerHTML = endDateStr + extLabel;
-                 document.getElementById('date-preview').classList.remove('hidden');
+                 const prevEnd = document.getElementById('preview-end');
+                 if(prevEnd) prevEnd.innerHTML = endDateStr + extLabel;
+                 
+                 const dtPreview = document.getElementById('date-preview');
+                 if(dtPreview) dtPreview.classList.remove('hidden');
              };
              
              window.openEditModal = function(username, source = 'dashboard') {
@@ -5773,17 +5801,21 @@
                  
                  if(!user) return;
 
-                 document.getElementById('edit-username-hidden').value = user.username;
-                 document.getElementById('edit-username-display').value = user.username;
-                 document.getElementById('edit-message').value = user.message || '';
+                 const uHidden = document.getElementById('edit-username-hidden');
+                 if(uHidden) uHidden.value = user.username;
+                 const uDisplay = document.getElementById('edit-username-display');
+                 if(uDisplay) uDisplay.value = user.username;
+                 const uMsg = document.getElementById('edit-message');
+                 if(uMsg) uMsg.value = user.message || '';
                  
                  // Reset Date Inputs
-                 document.getElementById('edit-start-date').value = '';
+                 const startDateEl = document.getElementById('edit-start-date');
+                 if(startDateEl) startDateEl.value = '';
                  const expInput = document.getElementById('edit-expiration-date');
-                 expInput.value = '';
+                 if(expInput) expInput.value = '';
                  
                  // Store current expiration for extension logic
-                 if (user.expiration) {
+                 if (user.expiration && expInput) {
                      expInput.dataset.original = user.expiration;
                      
                      // PRE-FILL Logic for existing Paid Users
@@ -5796,11 +5828,11 @@
                              expInput.value = ""; 
                          }
 
-                         if(user.start) {
+                         if(user.start && startDateEl) {
                              try {
-                                document.getElementById('edit-start-date').value = new Date(user.start).toISOString();
+                                startDateEl.value = new Date(user.start).toISOString();
                              } catch(e) { 
-                                document.getElementById('edit-start-date').value = ""; 
+                                startDateEl.value = ""; 
                              }
                          }
                          
@@ -5809,17 +5841,22 @@
                          const sTxt = user.start ? new Date(user.start).toLocaleDateString('en-US', dOpt) : 'N/A';
                          const eTxt = new Date(user.expiration).toLocaleDateString('en-US', dOpt);
                          
-                         document.getElementById('preview-start').innerText = sTxt;
-                         document.getElementById('preview-end').innerHTML = `${eTxt} <span class='text-slate-400 font-normal text-[9px]'>(Current)</span>`;
-                         document.getElementById('date-preview').classList.remove('hidden');
+                         const prevStart = document.getElementById('preview-start');
+                         if(prevStart) prevStart.innerText = sTxt;
+                         const prevEnd = document.getElementById('preview-end');
+                         if(prevEnd) prevEnd.innerHTML = `${eTxt} <span class='text-slate-400 font-normal text-[9px]'>(Current)</span>`;
+                         
+                         const dtPreview = document.getElementById('date-preview');
+                         if(dtPreview) dtPreview.classList.remove('hidden');
                      }
-                 } else {
+                 } else if (expInput) {
                      delete expInput.dataset.original;
                  }
 
                  // document.getElementById('date-preview').classList.add('hidden'); // REMOVED to allow pre-fill showing
                  if (!user.role.toLowerCase().includes('paid')) {
-                     document.getElementById('date-preview').classList.add('hidden');
+                     const dtPreview = document.getElementById('date-preview');
+                     if(dtPreview) dtPreview.classList.add('hidden');
                  }
 
                  document.querySelectorAll('.duration-btn').forEach(btn => {
@@ -5828,43 +5865,45 @@
                  });
                  
                  const roleSelect = document.getElementById('edit-role');
-                 const options = roleSelect.options;
+                 if(roleSelect) {
+                     const options = roleSelect.options;
 
-                 // Reset all options visibility/state first
-                 for(let i=0; i<options.length; i++) {
-                     options[i].hidden = false;
-                     options[i].disabled = false;
-                 }
-
-                 if (source === 'payment') {
-                     // Payment Mode: Lock to Paid User
+                     // Reset all options visibility/state first
                      for(let i=0; i<options.length; i++) {
-                         if(options[i].value !== 'Paid User') {
-                             options[i].hidden = true;
-                             options[i].disabled = true;
+                         options[i].hidden = false;
+                         options[i].disabled = false;
+                     }
+
+                     if (source === 'payment') {
+                         // Payment Mode: Lock to Paid User
+                         for(let i=0; i<options.length; i++) {
+                             if(options[i].value !== 'Paid User') {
+                                 options[i].hidden = true;
+                                 options[i].disabled = true;
+                             }
                          }
-                     }
-                     roleSelect.value = "Paid User";
-                     premiumOptions.classList.remove('hidden');
-                 } else {
-                     // Dashboard Mode: Allow all, map current role
-                     const r = user.role.toLowerCase();
-                     
-                     if(r.includes('paid')) {
                          roleSelect.value = "Paid User";
-                         premiumOptions.classList.remove('hidden');
-                     }
-                     else if(r.includes('admin')) {
-                         roleSelect.value = "Admin";
-                         premiumOptions.classList.add('hidden');
-                     }
-                     else if(r.includes('basic') || r.includes('local')) {
-                         roleSelect.value = "Basic User";
-                         premiumOptions.classList.add('hidden');
-                     }
-                     else {
-                         roleSelect.value = "New User";
-                         premiumOptions.classList.add('hidden');
+                         if(premiumOptions) premiumOptions.classList.remove('hidden');
+                     } else {
+                         // Dashboard Mode: Allow all, map current role
+                         const r = user.role.toLowerCase();
+                         
+                         if(r.includes('paid')) {
+                             roleSelect.value = "Paid User";
+                             if(premiumOptions) premiumOptions.classList.remove('hidden');
+                         }
+                         else if(r.includes('admin')) {
+                             roleSelect.value = "Admin";
+                             if(premiumOptions) premiumOptions.classList.add('hidden');
+                         }
+                         else if(r.includes('basic') || r.includes('local')) {
+                             roleSelect.value = "Basic User";
+                             if(premiumOptions) premiumOptions.classList.add('hidden');
+                         }
+                         else {
+                             roleSelect.value = "New User";
+                             if(premiumOptions) premiumOptions.classList.add('hidden');
+                         }
                      }
                  }
 
@@ -6564,6 +6603,8 @@
                      });
                  }
              }
+
+             updateAuthUI(); // Initial UI Update
 
         }); // Close DOMContentLoaded
     </script>
