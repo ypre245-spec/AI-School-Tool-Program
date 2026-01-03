@@ -2320,7 +2320,35 @@
                  if (subtitleEl) subtitleEl.innerText = "Personal Notification";
                  if (iconEl) iconEl.className = "fa-solid fa-paper-plane";
                  if (iconBg) iconBg.className = "w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-blue-100";
-                 if (timestampEl) timestampEl.innerText = "Just now";
+                 
+                 // UPDATED: Dynamic Timestamp Logic
+                 const serverTs = notifData.timestamp;
+                 const localTs = localStorage.getItem('personal_msg_ts');
+                 
+                 const formatFull = (dateStr) => {
+                     if (!dateStr) return '';
+                     const date = new Date(dateStr);
+                     if (isNaN(date.getTime())) return dateStr;
+                     
+                     return date.toLocaleString('en-US', { 
+                         month: 'long', 
+                         day: 'numeric', 
+                         year: 'numeric', 
+                         hour: 'numeric', 
+                         minute: '2-digit' 
+                     });
+                 };
+
+                 if (timestampEl) {
+                     if (serverTs) {
+                         timestampEl.innerText = `Delivered: ${formatFull(serverTs)}`;
+                     } else if (localTs) {
+                         timestampEl.innerText = `Delivered: ${formatFull(localTs)}`;
+                     } else {
+                         timestampEl.innerText = `Delivered: ${formatFull(new Date().toISOString())}`;
+                     }
+                 }
+
                  if (statusEl) {
                      statusEl.innerText = notifData.statusText || "Personal";
                      statusEl.className = "text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-100";
@@ -3116,7 +3144,11 @@
                  const localTs = localStorage.getItem('personal_msg_ts');
                  
                  const formatFull = (dateStr) => {
+                     if (!dateStr) return '';
                      const date = new Date(dateStr);
+                     // If invalid date, return the string as is
+                     if (isNaN(date.getTime())) return dateStr;
+                     
                      return date.toLocaleString('en-US', { 
                          month: 'long', 
                          day: 'numeric', 
@@ -3131,7 +3163,8 @@
                  } else if (localTs) {
                      timestampEl.innerText = `Delivered: ${formatFull(localTs)}`;
                  } else {
-                     timestampEl.innerText = 'Just now';
+                     // UPDATED: Show exact current time instead of "Just now"
+                     timestampEl.innerText = `Delivered: ${formatFull(new Date().toISOString())}`;
                  }
                  
                  statusEl.innerText = notifData.statusText || "Personal";
@@ -3141,12 +3174,8 @@
                  ackBtn.className = "bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition shadow-md hover:shadow-lg text-xs transform hover:-translate-y-0.5";
 
             } 
-            // 3. Standard Global Announcement (Dynamic Styling)
-            else {
-                 titleEl.innerText = notifData.title || "System Update";
-                 subtitleEl.innerText = "Global Announcement";
-                 timestampEl.innerText = "Broadcast Message";
-                 
+            // 3. URGENT / SECURITY (e.g. Logout)
+            else if (notifData.type === 'urgent') {
                  const lowerTitle = (notifData.title || "").toLowerCase();
 
                  if (lowerTitle.includes('urgent') || lowerTitle.includes('alert') || lowerTitle.includes('critical')) {
