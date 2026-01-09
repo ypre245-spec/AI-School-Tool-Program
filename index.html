@@ -1963,9 +1963,9 @@
         const SHEET_COLUMNS = {
             USERNAME: 1,      // Column B (Default: Username)
             PASSWORD: 2,      // Column C (Default: Password)
-            ROLE: 3,          // Column D (Default: Role)
+            ROLE: 12,         // Column N (Index 13) - READ ONLY: Calculated/Active Role. Updates are sent to backend for Column D.
             MESSAGE: 4,       // Column E (Default: Personal Message)
-            FULLNAME: 0,      // Column F (New: Full Name)
+            FULLNAME: 5,      // Column F (Full Name)
             SEC_QUESTION: 6,  // Column G (Security Question)
             SEC_ANSWER: 7,    // Column H (Security Answer)
             START_DATE: 8,    // Column I (Start/Approval Date)
@@ -4962,7 +4962,7 @@
              let currentAdminTab = 'dashboard';
 
              // *** PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE ***
-             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzFE1Wf2kEfou8HjV1WkbpVEFQ4QOEv8FRixBnY3SZrOfqtyYTCcnBMOzuh-pTHK6AE_w/exec"; 
+             const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyEFFIE1BGVZ2KToyAoYrqF3x6ultwcIwnQ5tFV9fR99C68QCIFiF1cQk3S7bD4hCuQ2w/exec"; 
              
              // NEW: Mobile Menu Toggle Function
              window.toggleAdminMobileMenu = function() {
